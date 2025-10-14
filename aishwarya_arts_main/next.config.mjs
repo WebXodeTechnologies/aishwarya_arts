@@ -11,11 +11,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
-  // ✅ Image optimization domains
-  images: {
-    domains: ["images.unsplash.com", "cdn.pixabay.com", "yourcdn.com"],
-  },
-
   // ✅ Enable experimental features if using Next 15+
   experimental: {
     serverActions: {
