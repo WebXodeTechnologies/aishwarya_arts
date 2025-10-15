@@ -1,5 +1,7 @@
 import { Poppins, Outfit } from "next/font/google";
 import "./globals.css";
+import Header from "./components/HomePage/Header";
+import Footer from "./components/HomePage/Footer";
 
 // 👇 Choose one font — uncomment the one you want
 
@@ -65,8 +67,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${font.variable} antialiased`} suppressHydrationWarning>
-        {children}
+      <body className={`${font.variable} antialiased flex flex-col min-h-screen`}>
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );
