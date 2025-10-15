@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap');
 @import "tailwindcss";
 
 body {
@@ -8,3 +10,6 @@ body {
   background-color: #faf9f6;
   }
 
+  .transition-all {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
