@@ -13,43 +13,45 @@ const iconMap = { FiSearch, FiHeart, FiShoppingCart };
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
+  const pathname = usePathname() || ""; // hydration-safe
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow">
+    <header className="sticky top-0 z-50 bg-white shadow" role="banner">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
         {/* Logo */}
         <div className="flex-shrink-0 mx-auto md:mx-0">
-          <Link href="/" aria-label="Home">
+          <Link href="/" aria-label="Home page">
             <Image
               src={LogoMain}
               alt="WebXode Logo"
               width={100}
               height={100}
-              sizes="(max-width: 768px) 60px, 100px"
+              sizes="(max-width: 640px) 60px, (max-width: 1024px) 80px, 100px"
+              style={{ width: "auto", height: "auto" }} // maintain aspect ratio
               priority
-              className="cursor-pointer"
             />
           </Link>
         </div>
 
-        {/* Desktop Nav */}
+        {/* Desktop Navigation */}
         <nav
           className="hidden md:flex space-x-8"
           aria-label="Primary Navigation"
+          role="navigation"
         >
           {navItems.map((item, idx) => (
             <Link
               key={idx}
               href={item.href}
-              className="relative font-medium text-black transition transform duration-300 hover:scale-105 group"
+              className="relative font-medium text-black transition duration-300 transform hover:scale-105 group"
+              aria-current={pathname === item.href ? "page" : undefined}
             >
               {item.label}
               <span
                 className={`absolute left-0 -bottom-1 h-[2px] bg-[#92080a] transition-all duration-300 ${
                   pathname === item.href ? "w-full" : "w-0"
                 } group-hover:w-full`}
-              ></span>
+              />
             </Link>
           ))}
         </nav>
@@ -62,6 +64,7 @@ const Header = () => {
               return (
                 <button
                   key={idx}
+                  type="button"
                   aria-label={item.label}
                   className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#92080a] text-black"
                 >
@@ -87,7 +90,8 @@ const Header = () => {
         {/* Mobile Menu Button */}
         <div className="lg:hidden flex items-center">
           <button
-            aria-label="Open menu"
+            type="button"
+            aria-label="Open mobile menu"
             onClick={() => setMobileOpen(true)}
             className="p-4 rounded-md text-black hover:text-[#92080a] transition duration-300"
           >
@@ -101,22 +105,27 @@ const Header = () => {
         className={`fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
+        style={{ willChange: "transform" }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile menu"
       >
         <div className="relative flex items-center justify-center px-4 py-4 border-b border-gray-200">
-          {/* Logo Centered */}
-          <Link href="/" aria-label="Home">
+          {/* Logo */}
+          <Link href="/" aria-label="Home page">
             <Image
               src={LogoMain}
               alt="WebXode Logo"
               width={80}
               height={80}
-              className="cursor-pointer"
+              style={{ width: "auto", height: "auto" }}
             />
           </Link>
 
-          {/* Close Button Top Right */}
+          {/* Close Button */}
           <button
-            aria-label="Close menu"
+            type="button"
+            aria-label="Close mobile menu"
             onClick={() => setMobileOpen(false)}
             className="absolute right-4 text-black p-2 rounded-md hover:text-[#92080a] transition duration-300"
           >
@@ -127,18 +136,24 @@ const Header = () => {
         <nav
           className="flex flex-col items-center mt-10 space-y-6 px-4"
           aria-label="Mobile Navigation"
+          role="menu"
         >
           {navItems.map((item, idx) => (
             <Link
               key={idx}
               href={item.href}
-              className={`text-black font-medium transition transform duration-300 hover:scale-105 hover:text-[#92080a]`}
+              role="menuitem"
+              className={`text-black font-medium transition transform duration-300 hover:scale-105 hover:text-[#92080a] ${
+                pathname === item.href ? "text-[#92080a]" : ""
+              }`}
               onClick={() => setMobileOpen(false)}
+              aria-current={pathname === item.href ? "page" : undefined}
             >
               {item.label}
             </Link>
           ))}
 
+          {/* Mobile Utilities */}
           <div className="flex space-x-4 mt-6">
             {utilities.map((item, idx) => {
               if (item.type === "icon") {
@@ -146,6 +161,7 @@ const Header = () => {
                 return (
                   <button
                     key={idx}
+                    type="button"
                     aria-label={item.label}
                     className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#92080a] text-black"
                   >
@@ -170,12 +186,12 @@ const Header = () => {
         </nav>
       </div>
 
-      {/* Optional overlay for dim background */}
+      {/* Optional overlay */}
       {mobileOpen && (
         <div
           className="fixed inset-0 bg-white bg-opacity-20 z-40"
           onClick={() => setMobileOpen(false)}
-        ></div>
+        />
       )}
     </header>
   );
