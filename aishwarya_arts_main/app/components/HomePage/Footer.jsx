@@ -86,7 +86,7 @@ const Footer = () => {
             </li>
             <li>
               <a href="tel:+919655007661" className="hover:underline">
-                +91 96550 07661
+                +91 9655007661
               </a>
             </li>
             <li>Namakkal, Tamil Nadu</li>
