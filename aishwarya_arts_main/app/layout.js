@@ -2,6 +2,7 @@ import { Poppins, Outfit } from "next/font/google";
 import "./globals.css";
 import Header from "./components/HomePage/Header";
 import Footer from "./components/HomePage/Footer";
+import Whatsapp from "./components/HomePage/whatsapp";
 
 const font = Outfit({
   subsets: ["latin"],
@@ -87,6 +88,7 @@ export default function RootLayout({ children }) {
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Whatsapp/>
       </body>
     </html>
   );

@@ -13,7 +13,7 @@ const iconMap = { FiSearch, FiHeart, FiShoppingCart };
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname() || ""; // hydration-safe
+  const pathname = usePathname() || "";
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow" role="banner">
@@ -26,8 +26,6 @@ const Header = () => {
               alt="WebXode Logo"
               width={100}
               height={100}
-              sizes="(max-width: 640px) 60px, (max-width: 1024px) 80px, 100px"
-              style={{ width: "auto", height: "auto" }} // maintain aspect ratio
               priority
             />
           </Link>
