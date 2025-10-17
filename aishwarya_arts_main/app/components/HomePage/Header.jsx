@@ -16,7 +16,7 @@ const Header = () => {
   const pathname = usePathname() || "";
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow" role="banner">
+    <header className="sticky top-0 z-50  shadow" role="banner">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
         {/* Logo */}
         <div className="flex-shrink-0 mx-auto md:mx-0">
@@ -46,7 +46,7 @@ const Header = () => {
             >
               {item.label}
               <span
-                className={`absolute left-0 -bottom-1 h-[2px] bg-[#92080a] transition-all duration-300 ${
+                className={`absolute left-0 -bottom-1 h-[2px] bg-[#006D5B] transition-all duration-300 ${
                   pathname === item.href ? "w-full" : "w-0"
                 } group-hover:w-full`}
               />
@@ -64,7 +64,7 @@ const Header = () => {
                   key={idx}
                   type="button"
                   aria-label={item.label}
-                  className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#92080a] text-black"
+                  className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#006D5B] text-black"
                 >
                   <Icon size={24} />
                 </button>
@@ -75,7 +75,7 @@ const Header = () => {
                 <Link
                   key={idx}
                   href={item.href}
-                  className="px-4 py-2 rounded-md bg-[#92080a] text-white hover:bg-[#910709] transition transform duration-300 hover:scale-105"
+                  className="px-4 py-2 rounded-md bg-[#006D5B] text-white hover:bg-[#910709] transition transform duration-300 hover:scale-105"
                 >
                   {item.label}
                 </Link>
@@ -91,7 +91,7 @@ const Header = () => {
             type="button"
             aria-label="Open mobile menu"
             onClick={() => setMobileOpen(true)}
-            className="p-4 rounded-md text-black hover:text-[#92080a] transition duration-300"
+            className="p-4 rounded-md text-black hover:text-[#006D5B] transition duration-300"
           >
             <CiMenuFries size={30} />
           </button>
@@ -125,7 +125,7 @@ const Header = () => {
             type="button"
             aria-label="Close mobile menu"
             onClick={() => setMobileOpen(false)}
-            className="absolute right-4 text-black p-2 rounded-md hover:text-[#92080a] transition duration-300"
+            className="absolute right-4 text-black p-2 rounded-md hover:text-[#006D5B] transition duration-300"
           >
             <FiX size={28} />
           </button>
@@ -141,8 +141,8 @@ const Header = () => {
               key={idx}
               href={item.href}
               role="menuitem"
-              className={`text-black font-medium transition transform duration-300 hover:scale-105 hover:text-[#92080a] ${
-                pathname === item.href ? "text-[#92080a]" : ""
+              className={`text-black font-medium transition transform duration-300 hover:scale-105 hover:text-[#006D5B] ${
+                pathname === item.href ? "text-[#006D5B]" : ""
               }`}
               onClick={() => setMobileOpen(false)}
               aria-current={pathname === item.href ? "page" : undefined}
@@ -161,7 +161,7 @@ const Header = () => {
                     key={idx}
                     type="button"
                     aria-label={item.label}
-                    className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#92080a] text-black"
+                    className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#006D5B] text-black"
                   >
                     <Icon size={24} />
                   </button>
@@ -172,7 +172,7 @@ const Header = () => {
                   <Link
                     key={idx}
                     href={item.href}
-                    className="px-6 py-3 rounded-md bg-[#92080a] text-white hover:bg-[#910709] transition transform duration-300 hover:scale-105"
+                    className="px-6 py-3 rounded-md bg-[#006D5B] text-white hover:bg-[#910709] transition transform duration-300 hover:scale-105"
                   >
                     {item.label}
                   </Link>
