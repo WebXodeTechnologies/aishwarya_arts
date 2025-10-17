@@ -9,7 +9,7 @@ import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
 const Footer = () => {
   return (
     <footer
-      className="bg-[#92080a] text-white px-6 py-10 mt-10"
+      className="bg-[#006d5b] text-white px-6 py-10 mt-10"
       aria-label="Footer"
     >
       {/* Main Grid */}
@@ -22,7 +22,7 @@ const Footer = () => {
               alt="Aishwarya Arts Logo"
               width={100}
               height={40}
-              className="rounded-md bg-white p-1"
+              className="rounded-md p-1"
               priority
             />
           </Link>
@@ -135,7 +135,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/30 mt-6 pt-4 text-center text-sm text-gray-100">
+      <div className="border-t border-white/30 mt-6 pt-4 text-center text-sm text-white">
         <p  className="space-x-6">
           © {new Date().getFullYear()} Aishwarya Art Gallery |  All Rights
           Reserved | Developed by{" "}
