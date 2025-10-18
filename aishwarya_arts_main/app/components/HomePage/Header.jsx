@@ -67,6 +67,7 @@ const Header = () => {
                   className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#006D5B] text-black"
                 >
                   <Icon size={24} />
+                 
                 </button>
               );
             }
@@ -75,7 +76,7 @@ const Header = () => {
                 <Link
                   key={idx}
                   href={item.href}
-                  className="px-4 py-2 rounded-md bg-[#006D5B] text-white hover:bg-[#910709] transition transform duration-300 hover:scale-105"
+                  className="px-4 py-2 rounded-md bg-[#006D5B] text-white hover:bg-[#000000] transition transform duration-300 hover:scale-105"
                 >
                   {item.label}
                 </Link>
