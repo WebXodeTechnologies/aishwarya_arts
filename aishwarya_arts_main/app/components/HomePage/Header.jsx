@@ -16,7 +16,7 @@ const Header = () => {
   const pathname = usePathname() || "";
 
   return (
-    <header className="sticky top-0 z-50  shadow" role="banner">
+    <header className="sticky top-0 z-50 bg-white" role="banner">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
         {/* Logo */}
         <div className="flex-shrink-0 mx-auto md:mx-0">
