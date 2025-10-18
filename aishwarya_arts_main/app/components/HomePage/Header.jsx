@@ -7,7 +7,7 @@ import { FiSearch, FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
 import { CiMenuFries } from "react-icons/ci";
 import { usePathname } from "next/navigation";
 import { navItems, utilities } from "../HomePage/index";
-import LogoMain from "@/public/assets/logo/logosample.png";
+import LogoMain from "../../../public/assets/logo/logosample.png"
 
 const iconMap = { FiSearch, FiHeart, FiShoppingCart };
 
