@@ -6,6 +6,7 @@ import Counter from "../../../models/CounterApi"; // IMPORT COUNTER
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../lib/auth";
 import { NextResponse } from "next/server";
+import crypto from "crypto"
 
 export async function GET() {
   try {
@@ -36,6 +37,17 @@ export async function POST(req) {
 
     const body = await req.json();
     const { orderItems, shippingAddress, paymentMethod, razorpayOrderId, razorpayPaymentId } = body;
+
+    if (paymentMethod === "Razorpay") {
+      const generated_signature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(razorpayOrderId + "|" + razorpayPaymentId)
+        .digest("hex");
+
+      if (generated_signature !== razorpaySignature) {
+        return NextResponse.json({ success: false, message: "Payment verification failed" }, { status: 400 });
+      }
+    }
 
     // --- 1. GENERATE CUSTOM ORDER ID (AG-DDMM-XXX) ---
     const now = new Date();
