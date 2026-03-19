@@ -3,7 +3,6 @@ import Razorpay from "razorpay";
 import { connectDB } from "@/lib/db";
 import Product from "@/models/Product";
 
-
 // Initialize inside or with a check to prevent build-time errors
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -16,17 +15,26 @@ export async function POST(req) {
     const { cartItems } = await req.json();
 
     if (!cartItems || cartItems.length === 0) {
-      return NextResponse.json({ success: false, message: "Cart is empty" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "Cart is empty" },
+        { status: 400 },
+      );
     }
 
     // 1. RECALCULATE TOTAL (Server-side Truth)
     let subtotal = 0;
     for (const item of cartItems) {
       // Find the product in DB to prevent price tampering
-      const dbProduct = await Product.findById(item.id || item._id);
+      const dbProduct = await Product.findById(
+        item.product || item.id || item._id,
+      );
       if (dbProduct) {
         // Use the price from the DATABASE, not the frontend
-        subtotal += dbProduct.price * (item.quantity || 1);
+        let activePrice = dbProduct.offerPrice || dbProduct.price;
+        if (item.price && item.price >= activePrice) {
+          activePrice = item.price;
+        }
+        subtotal += activePrice * (item.quantity || 1);
       }
     }
 
@@ -38,7 +46,7 @@ export async function POST(req) {
     // 3. CREATE RAZORPAY ORDER
     // We use Math.round to ensure 'amount' is an absolute Integer (Paise)
     const options = {
-      amount: Math.round(finalTotal * 100), 
+      amount: Math.round(finalTotal * 100),
       currency: "INR",
       receipt: `order_rcpt_${Date.now()}`,
       payment_capture: 1, // Auto-capture payment
@@ -56,7 +64,10 @@ export async function POST(req) {
   } catch (error) {
     console.error("CRITICAL CHECKOUT ERROR:", error);
     return NextResponse.json(
-      { success: false, message: "Could not initiate payment. Please try again." },
+      {
+        success: false,
+        message: "Could not initiate payment. Please try again.",
+      },
       { status: 500 },
     );
   }
