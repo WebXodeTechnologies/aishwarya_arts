@@ -10,7 +10,7 @@ export const dummyProducts = [
     offerPrice: 15500,
     godName: "Ganesha",
     workType: "3d",
-    rating: 4.8,
+    rating: 4.8,  
     reviews: 12,
     images: [
       "https://i.pinimg.com/1200x/ae/9b/72/ae9b72b10034ea10397ac96f7abb0287.jpg",
