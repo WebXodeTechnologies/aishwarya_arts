@@ -79,8 +79,7 @@ const CheckoutPage = () => {
           phone: formData.primaryPhone
         },
         totalAmount: total,
-        paymentMethod: paymentMethod,
-        // Gateway IDs (Only for ONLINE)
+        paymentMethod: paymentResponse ? "Razorpay" : "COD",
         razorpay_payment_id: paymentResponse?.razorpay_payment_id || null,
         razorpay_order_id: paymentResponse?.razorpay_order_id || null,
         razorpay_signature: paymentResponse?.razorpay_signature || null,
