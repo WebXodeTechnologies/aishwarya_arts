@@ -5,10 +5,8 @@ import dynamic from "next/dynamic";
 const NextImage = dynamic(() => import("next/image"));
 
 const heroImages = [
-   "/assets/hero/heroimageswebp/AishwarayaArts-1-cpy.png",
-   "/assets/hero/heroimageswebp/AishwarayaArts-3.png",
-  "/assets/hero/heroimageswebp/paintwithframe.webp",
-  "/assets/hero/heroimageswebp/pencilarts.webp",
+  "/assets/hero/heroimageswebp/AishwarayaArts-1-cpy.png",
+  "/assets/hero/heroimageswebp/AishwarayaArts-3.png",
   "/assets/hero/heroimageswebp/watercolor-elephant-illustration.webp",
   "/assets/hero/heroimageswebp/womencelebration.webp",
 ];
@@ -40,10 +38,7 @@ export default function Hero() {
         }}
       >
         {heroImages.map((src, i) => (
-          <div
-            key={i}
-            className="w-screen shrink-0 flex justify-center px-2"
-          >
+          <div key={i} className="w-screen shrink-0 flex justify-center px-2">
             {/* IMAGE BOX */}
             <div className="w-full max-w-7xl rounded-2xl overflow-hidden">
               <div className="relative w-full h-105 sm:h-125 md:h-150 lg:h-212.5">
