@@ -122,32 +122,32 @@ const PRICE_SHEET = {
     embossedMrp: 88888,
   },
   '36" X 24"': {
-    flat: 49999,
-    flatMrp: 55554,
+    flat: 52999, // Fixed from 49999
+    flatMrp: 58888, // Fixed from 55554
     "2d": 59999,
     "2dMrp": 66666,
     embossed: 94999,
     embossedMrp: 105554,
   },
   '48" X 36"': {
-    flat: 89999,
-    flatMrp: 99999,
+    flat: 102999, // Fixed from 89999
+    flatMrp: 114443, // Fixed from 99999
     "2d": 129999,
     "2dMrp": 144443,
     embossed: 179999,
     embossedMrp: 199999,
   },
   '60" X 36"': {
-    flat: 114999,
-    flatMrp: 127777,
+    flat: 123999, // Fixed from 114999
+    flatMrp: 137777, // Fixed from 127777
     "2d": 164999,
     "2dMrp": 183332,
     embossed: 219999,
     embossedMrp: 244443,
   },
   '72" X 48"': {
-    flat: 179999,
-    flatMrp: 199999,
+    flat: 199999, // Fixed from 179999
+    flatMrp: 222221, // Fixed from 199999
     "2d": 219999,
     "2dMrp": 244443,
     embossed: 349999,

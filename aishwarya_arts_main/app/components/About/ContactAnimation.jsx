@@ -149,7 +149,7 @@ export default function ContactAnimation() {
                       Customer Support
                     </span>
                     <p className="text-xl md:text-2xl font-bold text-zinc-900 mt-1 lowercase">
-                      aishwaryaarts@gmail.com
+                      contact.aishwaryaarts@gmail.com
                     </p>
                   </div>
                 </a>

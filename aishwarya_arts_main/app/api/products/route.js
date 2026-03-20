@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-// 1. Corrected path to match your lib/db.js file
 import { connectDB } from "../../../lib/db"; 
-// 2. Pointing to your Product model
 import Product from "../../../models/Product"; 
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../lib/auth";
 
 // GET: Fetch all products for your client-side collections
 export async function GET() {
@@ -38,5 +38,18 @@ export async function POST(req) {
   } catch (error) {
     console.error("Database Error:", error);
     return NextResponse.json({ success: false, message: error.message }, { status: 400 });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    // const session = await getServerSession(authOptions);
+    // if (session?.user?.role !== "admin") return NextResponse.json({ success: false, message: "Admin access required" }, { status: 401 });
+
+    await connectDB();
+    await Product.deleteMany({}); 
+    return NextResponse.json({ success: true, message: "Catalog cleared for re-upload" });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message });
   }
 }

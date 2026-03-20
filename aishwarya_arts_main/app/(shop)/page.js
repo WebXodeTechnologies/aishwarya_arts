@@ -17,7 +17,7 @@ export default function Home() {
       <Story/>
       <BestSellers/>
       <AboutSection/>
-      <FeaturedProducts/>
+      {/* <FeaturedProducts/> */}
       <Shipping/>
       <Testimonial/>
       <Faq/>
