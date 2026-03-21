@@ -2,8 +2,8 @@
 import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FiHeart, FiArrowRight } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { FiHeart, FiArrowRight, FiAward } from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
 
 const BestSellers = () => {
@@ -16,10 +16,10 @@ const BestSellers = () => {
         const res = await fetch("/api/products");
         const data = await res.json();
         if (data.success) {
-          // We filter for Best Sellers and take only the top 3
+          // Taking a balanced grid: top 6 best sellers
           const filtered = data.data
             .filter((p) => p.isBestSeller === true)
-            .slice(1, 7);
+            .slice(0, 6);
           setProducts(filtered);
         }
       } catch (error) {
@@ -33,171 +33,144 @@ const BestSellers = () => {
 
   if (loading)
     return (
-      <div className="w-full flex justify-center items-center h-100 bg-[#FCFAF7]">
-        <div className="animate-pulse font-cinzel text-amber-800 text-xl tracking-widest uppercase">
-          Curating Masterpieces...
-        </div>
+      <div className="w-full flex flex-col justify-center items-center h-[60vh] bg-white">
+        <div className="w-12 h-12 border-2 border-amber-800 border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="font-outfit text-zinc-400 text-xs tracking-[0.3em] uppercase">Curating Gallery...</p>
       </div>
     );
 
   if (products.length === 0) return null;
 
   return (
-    <section className="w-full relative bg-[#ffffff] py-20 lg:py-32 px-6 overflow-hidden">
-      {/* Texture Overlay */}
+    <section className="w-full bg-white py-16 md:py-24 lg:py-32 overflow-hidden">
+      <div className="max-w-350 mx-auto px-4 md:px-8">
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header Section */}
-        <header className="text-center mb-16 lg:mb-24">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
+        {/* --- Section Header --- */}
+        <header className="max-w-4xl mx-auto mb-12 md:mb-20 flex flex-col items-center text-center">
+          {/* Badge Section - Centered */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-amber-700 font-bold tracking-[0.4em] uppercase text-md  mb-4 block"
+            viewport={{ once: true }}
+            className="flex items-center gap-3 mb-6"
           >
-            Aishwarya Arts Exclusive
-          </motion.span>
+            <span className="h-px w-6 md:w-8 bg-amber-600" />
+            <span className="text-amber-700 font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs">
+              Legacy Collection
+            </span>
+            <span className="h-px w-6 md:w-8 bg-amber-600" />
+          </motion.div>
 
-          <h1 className="text-4xl md:text-7xl  text-slate-900 mb-6 tracking-wide">
-            <span className=" text-zinc-900 font-semibold ">Best Sellers</span>
-          </h1>
+          {/* Main Title - Centered */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-6xl lg:text-7xl font-light text-zinc-900 leading-[1.1] mb-8"
+          >
+            <h1 className="font-bold"> Our Best Sellers</h1>
+          </motion.h2>
 
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="h-px w-12 bg-amber-800/30"></div>
-            <div className="w-2 h-2 rotate-45 bg-amber-800"></div>
-            <div className="h-px w-12 bg-amber-800/30"></div>
-          </div>
-
-          <p className="text-slate-800 text-lg md:text-2xl max-w-2xl mx-auto leading-relaxed font-serif  font-medium">
-            Authentic 22K Gold Tanjore paintings, meticulously hand-curated for
-            those who seek divine elegance.
+          {/* Description - Centered via mx-auto */}
+          <p className="text-zinc-900 text-sm md:text-lg max-w-xl leading-relaxed mx-auto">
+            A curated selection of our most revered Tanjore masterpieces,
+            featuring authentic 22K gold leaf and semi-precious stones.
           </p>
         </header>
 
-        {/* Mapped Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8 w-full max-w-7xl mx-auto px-4">
+        {/* --- Product Grid --- */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16 md:gap-y-24">
           {products.map((product, index) => (
             <motion.article
               key={product._id || index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative flex flex-col w-full bg-white transition-all duration-500"
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              className="group flex flex-col items-center text-center"
             >
-              {/* --- Image Stage --- */}
-              <div className="relative aspect-4/5 w-full overflow-hidden bg-[#F9F9F9] rounded-sm shadow-sm group-hover:shadow-xl transition-shadow duration-500">
-                {/* Main Image */}
-                <Image
-                  src={product.images[0]}
-                  alt={product.title}
-                  fill
-                  className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-                  sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 33vw"
-                />
+              <Link href={`/collections/${product._id}`} className="w-full group/link">
+                {/* Image Stage */}
+                <div className="relative aspect-4/5 w-full overflow-hidden bg-zinc-50 mb-8 rounded-sm">
+                  <Image
+                    src={product.images[0]}
+                    alt={product.title}
+                    fill
+                    className="object-contain p-6 md:p-10 transition-transform duration-[1.5s] ease-out group-hover/link:scale-110"
+                    sizes="(max-w-768px) 100vw, 33vw"
+                  />
 
-                {/* Top Right Actions */}
-                <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
+                  {/* Luxury Authenticity Badge */}
+                  <div className="absolute top-4 left-4">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 border border-zinc-100 shadow-sm">
+                      <FiAward className="text-amber-600" size={12} />
+                      <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-800">22K Gold</span>
+                    </div>
+                  </div>
+
+                  {/* Floating Wishlist */}
                   <button
-                    onClick={() => toast.success("Added to Wishlist")}
-                    className="p-3 bg-white/80 backdrop-blur-md rounded-full text-slate-900 hover:bg-amber-800 hover:text-white transition-all duration-300 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 shadow-sm"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toast.success("Saved to favorites");
+                    }}
+                    className="absolute top-4 right-4 p-3 bg-white rounded-full text-zinc-900 shadow-lg translate-y-2 opacity-0 group-hover/link:translate-y-0 group-hover/link:opacity-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white"
                   >
-                    <FiHeart size={18} />
+                    <FiHeart size={16} />
                   </button>
                 </div>
 
-                {/* Bottom Slide-up Button (Shopify Style) */}
-                <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-20">
-                  <Link
-                    href={`/product/${product.sku}`}
-                    className="w-full bg-slate-900 text-white py-4 font-cinzel text-[10px] tracking-[0.2em] font-bold flex items-center justify-center gap-2 hover:bg-amber-900 transition-colors shadow-2xl"
-                  >
-                    QUICK VIEW{" "}
-                    <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
+                {/* Content Area */}
+                <div className="flex flex-col items-center px-4">
 
-                {/* Subtle Frame Overlay (Inner Shadow) */}
-                <div className="absolute inset-0 border border-black/5 pointer-events-none"></div>
-              </div>
+                  <h3 className="text-xl md:text-2xl font-medium text-zinc-900 mb-3 transition-colors duration-500 group-hover/link:text-amber-800 line-clamp-1">
+                    {product.title}
+                  </h3>
 
-              {/* --- Product Info --- */}
-              <div className="pt-6 flex flex-col items-center text-center">
-                {/* Category Badge */}
-                <span className="text-[10px] font-bold tracking-[0.25em] text-amber-700 uppercase mb-2 opacity-80">
-                  {product.category || "Tanjore Masterpiece"}
-                </span>
-
-                {/* Title */}
-                <h3 className="text-xl md:text-2xl font-cinzel font-semibold text-slate-900 mb-3 group-hover:text-amber-800 transition-colors duration-300 line-clamp-1 px-2">
-                  {product.title}
-                </h3>
-
-                {/* Price Section */}
-                <div className="flex items-baseline gap-3">
-                  {product.offerPrice && (
-                    <span className="text-slate-400 line-through text-sm font-light">
-                      ₹{product.offerPrice.toLocaleString("en-IN")}
+                  <div className="flex items-center gap-3 mb-8">
+                    <span className="text-xl font-bold text-zinc-900">
+                      ₹{product.price.toLocaleString("en-IN")}
                     </span>
-                  )}
-                  <span className="text-2xl font-serif font-bold text-slate-800">
-                    ₹{product.price.toLocaleString("en-IN")}
-                  </span>
-                </div>
+                    {product.offerPrice > product.price && (
+                      <span className="text-zinc-600 line-through text-xs font-light">
+                        ₹{product.offerPrice.toLocaleString("en-IN")}
+                      </span>
+                    )}
 
-                {/* View Details Text (Desktop only underline) */}
-                <div className="mt-4 overflow-hidden">
-                  <Link
-                    href={`/product/${product.sku}`}
-                    className="text-[10px] font-bold tracking-[0.15em] uppercase text-slate-500 hover:text-amber-800 transition-all relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-px after:bg-amber-800 after:transition-all group-hover:after:w-full"
-                  >
-                    Explore Heritage
-                  </Link>
+                  </div>
+
+                  {/* --- SASS STYLE GHOST BUTTON --- */}
+                  <div className="w-full max-w-50 relative overflow-hidden group/btn">
+                    <div className="flex items-center justify-center gap-3 py-3.5 px-6 border border-zinc-900 rounded-full transition-all duration-500 relative z-10 group-hover/btn:border-zinc-900 group-hover/btn:text-white">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em]">View Masterpiece</span>
+                      <FiArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform duration-500" />
+                    </div>
+                    {/* Hover Fill Effect */}
+                    <div className="absolute inset-0 bg-zinc-900 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-out z-0 rounded-full" />
+                  </div>
                 </div>
-              </div>
+              </Link>
             </motion.article>
           ))}
         </div>
 
-        {/* Discover More Link */}
-        <div className="flex justify-center mt-20 md:mt-32 mb-12 px-4">
+        {/* --- Global Footer CTA --- */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="mt-24 md:mt-32 flex justify-center"
+        >
           <Link
             href="/collections"
-            className="group relative flex flex-col items-center w-full max-w-fit"
+            className="group flex items-center gap-8 py-6 px-10 border border-zinc-200 hover:border-amber-800 transition-all duration-500 relative overflow-hidden"
           >
-            {/* The Main Action Button */}
-            <div className="relative flex items-center justify-center gap-4 md:gap-6 px-6 py-4 md:px-12 md:py-5 bg-white border border-slate-200 overflow-hidden transition-all duration-500 group-hover:border-amber-600 group-hover:shadow-[0_20px_40px_-15px_rgba(180,140,80,0.3)]">
-
-              {/* Background Fill Effect (Shopify Style) */}
-              <div className="absolute inset-0 bg-linear-to-r from-amber-400 to-amber-700 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
-
-              {/* Text Label - Adjusted size for responsiveness */}
-              <span className="relative z-10 text-slate-900 font-cinzel text-xs sm:text-sm md:text-md tracking-[0.2em] sm:tracking-[0.4em] font-bold group-hover:text-white transition-colors duration-500 uppercase whitespace-nowrap">
-                Explore Entire Gallery
-              </span>
-
-              {/* The Animated Arrow Container - Hidden on very small screens to save space if needed, or scaled */}
-              <div className="relative z-10 hidden sm:block w-6 md:w-8 h-px bg-slate-400 group-hover:bg-white/50 transition-all duration-500 overflow-hidden">
-                <div className="absolute inset-0 bg-white -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
-              </div>
-
-              <FiArrowRight
-                size={18}
-                className="relative z-10 text-slate-900 group-hover:text-white group-hover:translate-x-2 transition-all duration-500 shrink-0"
-              />
-            </div>
-
-            {/* Secondary "Traditional" Detail */}
-            <div className="mt-6 flex flex-col items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="h-6 md:h-8 w-px bg-linear-to-b from-amber-800 to-transparent"></div>
-              <span className="text-[8px] md:text-[9px] font-bold tracking-[0.2em] text-amber-900 uppercase">
-                Since 2000
-              </span>
-            </div>
-
-            {/* Subtle Decorative Aura */}
-            <div className="absolute -inset-4 bg-amber-100/20 blur-2xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-700 opacity-0 group-hover:opacity-100 hidden md:block"></div>
+            <span className="relative z-10 font-outfit text-sm font-bold uppercase tracking-[0.4em] text-zinc-900 group-hover:text-white transition-colors duration-500">
+              Explore Entire Gallery
+            </span>
+            <FiArrowRight className="relative z-10 text-amber-800 group-hover:text-white group-hover:translate-x-2 transition-all duration-500" />
+            <div className="absolute inset-0 bg-amber-900 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

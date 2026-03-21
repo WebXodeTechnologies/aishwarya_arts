@@ -26,6 +26,7 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
   const imageUrl = product.images?.[0] || "/placeholder-art.jpg";
   const title = product.title || "Gaja Lakshmi Antique Tanjore Painting";
   const displayPrice = product.offerPrice || product.price || 14000;
+  console.log(displayPrice, "display price:")
 
   return (
     <div className="group relative flex flex-col bg-white transition-all duration-500 rounded-4xl p-3 border border-zinc-100 hover:border-amber-200 hover:shadow-[0_20px_50px_-20px_rgba(217,119,6,0.15)]">
@@ -101,8 +102,14 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
             <div className="flex flex-col">
               <span className="text-sm font-semibold uppercase tracking-wide text-zinc-900 mb-1">Authentic Work From</span>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black text-zinc-900">₹{displayPrice?.toLocaleString("en-IN")}</span>
-                <span className="text-sm font-bold text-zinc-400 line-through ml-3">₹{(displayPrice * 1.2).toFixed(0).toLocaleString("en-IN")}</span>
+                <span className="text-2xl font-serif font-black text-zinc-900">
+                  ₹{product.price?.toLocaleString("en-IN")}
+                </span>
+                {product.offerPrice && (
+                  <span className="text-sm font-medium text-zinc-400 line-through">
+                    ₹{product.offerPrice.toLocaleString("en-IN")}
+                  </span>
+                )}
               </div>
             </div>
 

@@ -46,7 +46,7 @@ const ProductSchema = new mongoose.Schema(
     },
     workStyle: {
       type: String,
-      enum: ["3d", "2d", "flat", "embossed"],
+      enum: ["3d", "2d", "flat"],
       default: "3d",
     },
 

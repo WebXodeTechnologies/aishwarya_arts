@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import FilterSidebar from "../../components/Collections/FilterSidebar";
 import ProductGrid from "../../components/Collections/ProductGrid";
 import SortDropdown from "../../components/Collections/SortDropdown";
-import { Loader2, SlidersHorizontal, X } from "lucide-react"; 
+import { Loader2, SlidersHorizontal, X } from "lucide-react";
 
 import axios from "axios";
 
@@ -26,17 +26,17 @@ const CollectionsPage = () => {
   const [filters, setFilters] = useState({
     godName: [],
     workStyle: [],
-    dimensions:[],
+    dimensions: [],
   });
 
   const router = useRouter();
   const { data: session, status } = useSession();
   const { isLoggedIn } = useAuthStore();
-  
+
   const addToCart = useCartStore((state) => state.addToCart);
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
 
-  
+
   useEffect(() => {
     setMounted(true);
     const fetchLiveProducts = async () => {
@@ -73,41 +73,37 @@ const CollectionsPage = () => {
 
   const processedProducts = useMemo(() => {
     let result = [...products];
-    console.log(result, "result");
 
-    // Filter by God Name
+    // 1. Filter by God Name
     if (filters.godName.length > 0) {
-      result = result.filter((p) => 
+      result = result.filter((p) =>
         filters.godName.includes(p.godName?.toLowerCase())
       );
     }
 
-    // Filter by Work Style
-   if (filters.dimensions.length > 0) {
-  }
+    // 2. Filter by Work Style (FIXED: Added the missing logic here)
+    if (filters.workStyle.length > 0) {
+      result = result.filter((p) => 
+        filters.workStyle.includes(p.workStyle?.toLowerCase())
+      );
+    }
 
-  // 3. DIMENSIONS FILTER
-  if (filters.dimensions.length > 0) {
-    result = result.filter((p) => {
-      if (!p.dimensions) return false;
+    // 3. DIMENSIONS FILTER
+    if (filters.dimensions.length > 0) {
+      result = result.filter((p) => {
+        if (!p.dimensions) return false;
 
-      // This normalization handles the " (quotes), X (capital), and spaces
-      const normalize = (str) => 
-        str.toLowerCase()
-           .replace(/["\s]/g, "") 
-           .replace(/[*x]/g, "x"); 
+        const normalize = (str) =>
+          str.toLowerCase()
+            .replace(/["\s]/g, "")
+            .replace(/[*x]/g, "x");
 
-      const productDim = normalize(p.dimensions);
-      const isMatched = filters.dimensions.some(f => normalize(f) === productDim);
+        const productDim = normalize(p.dimensions);
+        return filters.dimensions.some(f => normalize(f) === productDim);
+      });
+    }
 
-      if (filters.dimensions.length > 0) {
-        console.log(`Comparing DB: [${productDim}] with Filter: [${normalize(filters.dimensions[0])}] | Match: ${isMatched}`);
-      }
-      return isMatched;
-    });
-  }
-
-    // Sorting
+    // 4. Sorting
     if (sortBy === "price-low") {
       result.sort((a, b) => (a.offerPrice || a.price) - (b.offerPrice || b.price));
     } else if (sortBy === "price-high") {
@@ -130,23 +126,23 @@ const CollectionsPage = () => {
   };
 
 
-useEffect(() => {
-  const checkGoogleUserProfile = async () => {
-    if (status === "authenticated" && session?.user) {
-      const res = await fetch("/api/users/profile");
-      const result = await res.json();
-      
-      // If a Google user has no phone, they can't buy. Remind them!
-      if (result.success && !result.data.primaryPhone) {
-        toast("Complete your profile to enable express checkout!", {
-          icon: '🎨',
-          duration: 6000,
-        });
+  useEffect(() => {
+    const checkGoogleUserProfile = async () => {
+      if (status === "authenticated" && session?.user) {
+        const res = await fetch("/api/users/profile");
+        const result = await res.json();
+
+        // If a Google user has no phone, they can't buy. Remind them!
+        if (result.success && !result.data.primaryPhone) {
+          toast("Complete your profile to enable express checkout!", {
+            icon: '🎨',
+            duration: 6000,
+          });
+        }
       }
-    }
-  };
-  checkGoogleUserProfile();
-}, [status]);
+    };
+    checkGoogleUserProfile();
+  }, [status]);
 
 
 
@@ -155,7 +151,7 @@ useEffect(() => {
 
     if (!absoluteAuth) {
       toast.error("Please login to add items to cart!");
-      router.push("/login"); 
+      router.push("/login");
       return;
     }
 
@@ -163,9 +159,9 @@ useEffect(() => {
       id: product._id,
       title: product.title,
       // Fallback SKU if not present
-      sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`, 
+      sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
       // Use the product's base price since no matrix selection is made here
-      price: product.offerPrice || product.price, 
+      price: product.offerPrice || product.price,
       image: product.images[0],
       quantity: 1, // Default to 1 from grid view
       size: product.dimensions || "Standard", // Default size from DB
@@ -173,7 +169,7 @@ useEffect(() => {
       style: product.workStyle || "Flat", // Default style from DB
       godName: product.godName
     });
-    
+
     toast.success(`${product.title} added to cart!`);
   };
 
@@ -190,7 +186,7 @@ useEffect(() => {
       id: product._id,
       title: product.title,
       sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
-      price: product.offerPrice || product.price, 
+      price: product.offerPrice || product.price,
       image: product.images[0],
       size: product.dimensions || "Standard",
       frame: product.frameType || "Classic Frame",
@@ -201,7 +197,7 @@ useEffect(() => {
   };
 
   if (!mounted) return null;
-  
+
   return (
     <div className="bg-white min-h-screen font-outfit relative">
       {/* --- MOBILE FILTER DRAWER --- */}
@@ -281,14 +277,14 @@ useEffect(() => {
                 <p className="font-semibold uppercase tracking-wide text-md">Syncing Art Gallery...</p>
               </div>
             ) : products.length > 0 ? (
-              <ProductGrid 
+              <ProductGrid
                 products={processedProducts} // Now using live database signal
-                onWishlistToggle={handleWishlistToggle} 
+                onWishlistToggle={handleWishlistToggle}
                 onAddToCart={handleAddToCart}
               />
             ) : (
               <div className="h-96 flex items-center justify-center border-2 border-dashed border-zinc-100 rounded-[3rem]">
-                 <p className="text-zinc-400 font-bold uppercase tracking-tighter">No masterpieces currently in stock.</p>
+                <p className="text-zinc-400 font-bold uppercase tracking-tighter">No masterpieces currently in stock.</p>
               </div>
             )}
 

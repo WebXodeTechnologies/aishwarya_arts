@@ -38,6 +38,12 @@ const DIMENSIONS = [
   '72" X 48"',
 ];
 
+const WORK_STYLE_LABELS = {
+  flat: "Flat",
+  "2d": "2D",
+  embossed: "3D", // This handles your 66 live products
+};
+
 const ProductPage = ({ params }) => {
   const [mounted, setMounted] = useState(false);
   const [product, setProduct] = useState(null);
@@ -64,6 +70,8 @@ const ProductPage = ({ params }) => {
         const res = await axios.get(`/api/admin/products/${productId}`);
         const data = res.data.data;
         console.log(res.data.data);
+        console.log("🛠️ Technical Spec Debug - WorkStyle:", data.workStyle);
+      console.log("📦 Full Product Object:", data);
         setProduct(data);
         setSelectedSize(data.dimensions);
         setSelectedStyle(data.workStyle || "flat");
@@ -78,6 +86,12 @@ const ProductPage = ({ params }) => {
     };
     fetchProductDetails();
   }, [productId]);
+
+  const availableStyles = useMemo(() => {
+    if (!product || !product.priceMatrix) return [];
+    // This pulls 'flat', '2d', or 'embossed' from your specific 72-row matrix
+    return [...new Set(product.priceMatrix.map((item) => item.style))];
+  }, [product]);
 
   const allGalleryImages = useMemo(() => {
     if (!product) return [];
@@ -252,10 +266,10 @@ const ProductPage = ({ params }) => {
       </div>
     );
 
-  const technicalSpecs = [
+const technicalSpecs = [
     { label: "Divine Subject", value: product.godName },
-    { label: "Work Style", value: product.workStyle },
-    { label: "Frame Type", value: product.frameType },
+    { label: "Work Style", value: WORK_STYLE_LABELS[selectedStyle] || selectedStyle }, 
+    { label: "Frame Type", value: selectedFrame },
     { label: "Lead Time", value: product.leadTime },
   ];
 
@@ -422,12 +436,13 @@ const ProductPage = ({ params }) => {
                         disabled={!isAvailable}
                         onClick={() => setSelectedSize(size)}
                         className={`relative py-2 px-1 rounded-lg border text-lg font-semibold transition-all duration-300
-                        ${!isAvailable
+                        ${
+                          !isAvailable
                             ? "bg-zinc-50 border-zinc-100 text-zinc-400 cursor-not-allowed"
                             : isSelected
                               ? "border-amber-600 bg-amber-900 text-white shadow-md ring-2 ring-amber-100"
                               : "border-zinc-200 bg-white text-zinc-800 hover:border-amber-400"
-                          }`}
+                        }`}
                       >
                         {size.replace(/["\s]/g, "").replace("X", "x")}
                         {!isAvailable && (
@@ -458,9 +473,10 @@ const ProductPage = ({ params }) => {
                       setActiveImage(frame.url); // Use frame URL from GLOBAL_ASSETS
                     }}
                     className={`px-4 py-2 rounded-full border text-md font-semibold uppercase tracking-wider transition-all duration-300
-                      ${selectedFrame === frame.name
-                        ? "bg-amber-900 text-white border-amber-900 shadow-lg scale-105"
-                        : "bg-zinc-50 text-zinc-800 border-zinc-200 hover:border-amber-500 hover:text-amber-800 hover:bg-white"
+                      ${
+                        selectedFrame === frame.name
+                          ? "bg-amber-900 text-white border-amber-900 shadow-lg scale-105"
+                          : "bg-zinc-50 text-zinc-800 border-zinc-200 hover:border-amber-500 hover:text-amber-800 hover:bg-white"
                       }`}
                   >
                     {frame.name.replace(" Frame", "")}
@@ -468,6 +484,55 @@ const ProductPage = ({ params }) => {
                 ))}
               </div>
             </div>
+
+            {/* --- WORK STYLE SELECTION --- */}
+<div className="space-y-4 pt-4">
+  <div className="flex justify-between items-end">
+    <label className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+      Select Work Style
+    </label>
+    <span className="text-[10px] text-amber-600 font-bold uppercase tracking-tight">
+      {selectedStyle === "embossed" ? "Premium 3D Relief" : "Traditional Finish"}
+    </span>
+  </div>
+
+  <div className="flex flex-wrap gap-3">
+    {/* Use availableStyles (extracted from Matrix) instead of hardcoded array */}
+    {availableStyles.map((style) => {
+      const isSelected = selectedStyle === style;
+      const is3D = style === "embossed";
+
+      return (
+        <button
+          key={style}
+          onClick={() => setSelectedStyle(style)}
+          className={`px-6 py-3 rounded-xl border-2 text-[11px] font-bold uppercase tracking-widest transition-all duration-500 flex items-center gap-2
+            ${
+              isSelected
+                ? "border-amber-600 bg-amber-900 text-white shadow-lg scale-[1.02]"
+                : "border-zinc-100 bg-zinc-50 text-zinc-500 hover:border-amber-200 hover:bg-white"
+            }`}
+        >
+          {/* Status Indicator */}
+          <div 
+            className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 
+            ${isSelected ? "bg-white animate-pulse" : "bg-zinc-300"}`} 
+          />
+
+          {/* Label Mapping (shows 3D instead of embossed) */}
+          <span>{WORK_STYLE_LABELS[style] || style}</span>
+
+          {/* Premium Badge for 3D */}
+          {is3D && !isSelected && (
+            <span className="text-[8px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-sm ml-1">
+              PRO
+            </span>
+          )}
+        </button>
+      );
+    })}
+  </div>
+</div>
 
             {/* QUANTITY & ACTIONS */}
             <div className="space-y-6 md:space-y-8">
@@ -523,9 +588,7 @@ const ProductPage = ({ params }) => {
                   </div>
                   Logistics & Delivery
                 </div>
-                <span
-                  className=" inline-flex items-center justify-center bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase md:text-xs md:px-3 md:py-1.5 lg:text-sm lg:px-4 lg:py-2border border-emerald-100/50 shadow-sm whitespace-nowrap"
-                >
+                <span className=" inline-flex items-center justify-center bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase md:text-xs md:px-3 md:py-1.5 lg:text-sm lg:px-4 lg:py-2border border-emerald-100/50 shadow-sm whitespace-nowrap">
                   Safe Transit
                 </span>
               </div>
@@ -615,7 +678,7 @@ const ProductPage = ({ params }) => {
           {[
             {
               icon: <Award />,
-              title: "30+ Years Legacy",
+              title: "20+ Years Legacy",
               desc: "Crafted by master artisans from Thanjavur.",
             },
             {
