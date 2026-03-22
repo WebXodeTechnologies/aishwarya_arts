@@ -45,7 +45,9 @@ export const authOptions = {
         try {
           await connectDB();
           // We select +password because it's hidden in your Schema
-          const user = await User.findOne({ email: inputEmail }).select("+password");
+          const user = await User.findOne({ email: inputEmail }).select(
+            "+password",
+          );
 
           if (!user) {
             console.error("❌ Auth Error: No user found in DB");
@@ -63,7 +65,7 @@ export const authOptions = {
             id: user._id.toString(),
             name: `${user.firstName} ${user.lastName || ""}`.trim(),
             email: user.email,
-            image: user.avatar?.startsWith('data:') ? null : user.avatar,
+            image: user.avatar?.startsWith("data:") ? null : user.avatar,
             role: user.role || "user",
           };
         } catch (error) {
@@ -79,43 +81,49 @@ export const authOptions = {
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
-
     async signIn({ user, account, profile }) {
-    if (account.provider === "google") {
-      try {
-        await connectDB();
-        const googleEmail = user.email.toLowerCase().trim();
-        const existingUser = await User.findOne({ email: user.googleEmail });
+      if (account.provider === "google") {
+        try {
+          await connectDB();
 
-        if (!existingUser) {
-          // Create a new user if they don't exist
-          await User.create({
-            firstName: profile.given_name || user.name.split(" ")[0] || "User",
-            lastName: profile.family_name || user.name.split(" ")[0] || "",
-            email: user.googleEmail,
-            avatar: user.image,
-            role: "user",
-            authProvider: "google",
-          });
+          // 1. Define the normalized email correctly
+          const normalizedEmail = user.email.toLowerCase().trim();
+
+          // 2. Use 'normalizedEmail' for the search
+          const existingUser = await User.findOne({ email: normalizedEmail });
+
+          if (!existingUser) {
+            // 3. Use 'normalizedEmail' for the creation
+            await User.create({
+              firstName:
+                profile?.given_name || user.name?.split(" ")[0] || "User",
+              lastName: profile?.family_name || user.name?.split(" ")[1] || "",
+              email: normalizedEmail,
+              avatar: user.image,
+              role: "user",
+              authProvider: "google",
+            });
+          }
+          return true;
+        } catch (error) {
+          // This will now show you the REAL error in Vercel logs
+          console.error("🚀 Google Sign-In DB Error:", error);
+          return false;
         }
-        return true;
-      } catch (error) {
-        console.error("Error saving Google user:", error);
-        return false;
       }
-    }
-    return true;
-  },
-  
+      return true;
+    },
+
     async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        const isBase64 = typeof user.image === 'string' && user.image.startsWith('data:');
+        const isBase64 =
+          typeof user.image === "string" && user.image.startsWith("data:");
         token.picture = isBase64 ? null : user.image;
       }
       if (trigger === "update" && session?.image) {
-        const isBase64Update = session.image.startsWith('data:');
+        const isBase64Update = session.image.startsWith("data:");
         token.picture = isBase64Update ? null : session.image;
       }
       return token;
@@ -134,4 +142,5 @@ export const authOptions = {
     error: "/auth/error",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  
 };

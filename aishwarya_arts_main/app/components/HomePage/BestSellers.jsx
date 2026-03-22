@@ -47,34 +47,34 @@ const BestSellers = () => {
 
         {/* --- Section Header --- */}
         <header className="max-w-4xl mx-auto mb-12 md:mb-20 flex flex-col items-center text-center">
-          {/* Badge Section - Centered */}
+          {/* 1. Small Badge Above */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="flex items-center gap-3 mb-6"
           >
-            <span className="h-px w-6 md:w-8 bg-amber-600" />
-            <span className="text-amber-700 font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs">
+            <span className="h-px w-8 bg-amber-600" />
+            <span className="text-amber-700 font-bold tracking-[0.3em] uppercase text-[10px]">
               Legacy Collection
             </span>
-            <span className="h-px w-6 md:w-8 bg-amber-600" />
+            <span className="h-px w-8 bg-amber-600" />
           </motion.div>
 
-          {/* Main Title - Centered */}
-          <motion.h2
+          {/* 2. Main H1 Heading */}
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-6xl lg:text-7xl font-light text-zinc-900 leading-[1.1] mb-8"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-zinc-900 leading-[1.1] mb-8"
           >
-            <h1 className="font-bold"> Our Best Sellers</h1>
-          </motion.h2>
+            Our <span className="font-bold">Best</span> Sellers
+          </motion.h1>
 
-          {/* Description - Centered via mx-auto */}
-          <p className="text-zinc-900 text-sm md:text-lg max-w-xl leading-relaxed mx-auto">
-            A curated selection of our most revered Tanjore masterpieces,
-            featuring authentic 22K gold leaf and semi-precious stones.
+          {/* 3. Description Below */}
+          <p className="text-zinc-900 text-sm md:text-lg max-w-xl mx-auto leading-relaxed">
+            Authentic 22K Gold Tanjore paintings, meticulously hand-curated for
+            those who seek divine elegance.
           </p>
         </header>
 
