@@ -84,16 +84,18 @@ export const authOptions = {
     if (account.provider === "google") {
       try {
         await connectDB();
-        const existingUser = await User.findOne({ email: user.email });
+        const googleEmail = user.email.toLowerCase().trim();
+        const existingUser = await User.findOne({ email: user.googleEmail });
 
         if (!existingUser) {
           // Create a new user if they don't exist
           await User.create({
-            firstName: profile.given_name || user.name.split(" ")[0],
-            lastName: profile.family_name || "",
-            email: user.email,
+            firstName: profile.given_name || user.name.split(" ")[0] || "User",
+            lastName: profile.family_name || user.name.split(" ")[0] || "",
+            email: user.googleEmail,
             avatar: user.image,
             role: "user",
+            authProvider: "google",
           });
         }
         return true;
