@@ -14,7 +14,7 @@ const ProductSchema = new mongoose.Schema(
       trim: true,
     },
     // --- DYNAMIC PRICING MATRIX ---
-    // This stores the Excel-style data: [{size: "15x12", style: "flat", price: 11999}]
+   
     priceMatrix: [
       {
         size: { type: String, required: true },
@@ -46,8 +46,8 @@ const ProductSchema = new mongoose.Schema(
     },
     workStyle: {
       type: String,
-      enum: ["3d", "2d", "flat"],
-      default: "3d",
+      enum: ["3D Embossed", "2D Embossed", "flat", "3d", "2d", "embossed"],
+      default: "3D Embossed",
     },
 
     // --- TECHNICAL SPECS ---

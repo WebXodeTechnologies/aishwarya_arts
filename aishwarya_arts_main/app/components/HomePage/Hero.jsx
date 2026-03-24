@@ -1,77 +1,95 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
-import dynamic from "next/dynamic";
-
-const NextImage = dynamic(() => import("next/image"));
+import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const heroImages = [
   "/assets/hero/heroimageswebp/AishwarayaArts-1-cpy.png",
+  "/assets/hero/heroimageswebp/1.png",
   "/assets/hero/heroimageswebp/AishwarayaArts-3.png",
-  "/assets/hero/heroimageswebp/watercolor-elephant-illustration.webp",
-  "/assets/hero/heroimageswebp/womencelebration.webp",
+  "/assets/hero/heroimageswebp/2.png",
+  "/assets/hero/heroimageswebp/3.png",
+  "/assets/hero/heroimageswebp/4.png"
 ];
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
-  const timeoutRef = useRef(null);
-  const delay = 3000;
+  const delay = 5000;
 
-  const resetTimeout = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  const nextSlide = useCallback(() => {
+    setIndex((prev) => (prev + 1) % heroImages.length);
+  }, []);
+
+  const prevSlide = () => {
+    setIndex((prev) => (prev === 0 ? heroImages.length - 1 : prev - 1));
   };
 
   useEffect(() => {
-    resetTimeout();
-    timeoutRef.current = setTimeout(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-    }, delay);
-    return () => resetTimeout();
-  }, [index]);
+    const interval = setInterval(nextSlide, delay);
+    return () => clearInterval(interval);
+  }, [nextSlide]);
 
   return (
-    <section className="relative w-full py-4 overflow-hidden">
-      {/* Slider Wrapper */}
-      <div
-        className="flex transition-transform duration-700 ease-in-out"
-        style={{
-          transform: `translateX(-${index * 100}vw)`,
-        }}
-      >
-        {heroImages.map((src, i) => (
-          <div key={i} className="w-screen shrink-0 flex justify-center px-2">
-            {/* IMAGE BOX */}
-            <div className="w-full max-w-7xl rounded-2xl overflow-hidden">
-              <div className="relative w-full h-105 sm:h-125 md:h-150 lg:h-212.5">
-                <NextImage
+    // Main Wrapper for centering and max-width
+    <section className="w-full py-4 px-2 md:px-0">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Aspect Ratio Container: 4/3 on mobile, 16/9 on desktop */}
+        <div className="relative aspect-4/3 md:aspect-video w-full overflow-hidden rounded-2xl shadow-2xl bg-transparent">
+          
+          {/* Slider Wrapper */}
+          <div
+            className="flex h-full transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {heroImages.map((src, i) => (
+              <div key={src} className="relative min-w-full h-full">
+                <Image
                   src={src}
                   alt={`Hero Image ${i + 1}`}
                   fill
-                  className="object-cover"
+                  priority={i === 0}
+                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  className="object-cover" 
                 />
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+
+          {/* Navigation Controls - Hidden on tiny screens, visible from 'sm' up */}
+          <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
+            <button
+              onClick={prevSlide}
+              className="pointer-events-auto p-2 md:p-3 rounded-full bg-white/90 hover:bg-white text-black transition-all shadow-md active:scale-90"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="pointer-events-auto p-2 md:p-3 rounded-full bg-white/90 hover:bg-white text-black transition-all shadow-md active:scale-90"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+          </div>
+
+          {/* Pagination Indicators */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {heroImages.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-1.5 transition-all rounded-full ${
+                  index === i ? "w-8 bg-white" : "w-2 bg-white/40 hover:bg-white/60"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
       </div>
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={() =>
-          setIndex((prev) => (prev === 0 ? heroImages.length - 1 : prev - 1))
-        }
-        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2
-        bg-white text-black rounded-full w-12 h-12 items-center justify-center shadow-xl"
-      >
-        ‹
-      </button>
-
-      <button
-        onClick={() => setIndex((prev) => (prev + 1) % heroImages.length)}
-        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2
-        bg-white text-black rounded-full w-12 h-12 items-center justify-center shadow-xl"
-      >
-        ›
-      </button>
     </section>
   );
 }

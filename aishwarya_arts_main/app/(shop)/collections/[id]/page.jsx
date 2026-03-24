@@ -41,7 +41,7 @@ const DIMENSIONS = [
 const WORK_STYLE_LABELS = {
   flat: "Flat",
   "2d": "2D",
-  embossed: "3D", // This handles your 66 live products
+  embossed: "3D Embossed", // This handles your 66 live products
 };
 
 const ProductPage = ({ params }) => {
@@ -328,7 +328,7 @@ const technicalSpecs = [
                 src={activeImage}
                 alt={product.title || "Masterpiece"}
                 fill
-                className={`object-contain p-4 transition-opacity duration-300 ${zoomData.show ? "lg:opacity-0 opacity-0" : "opacity-100"}`}
+                className={`object-contain p-4 transition-opacity duration-300 ${zoomData.show ? "xl:opacity-0" : "opacity-100"}`}
                 priority
               />
               {zoomData.show && (
@@ -678,7 +678,7 @@ const technicalSpecs = [
           {[
             {
               icon: <Award />,
-              title: "20+ Years Legacy",
+              title: "25+ Years Legacy",
               desc: "Crafted by master artisans from Thanjavur.",
             },
             {
