@@ -10,16 +10,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { month: "Jan", revenue: 45000 },
-  { month: "Feb", revenue: 52000 },
-  { month: "Mar", revenue: 48000 },
-  { month: "Apr", revenue: 70000 },
-  { month: "May", revenue: 61000 },
-  { month: "Jun", revenue: 85000 },
-  { month: "Jul", revenue: 78000 },
-];
-
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
@@ -36,7 +26,8 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-const SalesChart = () => {
+// Accept chartData as a prop from the Dashboard
+const SalesChart = ({ chartData = [] }) => {
   return (
     <div className="bg-white rounded-[2.5rem] p-8 border border-zinc-100 shadow-sm h-full flex flex-col">
       <div className="flex items-center justify-between mb-8">
@@ -45,7 +36,7 @@ const SalesChart = () => {
             Revenue Analytics
           </h2>
           <p className="text-[10px] text-zinc-800 font-bold uppercase tracking-[0.2em] mt-2">
-            7-Month Performance Trend
+            Performance Trend
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -54,9 +45,10 @@ const SalesChart = () => {
         </div>
       </div>
 
-      <div className="flex-1 w-full min-h-[300px] -ml-6 mt-4">
+      <div className="flex-1 w-full min-h-75 -ml-6 mt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data}>
+          {/* Use the chartData prop here */}
+          <AreaChart data={chartData}>
             <defs>
               <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.15} />
@@ -79,7 +71,7 @@ const SalesChart = () => {
               axisLine={false} 
               tickLine={false} 
               tick={{ fill: '#a1a1aa', fontSize: 10, fontWeight: 600 }}
-              tickFormatter={(value) => `₹${value / 1000}k`}
+              tickFormatter={(value) => value >= 100000 ? `₹${(value / 100000).toFixed(1)}L` : `₹${value / 1000}k`}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#f59e0b', strokeWidth: 1, strokeDasharray: '4 4' }} />
             <Area
