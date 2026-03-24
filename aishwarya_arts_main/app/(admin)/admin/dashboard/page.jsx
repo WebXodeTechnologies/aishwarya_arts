@@ -43,28 +43,28 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           label="Total Revenue"
-          value={`₹${(data.stats.totalRevenue / 100000).toFixed(1)}L`}
+          value={`₹${((data?.stats?.totalRevenue || 0) / 100000).toFixed(1)}L`}
           change="+12%"
           Icon={DollarSign}
           trend="up"
         />
         <StatCard
           label="Active Orders"
-          value={data.stats.activeOrders}
+          value={data?.stats?.activeOrders || 0}
           change="+4"
           Icon={Package}
           trend="up"
         />
         <StatCard
           label="New Patrons"
-          value={data.stats.totalPatrons}
+          value={data?.stats?.totalPatrons || 0}
           change="-2"
           Icon={Users}
           trend="down"
         />
         <StatCard
           label="Artworks Sold"
-          value={data.stats.artworkSold}
+          value={data?.stats?.artworkSold || 0}
           change="+18%"
           Icon={Palette}
           trend="up"
@@ -73,20 +73,19 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <SalesChart  chartData={data.chartData}/>
+          <SalesChart  chartData={data.chartData || []}/>
         </div>
         <div>
           <RecentPatrons patrons={data.recentOrders || []} />
         </div>
       </div>
       <div>
-        <ClientTable />
+        <ClientTable  tableData={data?.tableData || []}/>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <InventoryAlerts items={data.lowStock} />
-        <LogisticsPulse/>
+        <InventoryAlerts items={data?.lowStock || []} />
+        <LogisticsPulse orders={data?.logisticsPulse || []}/>
       </div>
-      
     </div>
   );
 }

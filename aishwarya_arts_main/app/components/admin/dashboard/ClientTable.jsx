@@ -1,59 +1,25 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { MoreHorizontal, Eye, Truck, CheckCircle2, Clock, Mail, Phone } from "lucide-react";
-
-
-const ClientTable = () => {
-
-    const tableData = [
-  {
-    id: "ORD-7241",
-    name: "TT Art Gallery",
-    email: "",
-    phone: "+91 98450 12345",
-    painting: "Goddess Lakshmi",
-    amount: "₹45,000",
-    status: "Shipped",
-    date: "Feb 22, 2026"
-  },
-  {
-    id: "ORD-7242",
-    name: "Mangala Arts",
-    email: "",
-    phone: "+91 99001 88722",
-    painting: "Krishna Rasa Leela",
-    amount: "₹1,25,000",
-    status: "Processing",
-    date: "Feb 23, 2026"
-  },
-  {
-    id: "ORD-7243",
-    name: "Sandiv Art Gallery",
-    email: "",
-    phone: "+91 98860 55432",
-    painting: "Tanjore Royal Court",
-    amount: "₹85,000",
-    status: "Delivered",
-    date: "Feb 21, 2026"
-  }
-];
+import { MoreHorizontal, Eye, Mail, Phone } from "lucide-react";
 
 const StatusBadge = ({ status }) => {
   const styles = {
     Shipped: "bg-blue-50 text-blue-600 border-blue-100",
     Processing: "bg-amber-50 text-amber-600 border-amber-100",
     Delivered: "bg-green-50 text-green-600 border-green-100",
+    Pending: "bg-zinc-50 text-zinc-500 border-zinc-100",
   };
 
   return (
-    <span className={`px-3 py-1 rounded-full text-[10px] font-bold border ${styles[status]}`}>
+    <span className={`px-3 py-1 rounded-full text-[10px] font-bold border ${styles[status] || styles.Pending}`}>
       {status}
     </span>
   );
 };
 
-
+// 🟢 Accept tableData as a prop
+const ClientTable = ({ tableData = [] }) => {
   return (
     <div className="bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm overflow-hidden">
       <div className="p-8 border-b border-zinc-50 flex items-center justify-between">
@@ -79,51 +45,57 @@ const StatusBadge = ({ status }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-50">
-            {tableData.map((row, i) => (
-              <motion.tr 
-                key={row.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="hover:bg-amber-50/30 transition-colors group"
-              >
-                <td className="p-5 pl-8 text-xs font-bold text-amber-600">{row.id}</td>
-                <td className="p-5">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-zinc-900">{row.name}</span>
-                    <div className="flex items-center gap-3 mt-1 text-zinc-800">
-                      <span className="flex items-center gap-1 text-[12px] font-medium"><Mail size={10}/> {row.email}</span>
-                      <span className="flex items-center gap-1 text-[12px] font-medium"><Phone size={10}/> {row.phone}</span>
+            {tableData.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="p-10 text-center text-zinc-400 text-xs italic">No orders found in the ledger.</td>
+              </tr>
+            ) : (
+              tableData.map((row, i) => (
+                <motion.tr 
+                  key={row.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="hover:bg-amber-50/30 transition-colors group"
+                >
+                  <td className="p-5 pl-8 text-xs font-bold text-amber-600">{row.id}</td>
+                  <td className="p-5">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-zinc-900">{row.name}</span>
+                      <div className="flex items-center gap-3 mt-1 text-zinc-500">
+                        {row.email && <span className="flex items-center gap-1 text-[11px]"><Mail size={10}/> {row.email}</span>}
+                        {row.phone && <span className="flex items-center gap-1 text-[11px]"><Phone size={10}/> {row.phone}</span>}
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="p-5 text-xs font-medium text-zinc-800">{row.painting}</td>
-                <td className="p-5 text-sm font-semibold text-zinc-900">{row.amount}</td>
-                <td className="p-5">
-                  <StatusBadge status={row.status} />
-                </td>
-                <td className="p-5 text-right pr-8">
-                  <div className="flex items-center justify-end gap-2">
-                    <button className="p-2 hover:bg-white rounded-lg text-zinc-400 hover:text-amber-600 shadow-sm border border-transparent hover:border-amber-100 transition-all">
-                      <Eye size={16} />
-                    </button>
-                    <button className="p-2 hover:bg-white rounded-lg text-zinc-400 hover:text-zinc-900 shadow-sm border border-transparent hover:border-zinc-200 transition-all">
-                      <MoreHorizontal size={16} />
-                    </button>
-                  </div>
-                </td>
-              </motion.tr>
-            ))}
+                  </td>
+                  <td className="p-5 text-xs font-medium text-zinc-800 max-w-50 truncate">{row.painting}</td>
+                  <td className="p-5 text-sm font-semibold text-zinc-900">{row.amount}</td>
+                  <td className="p-5">
+                    <StatusBadge status={row.status} />
+                  </td>
+                  <td className="p-5 text-right pr-8">
+                    <div className="flex items-center justify-end gap-2">
+                      <button className="p-2 hover:bg-white rounded-lg text-zinc-400 hover:text-amber-600 shadow-sm border border-transparent hover:border-amber-100 transition-all">
+                        <Eye size={16} />
+                      </button>
+                      <button className="p-2 hover:bg-white rounded-lg text-zinc-400 hover:text-zinc-900 shadow-sm border border-transparent hover:border-zinc-200 transition-all">
+                        <MoreHorizontal size={16} />
+                      </button>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
       <div className="p-6 bg-zinc-50/30 text-center">
         <button className="text-[10px] font-bold text-zinc-800 uppercase tracking-widest hover:text-amber-600 transition-colors">
-          Show More Transactions
+          View All Transactions
         </button>
       </div>
     </div>
   );
 }
 
-export default ClientTable
+export default ClientTable;
