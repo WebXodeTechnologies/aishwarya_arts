@@ -54,7 +54,7 @@ const CollectionsPage = () => {
         }
         // 3. Extract and Validate Array
         const rawData = res.data?.data || [];
-        console.log("📦 DATA EXTRACTED FROM WRAPPER:", rawData);
+        
         const publicProducts = rawData.filter(p => p.inStock);
         setProducts(publicProducts);
       } catch (err) {
