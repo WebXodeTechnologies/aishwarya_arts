@@ -30,11 +30,11 @@ const AccountSidebar = () => {
       if (data.success && data.data) {
         // Update Image
         if (data.data.avatar) setDbImage(data.data.avatar);
-        
+
         // 2. Update Name: Priority DB -> Session -> Fallback
         const fName = data.data.firstName?.trim();
         const lName = data.data.lastName?.trim();
-        
+
         if (fName) {
           setDisplayName(`${fName} ${lName || ""}`);
         } else {
@@ -128,7 +128,7 @@ const AccountSidebar = () => {
                 height={96}
                 className="object-cover"
                 priority
-                onError={() => setImgError(true)} // Stops the infinite loop
+                onError={() => setImgError(true)}
               />
             ) : (
               <span className="text-amber-800 font-bold text-3xl uppercase">

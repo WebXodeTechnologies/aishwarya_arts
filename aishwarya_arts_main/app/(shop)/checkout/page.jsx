@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ShieldCheck, ChevronLeft, ChevronRight, Lock,
-  CheckCircle2, Info, Truck, Landmark, Wallet, CreditCard
+  CheckCircle2, Info, Truck, CreditCard, Wallet
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
@@ -18,8 +18,6 @@ const CheckoutPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
-  
-  // Default to ONLINE for a premium experience
   const [paymentMethod, setPaymentMethod] = useState("ONLINE");
 
   const cart = useCartStore((state) => state.cart);
@@ -31,10 +29,11 @@ const CheckoutPage = () => {
     altPhone: "", primaryPhone: ""
   });
 
+
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const gstAmount = Math.round(subtotal * 0.05);
   const shippingCost = subtotal > 50000 ? 0 : 650;
-  const total = subtotal + gstAmount + shippingCost;
+  const total = subtotal + shippingCost;
+
 
   useEffect(() => {
     setMounted(true);
@@ -63,10 +62,10 @@ const CheckoutPage = () => {
     if (session) loadUserData();
   }, [session, cart.length, router, mounted]);
 
-  // --- LOGIC: FINALIZE ORDER IN DB ---
   const finalizeOrder = async (paymentResponse = null) => {
     const loadingToast = toast.loading(paymentResponse ? "Verifying Payment..." : "Placing Order...");
-    
+
+
     try {
       const payload = {
         orderItems: cart,
@@ -106,45 +105,58 @@ const CheckoutPage = () => {
     }
   };
 
-  // --- LOGIC: HANDLE PAYMENT TRIGGER ---
   const handleCheckoutTrigger = async () => {
+    // 1. COD LOGIC
     if (paymentMethod === "COD") {
       setIsProcessing(true);
       return await finalizeOrder();
     }
 
+    // 2. ONLINE PAYMENT LOGIC
     if (paymentMethod === "ONLINE") {
       setIsProcessing(true);
       const loadingToast = toast.loading("Connecting to secure gateway...");
 
       try {
+
         const res = await fetch("/api/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ cartItems: cart }),
         });
+
         const data = await res.json();
 
-        if (!data.success) throw new Error(data.message);
+
+        // 🟢 SAFETY CHECK: If backend fails, stop immediately
+        if (!data.success) throw new Error(data.message || "Could not create order");
 
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
+          // 🟢 KEY: Must be your Public Key from .env
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+
+          // 🟢 AMOUNT: data.amount is ALREADY in Paise (e.g., 50000 for ₹500)
+          // Do not multiply by 100 here!
           amount: data.amount,
-          currency: "INR",
+          currency: data.currency || "INR",
           name: "Aishwarya Arts",
-          description: "Heritage Tanjore Artwork",
+          description: "Heritage Tanjore Artwork (GST Inclusive)",
           order_id: data.orderId,
+
           handler: async function (response) {
-            await finalizeOrder(response); 
+            // response contains: razorpay_payment_id, razorpay_order_id, razorpay_signature
+            await finalizeOrder(response);
           },
           prefill: {
             name: `${formData.firstName} ${formData.lastName}`,
             email: session?.user?.email,
             contact: formData.primaryPhone,
           },
-          theme: { color: "#000000" },
+          theme: {
+            color: "#B8860B"
+          },
           modal: {
-            ondismiss: function() {
+            ondismiss: function () {
               setIsProcessing(false);
               toast.dismiss(loadingToast);
             }
@@ -153,14 +165,18 @@ const CheckoutPage = () => {
 
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();
+
+        // 🟢 Close the "Connecting" toast once the modal opens
         toast.dismiss(loadingToast);
 
       } catch (error) {
+        console.error("Razorpay Frontend Error:", error);
         toast.error(error.message, { id: loadingToast });
         setIsProcessing(false);
       }
     }
   };
+
 
   const validateStep1 = () => {
     const { firstName, lastName, address, city, state, pincode } = formData;
@@ -181,8 +197,7 @@ const CheckoutPage = () => {
   return (
     <div className="min-h-screen bg-white text-black font-outfit">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      
-      {/* --- HEADER --- */}
+
       <header className="border-b border-gray-100 py-6">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <Link href="/">
@@ -265,7 +280,6 @@ const CheckoutPage = () => {
               <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
                 <h3 className="text-xl font-bold">Select Payment</h3>
                 <div className="space-y-4">
-                  {/* ONLINE */}
                   <div
                     onClick={() => setPaymentMethod("ONLINE")}
                     className={`p-6 border-2 rounded-2xl cursor-pointer flex items-center gap-4 transition-all ${paymentMethod === 'ONLINE' ? 'border-amber-500 bg-amber-50/20' : 'border-gray-100 hover:border-zinc-200'}`}
@@ -278,7 +292,6 @@ const CheckoutPage = () => {
                     <div className={`w-5 h-5 rounded-full border-4 ${paymentMethod === 'ONLINE' ? 'border-amber-600' : 'border-gray-200'}`} />
                   </div>
 
-                  {/* COD */}
                   <div
                     onClick={() => setPaymentMethod("COD")}
                     className={`p-6 border-2 rounded-2xl cursor-pointer flex items-center gap-4 transition-all ${paymentMethod === 'COD' ? 'border-black bg-zinc-50' : 'border-gray-100 hover:border-zinc-200'}`}
@@ -294,8 +307,8 @@ const CheckoutPage = () => {
 
                 <div className="pt-8 flex items-center justify-between border-t">
                   <button onClick={() => setCurrentStep(2)} className="text-xs font-bold uppercase tracking-widest flex items-center gap-2"><ChevronLeft size={16} /> Return to Shipping</button>
-                  <button 
-                    onClick={handleCheckoutTrigger} 
+                  <button
+                    onClick={handleCheckoutTrigger}
                     disabled={isProcessing}
                     className="px-12 py-5 bg-black text-white rounded-xl text-xs font-bold uppercase tracking-widest shadow-xl disabled:opacity-50 flex items-center gap-2"
                   >
@@ -334,14 +347,18 @@ const CheckoutPage = () => {
                 <span>Subtotal</span>
                 <span className="text-black">₹{subtotal.toLocaleString("en-IN")}</span>
               </div>
+
+              {/* 🟢 GST INFO (NOW INCLUSIVE) */}
               <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-zinc-500">
-                <span className="flex items-center gap-1">GST (5%) <Info size={12} /></span>
-                <span className="text-black">₹{gstAmount.toLocaleString("en-IN")}</span>
+                <span className="flex items-center gap-1">Tax (GST)</span>
+                <span className="text-emerald-600 font-black">INCLUSIVE</span>
               </div>
+
               <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-zinc-500">
                 <span>Shipping</span>
                 <span className={shippingCost === 0 ? "text-emerald-600 font-black" : "text-black"}>{shippingCost === 0 ? "FREE" : `₹${shippingCost}`}</span>
               </div>
+
               <div className="flex justify-between items-center pt-6 mt-6 border-t-2 border-black">
                 <div className="flex flex-col">
                   <span className="text-xs font-black uppercase tracking-widest">Total</span>
@@ -356,7 +373,7 @@ const CheckoutPage = () => {
                 <ShieldCheck className="text-emerald-600 shrink-0" size={20} />
                 <div>
                   <p className="text-[10px] font-black text-black uppercase tracking-widest">Authentic Heritage</p>
-                  <p className="text-[10px] leading-relaxed text-gray-400 font-medium">Includes 22K Gold Foil Certificate of Authenticity.</p>
+                  <p className="text-[10px] leading-relaxed text-gray-400 font-medium italic">Includes GST & 22K Gold Foil Certificate.</p>
                 </div>
               </div>
             </div>

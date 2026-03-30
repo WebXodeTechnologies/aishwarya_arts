@@ -14,7 +14,7 @@ export default function UserDropdown() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setUser({ name: "User" }); // You can decode real name later
+      setUser({ name: "User" });
     }
   }, []);
 
@@ -29,7 +29,7 @@ export default function UserDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (!user) return null; // user not logged in → return nothing
+  if (!user) return null;
 
   const logout = () => {
     localStorage.removeItem("token");
