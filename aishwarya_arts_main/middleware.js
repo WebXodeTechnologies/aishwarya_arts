@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 
 export async function middleware(req) {
   const path = req.nextUrl.pathname;
+  
+ if (path.startsWith("/api/uploadthing") || path.startsWith("/api/admin/banner")) {
+    return NextResponse.next();
+  }
+
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   // 1. If they are trying to access Admin pages
