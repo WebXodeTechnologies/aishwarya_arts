@@ -3,7 +3,6 @@ import "./globals.css";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
 
-
 const titillium = Titillium_Web({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700", "900"],
@@ -62,7 +61,7 @@ export default function RootLayout({ children }) {
     url: "https://aishwaryaartgallery.com",
     logo: "https://aishwaryaartgallery.com/logo.png",
   };
-   
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -74,7 +73,6 @@ export default function RootLayout({ children }) {
       <body className={`${titillium.variable} antialiased font-sans`}>
         <Providers>
           <Toaster position="top-center" />
-          {/* This renders either the (shop) layout or the (admin) layout */}
           {children}
         </Providers>
       </body>
