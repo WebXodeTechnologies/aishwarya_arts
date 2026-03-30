@@ -81,10 +81,17 @@ const Story = () => {
           <div className=" flex justify-center items-center">
             <Button
               href="/about"
-              color="emerald"
-              className="bg-linear-to-r from-yellow-700 to-yellow-500 shadow-md hover:shadow-xl hover:-translate-y-0.5  hover:bg-[#000000] transition transform duration-300 hover:scale-105 text-white"
+              className="group relative px-10 py-5 bg-zinc-900 overflow-hidden rounded-2xl transition-all duration-500 hover:shadow-[0_20px_40px_rgba(184,134,11,0.2)] active:scale-95"
             >
-              Know About us
+              {/* Subtle Shimmer Background */}
+              <div className="absolute inset-0 bg-linear-to-tr from-[#B8860B] via-[#FFD700] to-[#B8860B] opacity-90 group-hover:opacity-100 transition-opacity" />
+
+              {/* Light Flare Animation */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-linear-to-r from-transparent via-white/40 to-transparent" />
+
+              <span className="relative flex items-center gap-3 text-black font-semibold  text-md">
+                Know More
+              </span>
             </Button>
           </div>
         </motion.div>
