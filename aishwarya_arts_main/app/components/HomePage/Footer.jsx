@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LogoMain from "../../../public/Logo.png";
-import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter, FaPinterestSquare } from "react-icons/fa";
 import Logo from "../../../public/LOGO.svg";
 
 const Footer = () => {
@@ -120,7 +120,7 @@ const Footer = () => {
       {/* Social Links */}
       <div className="flex justify-center items-center py-6 space-x-6 text-2xl">
         <a
-          href="https://facebook.com"
+          href="https://www.facebook.com/profile.php?id=61574363010344"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Facebook"
@@ -129,7 +129,7 @@ const Footer = () => {
           <FaFacebookF />
         </a>
         <a
-          href="https://instagram.com"
+          href="https://www.instagram.com/tanjorepaintings_aishwaryaarts/?hl=en"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Instagram"
@@ -138,7 +138,7 @@ const Footer = () => {
           <FaInstagram />
         </a>
         <a
-          href="https://youtube.com"
+          href="https://www.youtube.com/@AishwaryaArts-ofc"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="YouTube"
@@ -147,13 +147,13 @@ const Footer = () => {
           <FaYoutube />
         </a>
         <a
-          href="https://twitter.com"
+          href="https://pin.it/6CVwoCFwO"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Twitter"
           className="hover:text-sky-400 transition"
         >
-          <FaTwitter />
+          <FaPinterestSquare  />
         </a>
       </div>
 
