@@ -41,7 +41,7 @@ const DIMENSIONS = [
 const WORK_STYLE_LABELS = {
   flat: "Flat",
   "2d": "2D",
-  embossed: "3D Embossed", // This handles your 66 live products
+  embossed: "3D Embossed", 
 };
 
 const ProductPage = ({ params }) => {
@@ -69,9 +69,6 @@ const ProductPage = ({ params }) => {
       try {
         const res = await axios.get(`/api/admin/products/${productId}`);
         const data = res.data.data;
-        console.log(res.data.data);
-        console.log("🛠️ Technical Spec Debug - WorkStyle:", data.workStyle);
-      console.log("📦 Full Product Object:", data);
         setProduct(data);
         setSelectedSize(data.dimensions);
         setSelectedStyle(data.workStyle || "flat");
@@ -89,7 +86,6 @@ const ProductPage = ({ params }) => {
 
   const availableStyles = useMemo(() => {
     if (!product || !product.priceMatrix) return [];
-    // This pulls 'flat', '2d', or 'embossed' from your specific 72-row matrix
     return [...new Set(product.priceMatrix.map((item) => item.style))];
   }, [product]);
 
@@ -142,64 +138,7 @@ const ProductPage = ({ params }) => {
     if (product) setSelectedSize(product.dimensions);
   }, [product]);
 
-  // --- DEBUG CONSOLE STATEMENTS ---
-  useEffect(() => {
-    if (product && product.priceMatrix) {
-      console.group("🏷️ Price Matrix Debugging");
-
-      // 1. Check current state values being used for search
-      console.log(
-        "Current State -> Size:",
-        selectedSize,
-        "| Style:",
-        selectedStyle,
-        "| Frame:",
-        selectedFrame,
-      );
-
-      // 2. Check normalized values (how the code "sees" the match)
-      const searchSize = normalize(selectedSize);
-      const searchStyle = normalize(selectedStyle);
-      console.log(
-        "Normalized Search -> Size:",
-        searchSize,
-        "| Style:",
-        searchStyle,
-      );
-
-      // 3. Look at one sample from your DB to see if strings match
-      const sample = product.priceMatrix[0];
-      if (sample) {
-        console.log(
-          "DB Sample Item -> Size:",
-          sample.size,
-          "| Style:",
-          sample.style,
-          "| Frame:",
-          sample.frame,
-        );
-        console.log(
-          "DB Sample Normalized -> Size:",
-          normalize(sample.size),
-          "| Style:",
-          normalize(sample.style),
-        );
-      }
-
-      // 4. Final Match Result
-      console.log("Match Found:", currentSelection);
-      console.log("Display Price Result:", displayPrice);
-
-      console.groupEnd();
-    }
-  }, [
-    selectedSize,
-    selectedStyle,
-    selectedFrame,
-    product,
-    currentSelection,
-    displayPrice,
-  ]);
+ 
 
   // --- CALIBRATED INTERACTION HANDLER FOR ALL SCREENS ---
   const handleInteraction = (e) => {
@@ -407,7 +346,7 @@ const technicalSpecs = [
               </div>
 
               <div className="flex items-center gap-2 text-xs md:text-md font-semibold text-amber-700 uppercase tracking-widest bg-amber-50/50 w-fit px-4 py-1.5 rounded-full border border-amber-100/50">
-                <CheckCircle2 size={12} /> Authentic 22ct Gold Foil
+                <CheckCircle2 size={12} /> Authentic 22K Gold Foil
               </div>
             </header>
 
@@ -660,14 +599,14 @@ const technicalSpecs = [
                 The Story
               </h3>
               <h2 className="text-3xl md:text-5xl font-semibold text-zinc-900 tracking-tight leading-tight">
-                {product.storyTitle || "Heritage in Every Stroke"}
+                {product.storyTitle?.replace(/22ct/gi, "22K") || "Heritage in Every Stroke"}
               </h2>
               <div className="space-y-4">
                 <p className="text-zinc-700 text-lg md:text-xl leading-relaxed font-medium">
-                  {product.description}
+                  {product.description?.replace(/22ct/gi, "22K")}
                 </p>
                 <p className="text-zinc-500 text-md md:text-lg leading-relaxed italic border-l-4 border-amber-200 pl-6 py-2">
-                  {product.detailedDescription}
+                  {product.detailedDescription.replace(/22ct/gi, "22K")}
                 </p>
               </div>
             </div>
@@ -683,7 +622,7 @@ const technicalSpecs = [
             },
             {
               icon: <Zap />,
-              title: "22ct Gold foil",
+              title: "22K Gold foil",
               desc: "Certified original gold leaf used.",
             },
             {

@@ -7,7 +7,6 @@ const PrintableInvoice = forwardRef(
     // Invoice Number Logic: AG-DDMMYYYY-001
     const date = new Date(order.createdAt);
     const formattedDate = `${date.getDate().toString().padStart(2, "0")}${(date.getMonth() + 1).toString().padStart(2, "0")}${date.getFullYear()}`;
-    console.log("Current Order Data for Invoice:", order);
     const invoiceNo = `AG-${formattedDate}-001`;
 
     

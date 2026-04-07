@@ -16,7 +16,7 @@ export default function BlogDetail({ params }) {
       <img
         src={post.image}
         alt={post.title}
-        className="w-full h-auto rounded-xl mb-8"
+        className="w-full aspect-square h-auto rounded-xl mb-8 object-contain"
       />
 
       <div

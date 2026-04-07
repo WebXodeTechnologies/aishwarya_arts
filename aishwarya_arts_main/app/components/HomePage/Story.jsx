@@ -7,7 +7,7 @@ import Button from "./Button";
 
 const images = [
   "/assets/aboutCTA/2.webp",
-  "/assets/aboutCTA/3.webp",
+  "/assets/aboutCTA/about.png",
   "/assets/aboutCTA/4.webp",
   "/assets/aboutCTA/5.webp",
 ];

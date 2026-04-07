@@ -37,7 +37,7 @@ const Footer = () => {
 
             {/* THE MISSION (Improved Content) */}
             <p className="text-sm leading-relaxed text-zinc-900 max-w-xs font-normal">
-              Every stroke a story, every leaf a legacy. We bring the
+              Every stroke is a story and every leaf is a legacy. We bring the
               16th-century soul of Tamil Nadu to your modern sanctuary.
             </p>
 
@@ -96,19 +96,19 @@ const Footer = () => {
             <li>
               <a
                 href="mailto:contact.aishwaryaarts@gmail.com"
-                className="hover:underline"
+                className="hover:underline underline"
               >
                 contact.aishwaryaarts@gmail.com
               </a>
             </li>
             <li>
               <a href="tel:+919655007661" className="hover:underline">
-                +91 9655007661
+                +91 7550152764
               </a>
             </li>
             <li>
               <a href="tel:+919655007661" className="hover:underline">
-                +91 7550152764
+                +91 9655007661
               </a>
             </li>
             <li>3/648, Thuraiyur Road, N. Kosavampatti</li>

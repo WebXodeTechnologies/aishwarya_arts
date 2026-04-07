@@ -12,7 +12,7 @@ export async function GET(req, { params }) {
       "user",
       "firstName lastName email primaryPhone address",
     );
-    console.log("--- RAW DATABASE ORDER ---", JSON.stringify(order, null, 2));
+   
 
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });

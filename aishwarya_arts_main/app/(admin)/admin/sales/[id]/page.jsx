@@ -20,7 +20,6 @@ const OrderDetail = () => {
       try {
         const res = await fetch(`/api/admin/sales/${id}`);
         const data = await res.json();
-        console.log("--- FRONTEND RECEIVED DATA ---", data);
         if (data.error) throw new Error(data.error);
         setOrder(data);
       } catch (error) {
