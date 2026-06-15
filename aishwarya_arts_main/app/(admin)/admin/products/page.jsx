@@ -58,6 +58,13 @@ const GODS = [
   "Narashimar",
   "Kamatchi amman",
   "Ratha krishnan",
+  "Balaji",
+  "Ayyapan",
+  "Pooja Set",
+  "Big Painting",
+  "Kalabhairavar",
+  "EllaiAmman",
+  "Shiva Lingam",
 ];
 
 const ART_STYLES = [

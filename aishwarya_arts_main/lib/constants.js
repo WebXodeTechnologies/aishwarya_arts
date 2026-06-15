@@ -6,17 +6,17 @@ export const GLOBAL_ASSETS = {
     { 
       id: "classic", 
       name: "Classic Frame", 
-      url: "https://qfx58e3ty7.ufs.sh/f/cInulwx0r2NfZIHEndG5Ms7UadVfhSXZl9GwAPz1vxmnpe8c" 
+      url: "https://dlranh09xa.ufs.sh/f/wIfrl1CCrEbx6quENWmpICPbW73hSfNOUBavTFDJtui2zjQ4" 
     },
     { 
       id: "mani", 
       name: "Mani Frame", 
-      url: "https://qfx58e3ty7.ufs.sh/f/cInulwx0r2NfROjrP1VqmC5bhQ2ZF8u9JTlpvViMt7adNzfB" 
+      url: "https://dlranh09xa.ufs.sh/f/wIfrl1CCrEbxyWMJjqqYhmXwJPlDEpos0iHTxvSk2b5aedZj" 
     },
     { 
       id: "chettinad", 
       name: "Chettinad Frame", 
-      url: "https://qfx58e3ty7.ufs.sh/f/cInulwx0r2NfeB4nyWrW2a4CpzDJyMNKsrLf3T5G6IqRig0h" 
+      url: "https://dlranh09xa.ufs.sh/f/wIfrl1CCrEbxykFv7QYhmXwJPlDEpos0iHTxvSk2b5aedZj4" 
     }
   ]
 };

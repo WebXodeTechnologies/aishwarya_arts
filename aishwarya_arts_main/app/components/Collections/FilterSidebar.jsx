@@ -38,11 +38,13 @@ const GOD = [
 
 const ART_STYLES = [
   { label: "3D Embossed", value: "embossed" },
-  { label: "2D Work", value: "2d" },
+  { label: "2D", value: "2d" },
   { label: "Flat Type", value: "flat" },
+  { label:"Big Painting", value:"Big Painting"},
+  { label: "Pooja Set", value:"Pooja Set"}
 ];
 
-const DIMENSIONS = ["15x12", "18x14", "20x16", "24x18", "30x24", "Custom Size"];
+const DIMENSIONS = ["15x12", "18x14", "20x16", "24x18", "30x24", "36x24", "48x36","60x36", "72x48", "Custom Size"];
 
 const FilterSidebar = ({ selectedFilters, onFilterChange }) => {
   // Helper to strip quotes and spaces for exact matching (e.g., "20" X 16"" -> 20x16)

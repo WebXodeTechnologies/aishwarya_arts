@@ -227,6 +227,7 @@ const technicalSpecs = [
     });
   };
 
+ 
   return (
     <div className="min-h-screen bg-white font-outfit pb-20 overflow-x-hidden">
       {/* BREADCRUMBS */}
@@ -267,6 +268,7 @@ const technicalSpecs = [
                 src={activeImage}
                 alt={product.title || "Masterpiece"}
                 fill
+                unoptimized
                 className={`object-contain p-4 transition-opacity duration-300 ${zoomData.show ? "xl:opacity-0" : "opacity-100"}`}
                 priority
               />
@@ -302,7 +304,7 @@ const technicalSpecs = [
                   onClick={() => setActiveImage(img)}
                   className={`relative w-16 h-16 md:w-24 md:h-24 shrink-0 rounded-xl md:rounded-2xl overflow-hidden transition-all duration-300 snap-center ${activeImage === img ? "ring-2 ring-amber-600 ring-offset-2" : "opacity-60 hover:opacity-100"}`}
                 >
-                  <Image src={img} alt="thumb" fill className="object-cover" />
+                  <Image src={img} alt="thumb" fill unoptimized className="object-cover bg-red-400" />
                 </button>
               ))}
             </div>
