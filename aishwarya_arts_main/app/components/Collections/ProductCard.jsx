@@ -26,7 +26,7 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
   const imageUrl = product.images?.[0] || "/placeholder-art.jpg";
   const title = product.title || "Gaja Lakshmi Antique Tanjore Painting";
   const displayPrice = product.offerPrice || product.price || 14000;
- 
+
 
   return (
     <div className="group relative flex flex-col bg-white transition-all duration-500 rounded-4xl p-3 border border-zinc-100 hover:border-amber-200 hover:shadow-[0_20px_50px_-20px_rgba(217,119,6,0.15)]">
@@ -57,9 +57,12 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
             src={imageUrl}
             alt={title}
             fill
+            unoptimized
             className="object-contain p-6 transition-transform duration-1000 ease-out group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 33vw"
-          />
+            
+          /> 
+         
           {/* Soft vignette for a "gallery" look */}
           <div className="absolute inset-0 bg-linear-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </Link>

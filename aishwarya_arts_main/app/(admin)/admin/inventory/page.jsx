@@ -123,6 +123,24 @@ const InventoryTable = () => {
     },
   });
 
+  // Add this inside InventoryTable component
+const handleDelete = async (id) => {
+  if (!window.confirm("Are you sure you want to permanently remove this masterpiece?")) return;
+
+  try {
+    // Ensure your API route handles the DELETE method
+    await axios.delete(`/api/admin/products/${id}`);
+    
+    // Update local state to remove the item immediately
+    setProducts((prev) => prev.filter((product) => product._id !== id));
+    
+    toast.success("Masterpiece removed successfully.");
+  } catch (err) {
+    console.error("Deletion failed:", err);
+    toast.error("Failed to remove product. Check API logs.");
+  }
+};
+
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8 animate-in fade-in duration-700">
       
