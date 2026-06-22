@@ -2,7 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import Img1 from "../../../public/assets/about/as.png";
+import Img1 from "../../../public/assets/about/final_founder.png";
+import Img2 from "../../../public/assets/about/founder.png";
 
 export default function ProfessionalJourney() {
   return (
@@ -12,7 +13,7 @@ export default function ProfessionalJourney() {
     >
       {/* Left: Founder Image */}
       <figure className="relative group order-2 md:order-1">
-        <div className="relative w-full h-90 md:h-90 lg:h-95 xl:h-120 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-yellow-700/20">
+        <div className="relative w-full h-90 md:h-90 lg:h-130 xl:h-150 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-yellow-700/20">
           <Image
             src={Img1}
             alt="Portrait of Aishwarya, founder of Aishwarya Art Gallery"
@@ -23,7 +24,7 @@ export default function ProfessionalJourney() {
           <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent"></div>
         </div>
         <figcaption className="sr-only">
-          Devandran K — founder of Aishwarya Art Gallery
+          D. Periyanayagi Devenderan — founder of Aishwarya Art Gallery
         </figcaption>
       </figure>
 
@@ -38,7 +39,7 @@ export default function ProfessionalJourney() {
 
         <p className="text-black leading-relaxed mb-5 text-lg md:text-xl">
           Founded by
-          <span className="font-semibold text-gray-900 ml-2">Devandran K </span>, the
+          <span className="font-semibold text-gray-900 ml-2">Periyanayagi Devenderan D.</span>, the
           gallery began as a small creative studio deeply committed to
           preserving the intricate legacy of Tanjore art. From humble
           beginnings, her path evolved through years of dedication, innovation,

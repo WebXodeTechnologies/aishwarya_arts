@@ -65,6 +65,7 @@ const GODS = [
   "Kalabhairavar",
   "EllaiAmman",
   "Shiva Lingam",
+  "Andaal",
 ];
 
 const ART_STYLES = [
