@@ -5,4 +5,8 @@
   // 2. Export the GET and POST methods using the new name
   export const { GET, POST } = createRouteHandler({
     router: ourFileRouter,
+    errorFormatter: (err) => {
+      console.error("❌ UploadThing Error:", err);
+      return { message: err.message };
+    },
   });
