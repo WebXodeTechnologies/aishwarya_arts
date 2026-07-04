@@ -30,7 +30,7 @@ const ShippingDetails = () => {
       
       {/* --- TOP BAR --- */}
       <div className="flex items-center justify-between mb-12">
-        <Link href="/admin/shipping" className="flex items-center gap-2 text-zinc-400 hover:text-zinc-900 font-semibold text-sm transition-all">
+        <Link href="/admin/shipments" className="flex items-center gap-2 text-zinc-400 hover:text-zinc-900 font-semibold text-sm transition-all">
           <ArrowLeft size={18} /> Manifest Overview
         </Link>
         <span className="text-[10px] font-semibold px-4 py-1.5 bg-zinc-900 text-white rounded-full uppercase tracking-[0.2em]">

@@ -96,7 +96,7 @@ const ShippingManifest = () => {
                     </span>
                   </td>
                   <td className="px-8 py-6 text-right">
-                    <Link href={`/admin/shipping/${ship._id}`} className="p-2 inline-block bg-zinc-50 text-zinc-400 rounded-lg group-hover:bg-zinc-900 group-hover:text-white transition-all">
+                    <Link href={`/admin/shipments/${ship._id}`} className="p-2 inline-block bg-zinc-50 text-zinc-400 rounded-lg group-hover:bg-zinc-900 group-hover:text-white transition-all">
                       <ChevronRight size={16} />
                     </Link>
                   </td>

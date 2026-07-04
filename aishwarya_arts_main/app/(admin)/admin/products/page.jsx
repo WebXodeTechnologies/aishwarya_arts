@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Upload,
   Sparkles,
@@ -165,6 +166,10 @@ const PRICE_SHEET = {
 
 const AddProductFinal = () => {
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const productId = searchParams.get("id");
+  const isEditMode = !!productId;
 
   const [formData, setFormData] = useState({
     sku: "",
@@ -191,6 +196,51 @@ const AddProductFinal = () => {
     detailedDescription: "",
     priceMatrix: [], // Array to store { size, style, frame, price, mrp }
   });
+
+  useEffect(() => {
+    if (!productId) return;
+
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`/api/admin/products/${productId}`);
+        if (res.data.success && res.data.data) {
+          const prod = res.data.data;
+          setFormData({
+            sku: prod.sku || "",
+            title: prod.title || "",
+            description: prod.description || "Handcrafted 22ct Gold Leaf Tanjore Painting",
+            price: prod.price || "",
+            offerPrice: prod.offerPrice || "",
+            category: prod.category || "others",
+            godName: prod.godName || "",
+            workStyle: prod.workStyle || "flat",
+            dimensions: prod.dimensions || '15" X 12"',
+            frameType: prod.frameType || "Synthetic Frame",
+            weight: prod.weight || "2.5 kg",
+            leadTime: prod.leadTime || "Ready to Ship",
+            images: prod.images || [],
+            inStock: prod.inStock !== undefined ? prod.inStock : true,
+            isBestSeller: !!prod.isBestSeller,
+            isNewArrival: !!prod.isNewArrival,
+            aboutArtisan: prod.aboutArtisan || "Crafted by master artisans from Thanjavur with generations of expertise.",
+            goldPurity: prod.goldPurity || "Certified 22ct Gold Foil",
+            materialBase: prod.materialBase || "Water-resistant Plywood & Premium Cotton Cloth",
+            storyTitle: prod.storyTitle || "Heritage in Every Stroke",
+            detailedDescription: prod.detailedDescription || "",
+            priceMatrix: prod.priceMatrix || [],
+          });
+        }
+      } catch (err) {
+        toast.error("Failed to load product data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   // --- MATRIX LOGIC: SCALABLE CONTROL ---
   // This logic ensures that when you type a price for a specific Size + Style + Frame,
@@ -294,9 +344,17 @@ const AddProductFinal = () => {
         priceMatrix: finalizedMatrix,
       };
 
-      const res = await axios.post("/api/admin/products", payload);
+      let res;
+      if (isEditMode) {
+        res = await axios.put(`/api/admin/products/${productId}`, payload);
+      } else {
+        res = await axios.post("/api/admin/products", payload);
+      }
       if (res.status === 201 || res.status === 200) {
-        toast.success("Masterpiece Published Successfully!");
+        toast.success(isEditMode ? "Masterpiece Updated Successfully!" : "Masterpiece Published Successfully!");
+        if (!isEditMode) {
+          router.push("/admin/inventory");
+        }
       }
     } catch (err) {
       toast.error(err.response?.data?.error || "Database sync failed");
@@ -334,7 +392,7 @@ const AddProductFinal = () => {
       <div className="flex flex-col md:flex-row justify-between items-center bg-white/90 sticky top-0 z-30 py-6 px-3 rounded-4xl border-b border-zinc-100 mb-10 shadow-sm">
         <div className="ml-5">
           <h2 className="text-4xl font-semibold text-zinc-800 tracking-wide uppercase">
-            Products
+            {isEditMode ? "Edit Product" : "Products"}
           </h2>
           <p className="text-[12px] text-zinc-800 font-bold uppercase tracking-[0.3em]">
             Gallery Management
@@ -355,7 +413,7 @@ const AddProductFinal = () => {
             ) : (
               <Save size={16} />
             )}
-            {loading ? "Syncing..." : "Publish Artwork"}
+            {loading ? "Syncing..." : isEditMode ? "Update Artwork" : "Publish Artwork"}
           </button>
         </div>
       </div>
@@ -867,4 +925,10 @@ const AddProductFinal = () => {
   );
 };
 
-export default AddProductFinal;
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="h-96 flex items-center justify-center font-semibold text-zinc-500 uppercase tracking-widest text-xs">Loading Form Data...</div>}>
+      <AddProductFinal />
+    </Suspense>
+  );
+}

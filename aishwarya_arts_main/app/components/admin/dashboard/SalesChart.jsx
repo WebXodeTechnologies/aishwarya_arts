@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   AreaChart,
   Area,
@@ -28,6 +28,12 @@ const CustomTooltip = ({ active, payload }) => {
 
 // Accept chartData as a prop from the Dashboard
 const SalesChart = ({ chartData = [] }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="bg-white rounded-[2.5rem] p-8 border border-zinc-100 shadow-sm h-full flex flex-col">
       <div className="flex items-center justify-between mb-8">
@@ -45,46 +51,57 @@ const SalesChart = ({ chartData = [] }) => {
         </div>
       </div>
 
-      <div className="flex-1 w-full min-h-75 -ml-6 mt-4">
-        <ResponsiveContainer width="100%" height="100%">
-          {/* Use the chartData prop here */}
-          <AreaChart data={chartData}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid 
-                strokeDasharray="3 3" 
-                vertical={false} 
-                stroke="#f1f1f1" 
-            />
-            <XAxis 
-              dataKey="month" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#a1a1aa', fontSize: 10, fontWeight: 600 }}
-              dy={15}
-            />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#a1a1aa', fontSize: 10, fontWeight: 600 }}
-              tickFormatter={(value) => value >= 100000 ? `₹${(value / 100000).toFixed(1)}L` : `₹${value / 1000}k`}
-            />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#f59e0b', strokeWidth: 1, strokeDasharray: '4 4' }} />
-            <Area
-              type="monotone"
-              dataKey="revenue"
-              stroke="#f59e0b"
-              strokeWidth={3}
-              fillOpacity={1}
-              fill="url(#colorRevenue)"
-              animationDuration={2000}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      <div className="w-full h-[320px] -ml-6 mt-4">
+        {mounted ? (
+          chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid 
+                    strokeDasharray="3 3" 
+                    vertical={false} 
+                    stroke="#f1f1f1" 
+                />
+                <XAxis 
+                  dataKey="month" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#a1a1aa', fontSize: 10, fontWeight: 600 }}
+                  dy={15}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#a1a1aa', fontSize: 10, fontWeight: 600 }}
+                  tickFormatter={(value) => value >= 100000 ? `₹${(value / 100000).toFixed(1)}L` : `₹${value / 1000}k`}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#f59e0b', strokeWidth: 1, strokeDasharray: '4 4' }} />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#f59e0b"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorRevenue)"
+                  animationDuration={2000}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full w-full flex items-center justify-center text-zinc-400 text-xs font-semibold uppercase tracking-widest">
+              No sales data available
+            </div>
+          )
+        ) : (
+          <div className="h-full w-full flex items-center justify-center text-zinc-400 text-xs font-semibold uppercase tracking-widest">
+            Initializing...
+          </div>
+        )}
       </div>
     </div>
   );

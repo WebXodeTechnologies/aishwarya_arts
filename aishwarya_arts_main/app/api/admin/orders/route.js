@@ -27,9 +27,12 @@ export async function GET() {
           paymentStatus: 1,
           paymentMethod: 1,
           createdAt: 1,
+          updatedAt: 1,
           shippingAddress: 1,
           email: { $ifNull: ["$customerDetails.email", "Guest Patron"] },
-          customerName: "$shippingAddress.fullName"
+          customerName: "$shippingAddress.fullName",
+          trackingId: 1,
+          logisticsPartner: 1
         }
       },
       { $sort: { createdAt: -1 } } 

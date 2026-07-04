@@ -202,8 +202,15 @@ const handleDelete = async (id) => {
                       ))}
                       <td className="p-5 text-right pr-10">
                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                          <button className="p-2 bg-white border border-zinc-200 rounded-lg text-zinc-400 hover:text-amber-600 shadow-sm"><Eye size={14}/></button>
-                          <button className="p-2 bg-white border border-zinc-200 rounded-lg text-zinc-400 hover:text-red-600 shadow-sm"><Trash2 size={14}/></button>
+                          <Link href={`/admin/products?id=${row.original._id}`} className="p-2 bg-white border border-zinc-200 rounded-lg text-zinc-400 hover:text-amber-600 shadow-sm">
+                            <Eye size={14}/>
+                          </Link>
+                          <button 
+                            onClick={() => handleDelete(row.original._id)}
+                            className="p-2 bg-white border border-zinc-200 rounded-lg text-zinc-400 hover:text-red-600 shadow-sm"
+                          >
+                            <Trash2 size={14}/>
+                          </button>
                         </div>
                       </td>
                     </tr>
