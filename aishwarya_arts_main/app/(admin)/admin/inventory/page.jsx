@@ -14,6 +14,7 @@ import {
   Clock, ChevronRight, ChevronLeft 
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const InventoryTable = () => {
   const [products, setProducts] = useState([]);
@@ -52,12 +53,22 @@ const InventoryTable = () => {
       accessorKey: "title",
       cell: (info) => (
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl overflow-hidden border border-zinc-100 bg-zinc-50 shrink-0">
-            <img 
-              src={info.row.original.images?.[0]} 
-              alt="" 
-              className="w-full h-full object-cover transition-transform group-hover:scale-110" 
-            />
+          <div className="w-12 h-12 rounded-xl overflow-hidden border border-zinc-100 bg-zinc-50 shrink-0 relative">
+            {info.row.original.images?.[0] ? (
+              <Image 
+                src={info.row.original.images[0]} 
+                alt={info.getValue() || "Artwork"} 
+                fill
+                sizes="48px"
+                className="object-cover transition-transform group-hover:scale-110"
+                priority={false}
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-[10px] text-zinc-300 font-bold bg-zinc-100 uppercase">
+                No Img
+              </div>
+            )}
           </div>
           <p className="text-sm font-bold text-zinc-900 truncate max-w-[200px]">
             {info.getValue()}
@@ -163,7 +174,7 @@ const handleDelete = async (id) => {
               className="bg-white border border-zinc-200 rounded-2xl py-3 pl-12 pr-6 text-sm font-medium outline-none focus:ring-4 focus:ring-amber-500/5 focus:border-amber-500/30 transition-all w-full shadow-sm"
             />
           </div>
-          <Link href="/admin/add-product" className="p-3.5 bg-zinc-900 text-white rounded-2xl hover:bg-amber-600 transition-all shadow-xl">
+          <Link href="/admin/products" className="p-3.5 bg-zinc-900 text-white rounded-2xl hover:bg-amber-600 transition-all shadow-xl">
             <Plus size={20} />
           </Link>
         </div>

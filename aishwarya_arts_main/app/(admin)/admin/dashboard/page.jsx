@@ -8,30 +8,17 @@ import ClientTable from "../../../components/admin/dashboard/ClientTable";
 import InventoryAlerts from "../../../components/admin/dashboard/InventoryAlerts";
 import BannerStatus from "../../../components/admin/dashboard/BannerStatus";
 import LogisticsPulse from "../../../components/admin/dashboard/LogisticsPulse";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDashboardStore } from "@/store/useDashboardStore";
 
 export default function DashboardPage() {
-  
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+  const { data, loading, fetchStats } = useDashboardStore();
 
   useEffect(() => {
-    async function fetchStats() {
-      try {
-        const res = await fetch("/api/admin/dashboard");
-        const json = await res.json();
-        if (json.success) setData(json);
-      } catch (err) {
-        console.error("Dashboard error:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchStats();
-  }, []);
+  }, [fetchStats]);
 
-  if (loading) return (
+  if (loading || !data) return (
     <div className="h-96 flex items-center justify-center">
       <Loader2 className="animate-spin text-zinc-900" size={32} />
     </div>

@@ -12,23 +12,38 @@ export async function GET() {
       .sort({ createdAt: -1 });
 
     // Map DB data to match your Frontend 'salesData' keys exactly
-    const formattedSales = orders.map((order, index) => ({
-      sNo: index + 1,
-      name: `${order.user?.firstName} ${order.user?.lastName || ""}`,
-      contact: order.user?.primaryPhone || "N/A",
-      email: order.user?.email || "N/A",
-      location: `${order.shippingAddress?.city || order.user?.address?.city}, ${order.shippingAddress?.state || order.user?.address?.state}`,
-      orderId: order.orderId,
-      artwork: order.artworkName || "Tanjore Painting",
-      paymentStatus: order.paymentStatus, // 'Paid' or 'Pending'
-      method: order.paymentMethod || "UPI",
-      amount: `₹${order.totalAmount.toLocaleString("en-IN")}`,
-      date: new Date(order.createdAt).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-    }));
+    const formattedSales = orders.map((order, index) => {
+      const name = order.shippingAddress?.fullName || 
+        `${order.user?.firstName || ""} ${order.user?.lastName || ""}`.trim() || 
+        "Guest Patron";
+      
+      const contact = order.shippingAddress?.phone || order.user?.primaryPhone || "N/A";
+      const email = order.user?.email || "N/A";
+      
+      const city = order.shippingAddress?.city || order.user?.address?.city || "";
+      const state = order.shippingAddress?.state || order.user?.address?.state || "";
+      const location = [city, state].filter(Boolean).join(", ") || "N/A";
+
+      const artwork = order.orderItems?.map((item) => item.title).join(", ") || "Tanjore Painting";
+
+      return {
+        sNo: index + 1,
+        name,
+        contact,
+        email,
+        location,
+        orderId: order.orderId,
+        artwork,
+        paymentStatus: order.paymentStatus, // 'Paid' or 'Pending'
+        method: order.paymentMethod || "UPI",
+        amount: `₹${(order.totalAmount || 0).toLocaleString("en-IN")}`,
+        date: new Date(order.createdAt).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      };
+    });
 
     return NextResponse.json(formattedSales);
   } catch (error) {

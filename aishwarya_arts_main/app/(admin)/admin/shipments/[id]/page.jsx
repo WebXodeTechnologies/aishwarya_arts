@@ -25,6 +25,17 @@ const ShippingDetails = () => {
 
   if (loading) return <div className="h-screen flex items-center justify-center font-outfit text-zinc-400">SYNCHRONIZING...</div>;
 
+  if (!order) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-white font-outfit text-zinc-400">
+        <span className="uppercase text-xs tracking-widest mb-4">Shipment Not Found</span>
+        <Link href="/admin/shipments" className="px-4 py-2 bg-zinc-950 text-white rounded-xl text-xs uppercase font-semibold">
+          Back to Manifest
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#fafafa] p-8 lg:p-12 font-outfit text-zinc-900">
       

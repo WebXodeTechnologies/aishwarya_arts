@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
 
     const order = await Order.findOne({ orderId: id }).populate(
       "user",
@@ -59,7 +59,7 @@ export async function GET(req, { params }) {
 export async function PATCH(req, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
 
     const updatedOrder = await Order.findOneAndUpdate(
@@ -80,7 +80,7 @@ export async function PATCH(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
 
     const deleted = await Order.findOneAndDelete({ orderId: id });
     if (!deleted)

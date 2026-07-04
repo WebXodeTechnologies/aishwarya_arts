@@ -17,6 +17,7 @@ export async function GET() {
           paymentStatus: { $first: "$paymentStatus" },
           // Keep shipping address details as backup
           shippingName: { $first: "$shippingAddress.fullName" },
+          shippingPhone: { $first: "$shippingAddress.phone" },
           location: { $first: "$shippingAddress.city" }
         }
       },
@@ -42,7 +43,7 @@ export async function GET() {
           name: { $ifNull: ["$userDetails.firstName", "$shippingName"] },
           lastName: "$userDetails.lastName",
           email: "$userDetails.email", // Now we have the Mail ID!
-          phone: { $ifNull: ["$userDetails.primaryPhone", "$phone"] }
+          phone: { $ifNull: ["$userDetails.primaryPhone", "$shippingPhone"] }
         }
       },
       { $sort: { totalValue: -1 } } 

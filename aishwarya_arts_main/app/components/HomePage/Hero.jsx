@@ -84,7 +84,7 @@ export default function Hero() {
                   alt="Gallery Masterpiece"
                   fill
                   priority={i === 0}
-                  unoptimized={banner.imageUrl.includes("utfs.io")}
+                  sizes="(max-width: 1200px) 100vw, 1200px"
                   className={`object-cover object-center transition-transform duration-8000 ease-out ${
                     index === i ? "scale-110" : "scale-100"
                   }`}

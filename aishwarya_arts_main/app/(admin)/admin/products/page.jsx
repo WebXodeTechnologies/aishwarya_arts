@@ -24,6 +24,7 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import { UploadButton } from "@uploadthing/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // --- DYNAMIC DATA ARRAYS ---
 const GODS = [
@@ -166,6 +167,7 @@ const PRICE_SHEET = {
 
 const AddProductFinal = () => {
   const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const productId = searchParams.get("id");
@@ -312,12 +314,14 @@ const AddProductFinal = () => {
   };
 
   // --- REWRITTEN: PUBLISH LOGIC ---
-  // Ensures data is clean and unblocks the Shop frontend
-  const handlePublish = async () => {
+  const handlePublish = () => {
     if (!formData.sku || !formData.price || formData.images.length === 0) {
       return toast.error("SKU, Price, and Main Image are mandatory!");
     }
+    setShowPreview(true);
+  };
 
+  const submitProduct = async () => {
     setLoading(true);
     try {
       // 1. Clean the matrix: Remove empty entries
@@ -352,6 +356,7 @@ const AddProductFinal = () => {
       }
       if (res.status === 201 || res.status === 200) {
         toast.success(isEditMode ? "Masterpiece Updated Successfully!" : "Masterpiece Published Successfully!");
+        setShowPreview(false);
         if (!isEditMode) {
           router.push("/admin/inventory");
         }
@@ -921,6 +926,133 @@ const AddProductFinal = () => {
           </div>
         </div>
       </div>
+
+      {/* PREVIEW MODAL */}
+      <AnimatePresence>
+        {showPreview && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden border border-zinc-100 border-t-4 border-t-amber-500 max-h-[90vh] flex flex-col font-outfit text-zinc-900"
+            >
+              {/* Header */}
+              <div className="px-8 py-6 flex items-center justify-between border-b border-zinc-100 shrink-0">
+                <div>
+                  <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Artwork Preview</h3>
+                  <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-bold">Verify details before publishing</p>
+                </div>
+                <button onClick={() => setShowPreview(false)} className="p-2 hover:bg-zinc-100 rounded-full transition-colors">
+                  <X size={20} className="text-zinc-500" />
+                </button>
+              </div>
+
+              {/* Content (Scrollable) */}
+              <div className="p-8 overflow-y-auto space-y-6 flex-1 text-black">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Product Image */}
+                  <div className="aspect-square bg-zinc-50 rounded-2xl overflow-hidden border border-zinc-100 flex items-center justify-center relative">
+                    {formData.images[0] ? (
+                      <img
+                        src={formData.images[0]}
+                        alt={formData.title}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-xs text-zinc-400 font-bold uppercase tracking-widest">No Image Selected</span>
+                    )}
+                    {formData.images.length > 1 && (
+                      <div className="absolute bottom-3 left-3 bg-zinc-900/80 px-2.5 py-1 rounded-full text-[9px] font-bold text-white uppercase tracking-widest">
+                        +{formData.images.length - 1} More Images
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Key Specs */}
+                  <div className="space-y-4">
+                    <div>
+                      <span className="text-[10px] bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-md font-black tracking-widest uppercase">
+                        {formData.sku || "PENDING SKU"}
+                      </span>
+                      <h4 className="text-2xl font-bold text-zinc-900 mt-2 leading-tight uppercase">{formData.title || "Untitled Masterpiece"}</h4>
+                      <p className="text-xs text-zinc-500 italic mt-1">{formData.description}</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 border-t border-zinc-100 pt-4">
+                      <div>
+                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Divine Subject</span>
+                        <span className="text-sm font-bold text-zinc-800">{formData.godName || "General"}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Category</span>
+                        <span className="text-sm font-bold text-zinc-800 uppercase tracking-widest">{formData.category}</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 border-t border-zinc-100 pt-4">
+                      <div>
+                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Display Size</span>
+                        <span className="text-sm font-bold text-zinc-800">{formData.dimensions}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Work Style</span>
+                        <span className="text-sm font-bold text-zinc-800 capitalize">
+                          {ART_STYLES.find(style => style.value === formData.workStyle)?.label || formData.workStyle}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 border-t border-zinc-100 pt-4">
+                      <div>
+                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Price (Starting)</span>
+                        <span className="text-lg font-bold text-zinc-900">₹{Number(formData.price || 0).toLocaleString()}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">MRP (Starting)</span>
+                        <span className="text-lg font-bold text-zinc-500 line-through">₹{Number(formData.offerPrice || formData.price || 0).toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hallmarks & Details */}
+                <div className="bg-zinc-50 p-6 rounded-2xl space-y-3">
+                  <h5 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Quality Hallmarks</h5>
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                      <span className="text-zinc-400 font-bold uppercase block">Gold Purity</span>
+                      <span className="font-bold text-zinc-800 mt-0.5 block">{formData.goldPurity || "N/A"}</span>
+                    </div>
+                    <div>
+                      <span className="text-zinc-400 font-bold uppercase block">Base Board</span>
+                      <span className="font-bold text-zinc-800 mt-0.5 block">{formData.materialBase || "N/A"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer Actions */}
+              <div className="px-8 py-6 bg-zinc-50 border-t border-zinc-100 flex gap-3 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowPreview(false)}
+                  className="flex-1 py-3.5 border border-zinc-200 rounded-2xl text-xs font-bold uppercase tracking-widest text-zinc-500 hover:bg-zinc-100 transition-all text-center"
+                >
+                  Back to Editor
+                </button>
+                <button
+                  type="button"
+                  onClick={submitProduct}
+                  className="flex-1 py-3.5 bg-zinc-900 hover:bg-amber-600 text-white rounded-2xl text-xs font-bold uppercase tracking-widest transition-all shadow-lg flex items-center justify-center gap-2"
+                >
+                  <Save size={14} /> Confirm & Publish
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

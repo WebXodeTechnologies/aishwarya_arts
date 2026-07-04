@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
             y: [0, 30, 0],
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-amber-900/30 blur-[120px]"
+          className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-amber-900/30 blur-[120px]"
         />
 
         {/* Animated Deep Bronze Orb */}

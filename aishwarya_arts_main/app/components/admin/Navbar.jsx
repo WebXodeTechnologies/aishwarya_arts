@@ -3,18 +3,68 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Menu, Search, Bell, User, Plus,
   Settings, LogOut, Globe, Command,
-  CheckCircle2, Sparkles
+  CheckCircle2, Sparkles, AlertTriangle, AlertCircle, Package
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
+import { useDashboardStore } from "@/store/useDashboardStore";
 
 
 const Navbar = ({ onMenuClick }) => {
   const [showProfile, setShowProfile] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const { data: session } = useSession();
   const timeoutRef = useRef(null);
+
+  const { data, fetchStats } = useDashboardStore();
+
+  useEffect(() => {
+    if (!data) {
+      fetchStats();
+    }
+  }, [data, fetchStats]);
+
+  const notifications = [];
+  if (data) {
+    if (data.lowStock) {
+      data.lowStock.forEach(item => {
+        notifications.push({
+          id: `stock-${item.id}`,
+          type: "low_stock",
+          title: "Low Stock Alert",
+          description: `${item.name} has only ${item.stock} left.`,
+          link: "/admin/inventory",
+          time: "Immediate"
+        });
+      });
+    }
+    if (data.logisticsPulse) {
+      data.logisticsPulse.filter(o => o.isDelayed).forEach(o => {
+        notifications.push({
+          id: `delay-${o.id}`,
+          type: "delay",
+          title: "Shipment Delay Warning",
+          description: `Order ${o.id} for ${o.patron} is pending for ${o.days} days.`,
+          link: `/admin/orders`,
+          time: "Overdue"
+        });
+      });
+    }
+    if (data.recentOrders) {
+      data.recentOrders.slice(0, 3).forEach(o => {
+        notifications.push({
+          id: `order-${o._id}`,
+          type: "order",
+          title: "New Placement",
+          description: `${o.name} from ${o.city} ordered artwork of ₹${o.amount.toLocaleString()}.`,
+          link: `/admin/orders`,
+          time: "Recent"
+        });
+      });
+    }
+  }
 
   useEffect(() => {
     // If dropdown is opened, start a 10-second timer
@@ -84,10 +134,80 @@ const Navbar = ({ onMenuClick }) => {
       <div className="flex items-center gap-2 md:gap-5">
 
         {/* Notifications */}
-        <button className="p-2.5 text-zinc-500 hover:bg-amber-50 hover:text-amber-600 rounded-xl transition-all relative group">
-          <Bell size={20} />
-          <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-amber-500 rounded-full border-2 border-white ring-2 ring-amber-500/20 group-hover:scale-125 transition-transform" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="p-2.5 text-zinc-500 hover:bg-amber-50 hover:text-amber-600 rounded-xl transition-all relative group"
+          >
+            <Bell size={20} />
+            {notifications.length > 0 && (
+              <span className="absolute top-2 right-2 w-4 h-4 bg-amber-500 rounded-full border-2 border-white text-[9px] font-black text-white flex items-center justify-center">
+                {notifications.length}
+              </span>
+            )}
+          </button>
+
+          <AnimatePresence>
+            {showNotifications && (
+              <>
+                <div className="fixed inset-0 z-[-1]" onClick={() => setShowNotifications(false)} />
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute right-0 mt-3 w-80 md:w-96 bg-white border border-amber-100 rounded-2xl shadow-2xl shadow-amber-900/5 p-4 overflow-hidden z-50 text-zinc-950 font-outfit"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-zinc-100 mb-3">
+                    <h4 className="text-sm font-bold text-zinc-900">Notifications</h4>
+                    <span className="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                      {notifications.length} Alerts
+                    </span>
+                  </div>
+
+                  <div className="max-h-72 overflow-y-auto space-y-3 pr-1">
+                    {notifications.length === 0 ? (
+                      <div className="py-8 text-center text-zinc-400 text-xs font-semibold uppercase tracking-widest">
+                        No new notifications
+                      </div>
+                    ) : (
+                      notifications.map((n) => {
+                        let Icon = Package;
+                        let colorClass = "bg-green-50 text-green-700 border-green-100";
+                        if (n.type === "low_stock") {
+                          Icon = AlertTriangle;
+                          colorClass = "bg-amber-50 text-amber-700 border-amber-100";
+                        } else if (n.type === "delay") {
+                          Icon = AlertCircle;
+                          colorClass = "bg-red-50 text-red-700 border-red-100";
+                        }
+
+                        return (
+                          <Link
+                            key={n.id}
+                            href={n.link}
+                            onClick={() => setShowNotifications(false)}
+                            className="flex gap-3 p-3 rounded-xl border border-zinc-50 hover:bg-zinc-50/50 hover:border-zinc-100 transition-all text-left"
+                          >
+                            <div className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 ${colorClass}`}>
+                              <Icon size={16} />
+                            </div>
+                            <div className="space-y-0.5 flex-1 min-w-0">
+                              <div className="flex justify-between items-baseline gap-2">
+                                <p className="text-xs font-bold text-zinc-900 truncate uppercase tracking-tight">{n.title}</p>
+                                <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest shrink-0">{n.time}</span>
+                              </div>
+                              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">{n.description}</p>
+                            </div>
+                          </Link>
+                        );
+                      })
+                    )}
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Quick Add Button */}
 

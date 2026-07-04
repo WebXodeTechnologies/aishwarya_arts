@@ -83,6 +83,18 @@ const OrderDetails = () => {
       </div>
     );
 
+  if (!order) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-white font-outfit text-zinc-400">
+        <AlertCircle className="text-red-500 mb-4" size={32} />
+        <span className="uppercase text-xs tracking-widest mb-4">Order Not Found</span>
+        <Link href="/admin/orders" className="px-4 py-2 bg-zinc-950 text-white rounded-xl text-xs uppercase font-semibold">
+          Back to Orders
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#fafafa] p-4 lg:p-12 font-outfit text-zinc-900">
       {/* --- TOP NAVIGATION --- */}
