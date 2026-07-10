@@ -2,15 +2,15 @@ import React from "react";
 
 // 1. Data Constants - Values MUST be lowercase to match normalized DB strings
 const GOD = [
-  "Amman", "Annamalai", "Annapoorni", "Baba", "Balaji", 
-  "Balaji Lakshmi", "Balaji Thaayar", "Balaji Thayaar", 
-  "Datchnamoorthy", "Dhanvanthri", "Durga Devi", 
-  "GajaLakshmi", "Ganesha", "Gayathri Devi", "Guruvayurappan", 
-  "Hanuman", "Kamadenu", "Kamatchi amman", "Krishna", 
-  "Lakshmi", "Lakshmi Narayana", "Lalitha Devi", 
-  "Maha Mariamman", "Meenakshi", "Murugan", "Narashimar", 
-  "Pooja Set Painting", "Raja Raja Rajeshwari", "Ramar", 
-  "Ratha krishnan", "Renuga Devi", "Saraswathi", 
+  "Amman", "Annamalai", "Annapoorni", "Baba", "Balaji",
+  "Balaji Lakshmi", "Balaji Thayaar",
+  "Datchnamoorthy", "Dhanvanthri", "Durga Devi",
+  "GajaLakshmi", "Ganesha", "Gayathri Devi", "Guruvayurappan",
+  "Hanuman", "Kamadenu", "Kamatchi amman", "Krishna",
+  "Lakshmi", "Lakshmi Narayana", "Lalitha Devi",
+  "Maha Mariamman", "Meenakshi", "Murugan", "Narashimar",
+  "Pooja Set Painting", "Raja Raja Rajeshwari", "Ramar",
+  "Ratha krishnan", "Renuga Devi", "Saraswathi",
   "Sathya Narayana", "Shiva Family", "Vishwa Brahma", "Andaal"
 ];
 
@@ -18,11 +18,11 @@ const ART_STYLES = [
   { label: "3D Embossed", value: "embossed" },
   { label: "2D", value: "2d" },
   { label: "Flat Type", value: "flat" },
-  { label:"Big Painting", value:"Big Painting"},
-  { label: "Pooja Set", value:"Pooja Set"}
+  { label: "Big Painting", value: "Big Painting" },
+  { label: "Pooja Set", value: "Pooja Set" }
 ];
 
-const DIMENSIONS = ["15x12", "18x14", "20x16", "24x18", "30x24", "36x24", "48x36","60x36", "72x48", "Custom Size"];
+const DIMENSIONS = ["15x12", "18x14", "20x16", "24x18", "30x24", "36x24", "48x36", "60x36", "72x48", "Custom Size"];
 
 const FilterSidebar = ({ selectedFilters, onFilterChange }) => {
   // Helper to strip quotes and spaces for exact matching (e.g., "20" X 16"" -> 20x16)
@@ -84,11 +84,10 @@ const FilterCheckbox = ({ label, checked, onChange }) => (
     <div className="flex items-center gap-3">
       <div
         className={`w-4 h-4 rounded border transition-all flex items-center justify-center
-        ${
-          checked
+        ${checked
             ? "bg-amber-800 border-amber-800"
             : "border-gray-300 group-hover:border-amber-600 bg-white"
-        }`}
+          }`}
       >
         {checked && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
       </div>
