@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 import { useAuthStore } from "../../../store/useAuthStore";
 
@@ -107,9 +108,11 @@ export default function LoginPage() {
             onClick={() => handleOAuthLogin("google")}
             className="w-full flex items-center justify-center gap-2 py-3 border rounded-lg hover:bg-gray-100 transition"
           >
-            <img
+            <Image
               src="/assets/auth/google-icon-logo-svgrepo-com.png"
               alt="Google"
+              width={20}
+              height={20}
               className="w-5 h-5"
             />
             Sign in with Google

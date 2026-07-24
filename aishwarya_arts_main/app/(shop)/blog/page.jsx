@@ -1,7 +1,6 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const blogPosts = [
   {
@@ -30,11 +29,19 @@ const blogPosts = [
   },
 ];
 
+export const metadata = {
+  title: "Art & Heritage Blog | Aishwarya Arts",
+  description: "Immerse yourself in the legacy of Tanjore paintings, custom spiritual art, and the history of traditional gold foil Indian art.",
+  alternates: {
+    canonical: "https://www.aishwaryaarts.com/blog",
+  },
+};
+
 export default function BlogPage() {
   return (
     <section className="py-16 max-w-7xl mx-auto px-6">
       
-      <h1 className="text-5xl font-bold text-center mb-12">
+      <h1 className="text-5xl font-bold text-center mb-12 text-zinc-900">
         Our Art Blog
       </h1>
 
@@ -42,14 +49,16 @@ export default function BlogPage() {
         {blogPosts.map((post) => (
           <div
             key={post.id}
-            className="group relative rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500"
+            className="group relative rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 border border-zinc-100 bg-white"
           >
             {/* Image with hover zoom */}
-            <div className="overflow-hidden">
-              <img
+            <div className="relative w-full h-72 md:h-80 overflow-hidden">
+              <Image
                 src={post.image}
                 alt={post.title}
-                className="w-full h-72 md:h-80 object-cover transform group-hover:scale-110 transition-transform duration-500"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transform group-hover:scale-110 transition-transform duration-500"
               />
             </div>
 
@@ -58,16 +67,16 @@ export default function BlogPage() {
 
             {/* Text content */}
             <div className="p-6 bg-white relative -mt-16 rounded-t-3xl z-10 ">
-              <span className="inline-block bg-yellow-500 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
+              <span className="inline-block bg-amber-500 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">
                 {post.category}
               </span>
-              <h2 className="text-2xl font-bold mb-3 group-hover:text-yellow-700 transition-colors">
+              <h2 className="text-2xl font-bold mb-3 text-zinc-900 group-hover:text-amber-800 transition-colors">
                 {post.title}
               </h2>
-              <p className="text-gray-600 mb-4">{post.summary}</p>
+              <p className="text-zinc-600 mb-4 font-medium">{post.summary}</p>
               <Link
                 href={post.slug}
-                className="text-yellow-700 font-semibold hover:underline"
+                className="text-amber-800 font-semibold hover:underline"
               >
                 Read More &rarr;
               </Link>

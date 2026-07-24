@@ -55,12 +55,12 @@ const Story = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h1
+          <h2
             id="story-title"
             className="text-3xl md:text-4xl font-semibold mb-4 text-black"
           >
             Our Story & Tradition
-          </h1>
+          </h2>
           <p className="text-black leading-relaxed mb-4 text-lg md:text-xl">
             At <span className="font-medium text-gray-800">Aishwarya Arts</span>
             , we celebrate the timeless beauty of{" "}
@@ -81,6 +81,7 @@ const Story = () => {
           <div className=" flex justify-center items-center">
             <Button
               href="/about"
+              color="none"
               className="group relative px-10 py-5 bg-zinc-900 overflow-hidden rounded-2xl transition-all duration-500 hover:shadow-[0_20px_40px_rgba(184,134,11,0.2)] active:scale-95"
             >
               {/* Subtle Shimmer Background */}

@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Banner from "@/models/Banner";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 // GET: Fetch all active banners for the Hero Carousel
-export async function GET() {
+export async function GET(req) {
   try {
     await connectDB();
-    const banners = await Banner.find({ isActive: true }).sort({ createdAt: -1 });
+    const { searchParams } = new URL(req.url);
+    const all = searchParams.get("all") === "true";
+    const query = all ? {} : { isActive: true };
+    const banners = await Banner.find(query).sort({ createdAt: -1 });
     return NextResponse.json(banners);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -23,8 +27,6 @@ export async function POST(req) {
       return NextResponse.json({ error: "Image URL is required" }, { status: 400 });
     }
 
-    // 🟢 CHANGED: We no longer deactivate everything. 
-    // This allows you to upload multiple images to build your 6-image carousel.
     const newBanner = await Banner.create({ 
       imageUrl, 
       title: title || "New Masterpiece", 
@@ -32,18 +34,27 @@ export async function POST(req) {
       isActive: true 
     });
 
+    // Invalidate the cache to ensure instant storefront updates
+    revalidateTag("banners");
+    revalidatePath("/");
+
     return NextResponse.json({ success: true, data: newBanner });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
 
-// DELETE: (Optional but recommended) to manage your carousel
+// DELETE: Manage your carousel
 export async function DELETE(req) {
   try {
     await connectDB();
     const { id } = await req.json();
     await Banner.findByIdAndDelete(id);
+
+    // Invalidate cache
+    revalidateTag("banners");
+    revalidatePath("/");
+
     return NextResponse.json({ success: true, message: "Banner removed" });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -55,6 +66,11 @@ export async function PATCH(req) {
     await connectDB();
     const { id, isActive } = await req.json();
     await Banner.findByIdAndUpdate(id, { isActive });
+
+    // Invalidate cache
+    revalidateTag("banners");
+    revalidatePath("/");
+
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

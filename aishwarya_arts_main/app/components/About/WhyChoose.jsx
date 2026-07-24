@@ -43,12 +43,12 @@ export default function WhyChoose() {
       aria-labelledby="why-choose-heading"
     >
       <div className="px-6 text-center">
-        <h1
+        <h2
           id="why-choose-heading"
           className="text-4xl font-bold mb-5 text-black leading-snug tracking-wider"
         >
           What Makes <span className="text-yellow-700"> Us Unique</span>
-        </h1>
+        </h2>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {reasons.map((reason, idx) => (

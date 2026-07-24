@@ -33,12 +33,12 @@ export default function OurTeam() {
       aria-labelledby="our-team-heading"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-8 text-center">
-        <h1
+        <h2
           id="our-team-heading"
           className="text-4xl font-bold mb-12 text-gray-900 tracking-wide"
         >
           Our Team
-        </h1>
+        </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member) => (

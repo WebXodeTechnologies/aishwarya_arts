@@ -31,12 +31,12 @@ const cards = [
       className="max-w-7xl mx-auto py-20 px-6 md:px-8 text-center"
       aria-labelledby="mission-vision-heading"
     >
-      <h1
+      <h2
         id="mission-vision-heading"
         className="text-4xl font-bold mb-12 text-gray-900 tracking-wide"
       >
         Our Mission & Vision
-      </h1>
+      </h2>
 
       <div className="grid md:grid-cols-3 gap-10">
         {cards.map((card, index) => (

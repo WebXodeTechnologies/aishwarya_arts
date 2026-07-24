@@ -119,6 +119,7 @@ export default function ArtistAboutSection() {
                   src={img.src}
                   alt={img.alt}
                   fill
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   className="object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60" />
@@ -137,12 +138,12 @@ export default function ArtistAboutSection() {
                 </h2>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white">
+              <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white">
                 Sacred Gold <br />
                 <span className="bg-linear-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent italic drop-shadow-[0_4px_15px_rgba(251,191,36,0.3)] select-none">
                   Timeless Art
                 </span>
-              </h1>
+              </h2>
 
               <p className="text-zinc-300 text-base md:text-xl leading-relaxed max-w-xl font-medium px-4 md:px-0">
                 Rooted in centuries of devotion, Aishwarya Arts preserves the

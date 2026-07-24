@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function RelatedProducts({ category, currentSlug }) {
   const [products, setProducts] = useState([]);
@@ -43,11 +44,13 @@ export default function RelatedProducts({ category, currentSlug }) {
             className="group flex flex-col sm:flex-row gap-8 bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition"
           >
             {/* IMAGE */}
-            <div className="w-full sm:w-60 h-60 flex items-center justify-center overflow-hidden rounded-xl bg-white">
-              <img
+            <div className="w-full sm:w-60 h-60 flex items-center justify-center overflow-hidden rounded-xl bg-white relative">
+              <Image
                 src={product.images?.[0] || product.img}
                 alt={product.name}
-                className="object-contain w-full h-full group-hover:scale-105 transition"
+                fill
+                sizes="(max-width: 640px) 100vw, 240px"
+                className="object-contain p-2 group-hover:scale-105 transition"
               />
             </div>
 

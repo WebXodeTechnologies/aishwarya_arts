@@ -1,11 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Upload, Sparkles, Trash2, Save,
   Monitor, Smartphone, Layout,
   CheckCircle2, Clock, Image as ImageIcon
 } from "lucide-react";
-import { UploadButton } from "@uploadthing/react"; // 🟢 Added this import
+import { UploadButton } from "@uploadthing/react";
 import toast from "react-hot-toast";
 
 const BannerManager = () => {
@@ -14,8 +14,26 @@ const BannerManager = () => {
   const [link, setLink] = useState("New Collection");
   const [isActive, setIsActive] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
+  const [existingBanners, setExistingBanners] = useState([]);
 
-  // 🟢 2. SAVE LOGIC (The Bridge)
+  // 🟢 2. FETCH LOGIC
+  const fetchExistingBanners = async () => {
+    try {
+      const res = await fetch("/api/admin/banner?all=true");
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setExistingBanners(data);
+      }
+    } catch (error) {
+      console.error("Error fetching banners:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExistingBanners();
+  }, []);
+
+  // 🟢 3. SAVE LOGIC
   const handleUpdateCarousel = async () => {
     console.log("🚀 STARTING DB SYNC...");
     console.log("Payload:", { imageUrl, link, isActive });
@@ -30,14 +48,14 @@ const BannerManager = () => {
         body: JSON.stringify({ imageUrl, link, isActive, title: "Hero Banner" }),
       });
 
-      // 🔍 DEBUG: Log the status code
       console.log("📡 Server Status:", response.status);
-
       const data = await response.json();
       console.log("📦 Server Response Data:", data);
 
       if (response.ok) {
         toast.success("Homepage Updated!", { id: loadingToast });
+        setImageUrl(""); // Clear preview
+        fetchExistingBanners(); // Refresh list
       } else {
         console.error("❌ DB Error:", data.error);
         throw new Error(data.error || "Failed to update");
@@ -45,6 +63,48 @@ const BannerManager = () => {
     } catch (error) {
       console.error("🔥 Catch Block Error:", error);
       toast.error("Failed to sync database. Check Console.", { id: loadingToast });
+    }
+  };
+
+  // 🟢 4. DELETE LOGIC
+  const handleDeleteBanner = async (id) => {
+    if (!confirm("Are you sure you want to delete this banner?")) return;
+    const loadingToast = toast.loading("Removing Banner...");
+    try {
+      const response = await fetch("/api/admin/banner", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Banner removed!", { id: loadingToast });
+        fetchExistingBanners();
+      } else {
+        throw new Error(data.error || "Failed to delete");
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to delete", { id: loadingToast });
+    }
+  };
+
+  // 🟢 5. STATUS TOGGLE LOGIC
+  const handleToggleStatus = async (id, currentStatus) => {
+    const loadingToast = toast.loading("Updating banner status...");
+    try {
+      const response = await fetch("/api/admin/banner", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, isActive: !currentStatus }),
+      });
+      if (response.ok) {
+        toast.success("Banner status updated!", { id: loadingToast });
+        fetchExistingBanners();
+      } else {
+        throw new Error("Failed to update status");
+      }
+    } catch (error) {
+      toast.error("Error updating banner status", { id: loadingToast });
     }
   };
 
@@ -58,7 +118,6 @@ const BannerManager = () => {
           <p className="text-sm text-zinc-800 font-semibold italic tracking-wide mt-1">Storefront Campaign Manager</p>
         </div>
         <div className="flex items-center gap-4">
-          {/* 🟢 Added onClick */}
           <button onClick={handleUpdateCarousel} className="px-8 py-3 bg-zinc-800 text-white rounded-2xl font-semibold text-sm uppercase tracking-widest shadow-xl flex items-center gap-2 hover:bg-amber-600 transition-all">
             <Save size={16} /> Update Carousel
           </button>
@@ -81,7 +140,7 @@ const BannerManager = () => {
               </div>
             </div>
 
-            {/* 🟢 DYNAMIC PREVIEW BOX (Keeping your exact UI) */}
+            {/* DYNAMIC PREVIEW BOX */}
             <div className="aspect-21/9 w-full bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-[2.5rem] flex flex-col items-center justify-center group hover:border-amber-400 hover:bg-amber-50/30 transition-all cursor-pointer overflow-hidden relative">
               {imageUrl ? (
                 <div className="relative w-full h-full">
@@ -92,22 +151,15 @@ const BannerManager = () => {
                 </div>
               ) : (
                 <div className="flex flex-col items-center group-hover:scale-110 transition-transform duration-500">
-                  {/* 🟢 Inserted UploadButton here */}
                   <UploadButton
                     endpoint="imageUploader"
-                    // 🟢 1. This triggers the "Uploading..." text immediately
                     onUploadBegin={() => {
                       setIsUploading(true);
-
                     }}
-                    // 🟢 2. No need for onBeforeUploadBegin unless you are doing complex renaming
                     onClientUploadComplete={(res) => {
-                      
-
-                      // UploadThing returns an array. Check if it exists and has the url.
                       if (res && res.length > 0) {
                         const newUrl = res[0].url;
-                        setImageUrl(newUrl); // This updates your preview <img>
+                        setImageUrl(newUrl);
                         setIsUploading(false);
                         toast.success("Masterpiece Uploaded!");
                       }
@@ -123,7 +175,6 @@ const BannerManager = () => {
                     }}
                     content={{
                       button({ ready, isUploading: componentIsUploading }) {
-                        // 🟢 3. Use both the internal state and your local state for accuracy
                         if (isUploading || componentIsUploading) return (
                           <div className="flex flex-col items-center animate-pulse">
                             <Clock className="text-amber-500 mb-4 animate-spin" size={40} />
@@ -145,6 +196,67 @@ const BannerManager = () => {
               )}
             </div>
           </section>
+
+          {/* 🟢 MANAGE EXISTING BANNERS SECTION */}
+          <section className="bg-white p-10 rounded-[3rem] border border-zinc-100 shadow-sm space-y-8">
+            <h3 className="text-sm font-semibold text-zinc-800 uppercase tracking-widest flex items-center gap-2">
+              <Layout size={16} className="text-amber-600" /> Active Banners on Storefront ({existingBanners.length})
+            </h3>
+            
+            {existingBanners.length === 0 ? (
+              <div className="text-center py-10 border-2 border-dashed border-zinc-100 rounded-3xl text-zinc-400">
+                <ImageIcon className="mx-auto mb-3 opacity-30" size={32} />
+                <p className="text-xs font-semibold uppercase tracking-widest">No active banners in database</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {existingBanners.map((banner) => (
+                  <div 
+                    key={banner._id} 
+                    className="group/item relative flex flex-col bg-zinc-50 border border-zinc-100 rounded-[2rem] p-4 transition-all duration-300 hover:border-amber-200 hover:shadow-lg"
+                  >
+                    {/* Image Preview */}
+                    <div className="relative aspect-21/9 w-full rounded-2xl overflow-hidden bg-zinc-200 border border-zinc-100 shadow-inner">
+                      <img 
+                        src={banner.imageUrl} 
+                        alt={banner.title} 
+                        className="w-full h-full object-cover" 
+                      />
+                      
+                      {/* Hover Overlay Delete */}
+                      <button 
+                        onClick={() => handleDeleteBanner(banner._id)}
+                        className="absolute top-3 right-3 p-2.5 bg-white/90 backdrop-blur-md text-red-600 rounded-xl shadow-md hover:bg-red-600 hover:text-white transition-all hover:scale-110 active:scale-95"
+                        title="Delete Banner"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+
+                    {/* Banner Info */}
+                    <div className="mt-4 flex items-center justify-between px-1">
+                      <div>
+                        <p className="text-xs font-bold text-zinc-800 uppercase tracking-wider">{banner.title || "Hero Banner"}</p>
+                        <p className="text-[10px] text-zinc-400 font-semibold italic mt-0.5">{banner.link}</p>
+                      </div>
+                      
+                      {/* Active Status Toggle */}
+                      <button
+                        onClick={() => handleToggleStatus(banner._id, banner.isActive)}
+                        className={`px-3.5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${
+                          banner.isActive 
+                            ? "bg-green-50 text-green-700 border border-green-200" 
+                            : "bg-zinc-200 text-zinc-500 border border-zinc-300"
+                        }`}
+                      >
+                        {banner.isActive ? "Active" : "Paused"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
 
         {/* RIGHT: SETTINGS */}
@@ -162,7 +274,6 @@ const BannerManager = () => {
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-zinc-800 uppercase tracking-widest ml-1">Redirect Link</label>
                 <div className="relative">
-                  {/* 🟢 Connected value and onChange */}
                   <select
                     value={link}
                     onChange={(e) => setLink(e.target.value)}
@@ -189,7 +300,6 @@ const BannerManager = () => {
           {/* VISIBILITY TOGGLES */}
           <div className="space-y-4">
             <label className="w-full cursor-pointer group">
-              {/* 🟢 Connected checked and onChange */}
               <input
                 type="checkbox"
                 className="hidden peer"

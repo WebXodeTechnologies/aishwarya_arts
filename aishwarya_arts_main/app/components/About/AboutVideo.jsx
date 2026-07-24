@@ -9,12 +9,12 @@ export default function AboutVideo() {
       aria-labelledby="about-video-heading"
     >
       {/* Accessible & SEO-friendly heading */}
-      <h1
+      <h2
         id="about-video-heading"
         className="text-3xl md:text-4xl font-semibold mb-4 text-black"
       >
         A Glimpse Into Our World
-      </h1>
+      </h2>
 
       {/* Descriptive paragraph for SEO */}
       <p className="text-black max-w-2xl mb-8 leading-relaxed">

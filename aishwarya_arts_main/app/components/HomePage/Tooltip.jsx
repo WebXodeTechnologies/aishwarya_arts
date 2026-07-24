@@ -12,12 +12,12 @@ const TooltipWithCTA = () => {
       aria-label="Showcase of Tanjore art enthusiasts"
     >
       {/* Headline */}
-      <h1
-        className="text-4xl md:text-5xl font-bold text-gray-900 leading-relaxed tracking-wider font-cinzel animate-pulse"
+      <h2
+        className="text-4xl md:text-5xl font-bold text-gray-900 leading-relaxed tracking-wider font-cinzel"
         data-sb-field-path="heading"
       >
         Explore Our Traditional Tanjore Arts
-      </h1>
+      </h2>
 
       {/* Tooltip + CTA */}
       <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -32,6 +32,7 @@ const TooltipWithCTA = () => {
         {/* CTA Button */}
         <Button
           href="/collections"
+          color="none"
           className="group relative px-10 py-5 bg-zinc-900 overflow-hidden rounded-2xl transition-all duration-500 hover:shadow-[0_20px_40px_rgba(184,134,11,0.2)] active:scale-95"
         >
           {/* Subtle Shimmer Background */}

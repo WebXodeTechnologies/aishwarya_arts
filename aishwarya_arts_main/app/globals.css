@@ -18,6 +18,10 @@ h1 {
   font-family: "Cinzel Decorative", serif;
 }
 
+h2 {
+  font-family: "Cinzel Decorative", serif;
+}
+
 .input {
   @apply w-full border rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-600;
 }

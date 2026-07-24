@@ -55,12 +55,12 @@ const Testimonial = () => {
       className="max-w-7xl mx-auto py-20 px-6 md:px-16"
     >
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h1
+        <h2
           id="testimonial-heading"
           className="text-4xl md:text-4xl font-bold text-black"
         >
           What Our Patrons Say
-        </h1>
+        </h2>
         <p className="mt-4 text-black max-w-2xl mx-auto text-2xl">
           Hear from those who’ve experienced the artistry and devotion behind
           every Aishwarya Arts Tanjore painting.

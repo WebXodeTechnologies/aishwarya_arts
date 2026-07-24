@@ -30,7 +30,7 @@ export default function ContactForm() {
   }
 
   return (
-    <section className="py-10 max-w-7xl mx-auto px-6">
+    <section className="py-10 max-w-7xl mx-auto px-6" aria-label="Contact Form Section">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-20 items-start">
         {/* LEFT CONTENT */}
         <div>
@@ -40,10 +40,10 @@ export default function ContactForm() {
             our studio creates pieces that last generations.
           </p>
           <div className="space-y-2 text-lg">
-            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none ">Aishwarya Arts  </h1>
-            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none "> Tanjore Art Gallery </h1>
+            <h2 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none ">Aishwarya Arts  </h2>
+            <h2 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none mt-1"> Tanjore Art Gallery </h2>
 
-            <p className="text-gray-800">3/648, Thuraiyur Road, N. Kosavampatti Namakkal Tamilnadu - 637002</p>
+            <p className="text-gray-800 mt-4">3/648, Thuraiyur Road, N. Kosavampatti Namakkal Tamilnadu - 637002</p>
             <p className="text-gray-800 font-medium">Phone: <span className="text-gray-600">+91 9655007661</span></p>
             <p className="text-gray-800 font-medium">Email: <span className="text-gray-600">contact.aishwaryaarts@gmail.com</span></p>
           </div>
@@ -53,12 +53,12 @@ export default function ContactForm() {
         <div className="bg-white/90 backdrop-blur-lg border border-gray-100 shadow-2xl rounded-3xl p-12">
           <h2 className="text-3xl font-semibold mb-10">Send us a message</h2>
 
-          {/* ADDED onSubmit HERE */}
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col">
-              <label className="text-base font-medium mb-1">First Name</label>
+              <label htmlFor="firstName" className="text-base font-medium mb-1">First Name</label>
               <input
-                name="firstName" // ADDED NAME
+                id="firstName"
+                name="firstName"
                 type="text"
                 required
                 className="border p-4 rounded-xl text-lg w-full focus:ring-2 focus:ring-black outline-none"
@@ -67,9 +67,10 @@ export default function ContactForm() {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-base font-medium mb-1">Last Name</label>
+              <label htmlFor="lastName" className="text-base font-medium mb-1">Last Name</label>
               <input
-                name="lastName" // ADDED NAME
+                id="lastName"
+                name="lastName"
                 type="text"
                 className="border p-4 rounded-xl text-lg w-full focus:ring-2 focus:ring-black outline-none"
                 placeholder="Doe"
@@ -77,9 +78,10 @@ export default function ContactForm() {
             </div>
 
             <div className="flex flex-col md:col-span-2">
-              <label className="text-base font-medium mb-1">Phone Number <span className="text-red-500">*</span></label>
+              <label htmlFor="phone" className="text-base font-medium mb-1">Phone Number <span className="text-red-500">*</span></label>
               <input
-                name="phone" // ADDED NAME
+                id="phone"
+                name="phone"
                 type="text"
                 required
                 className="border p-4 rounded-xl text-lg w-full focus:ring-2 focus:ring-black outline-none"
@@ -88,9 +90,10 @@ export default function ContactForm() {
             </div>
 
             <div className="flex flex-col md:col-span-2">
-              <label className="text-base font-medium mb-1">Email Address</label>
+              <label htmlFor="email" className="text-base font-medium mb-1">Email Address</label>
               <input
-                name="email" // ADDED NAME
+                id="email"
+                name="email"
                 type="email"
                 required
                 className="border p-4 rounded-xl text-lg w-full focus:ring-2 focus:ring-black outline-none"
@@ -99,9 +102,10 @@ export default function ContactForm() {
             </div>
 
             <div className="flex flex-col md:col-span-2">
-              <label className="text-base font-medium mb-1">Message</label>
+              <label htmlFor="message" className="text-base font-medium mb-1">Message</label>
               <textarea
-                name="message" // ADDED NAME
+                id="message"
+                name="message"
                 required
                 className="border p-4 rounded-xl text-lg w-full focus:ring-2 focus:ring-black outline-none"
                 rows="4"
@@ -112,7 +116,7 @@ export default function ContactForm() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-black text-white py-4 px-10 rounded-2xl md:col-span-2 font-semibold text-xl shadow-lg hover:bg-gray-900 transition-all flex items-center justify-center gap-3"
+              className="bg-black text-white py-4 px-10 rounded-2xl md:col-span-2 font-semibold text-xl shadow-lg hover:bg-gray-900 transition-all flex items-center justify-center gap-3 animate-all duration-300"
             >
               {loading ? <><Loader2 className="animate-spin" /> Sending...</> : "Submit"}
             </button>

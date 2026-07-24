@@ -97,7 +97,7 @@ const BestSellers = () => {
                     alt={product.title}
                     fill
                     className="object-contain p-6 md:p-10 transition-transform duration-[1.5s] ease-out group-hover/link:scale-110"
-                    sizes="(max-w-768px) 100vw, 33vw"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
 
                   {/* Luxury Authenticity Badge */}

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiSearch, FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
+import { FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
 import { CiMenuFries } from "react-icons/ci";
 import { usePathname, useRouter } from "next/navigation";
 import { navItems } from "../HomePage";
@@ -20,7 +20,6 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-
   const [dbImage, setDbImage] = useState(null);
 
   // Get Store Data
@@ -58,12 +57,9 @@ const Header = () => {
   const zustandLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   useEffect(() => {
-    // If NextAuth says we are logged in, but Zustand is still 'false'
     if (status === "authenticated" && !zustandLoggedIn && session?.user) {
       loginZustand(session.user);
     }
-
-    // If NextAuth says we are logged out, but Zustand is still 'true'
     if (status === "unauthenticated" && zustandLoggedIn) {
       logoutZustand();
     }
@@ -78,8 +74,6 @@ const Header = () => {
     router.push("/");
   };
 
-  
-
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {
@@ -89,11 +83,11 @@ const Header = () => {
 
   const headerProfileSrc = dbImage || session?.user?.image;
 
-  // Updated Helper to render Icons with Real-Time Badges
+  // Helper to render Icons with Real-Time Badges & Accessibility attributes
   const renderIcon = (type) => {
     if (type === "wishlist")
       return (
-        <div className="relative">
+        <div className="relative" aria-hidden="true">
           <FiHeart size={22} />
           {mounted && wishlist.length > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full animate-in zoom-in duration-300">
@@ -104,7 +98,7 @@ const Header = () => {
       );
     if (type === "cart")
       return (
-        <div className="relative">
+        <div className="relative" aria-hidden="true">
           <FiShoppingCart size={22} />
           {mounted && cart.length > 0 && (
             <span className="absolute -top-2 -right-2 bg-amber-600 text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full animate-in zoom-in duration-300">
@@ -119,42 +113,48 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 font-outfit">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Brand Logo & Tagline SEO wrapper */}
         <Link
           href="/"
-          aria-label="Home"
+          aria-label="Aishwarya Arts - Home"
           className="flex items-center gap-4 group"
         >
           <div className="relative overflow-hidden rounded-xl transition-transform group-hover:scale-105">
             <Image
               src={Logo}
-              alt="Logo"
+              alt="Aishwarya Arts Logo"
               width={55}
+              height={55}
               priority
               className="object-contain"
             />
           </div>
 
           <div className="flex flex-col mt-2">
-            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none">
-              Aishwaraya Arts
-            </h1>
-            <span className="text-sm md:text-[15px] uppercase trackaing-wide text-zinc-900 font-semibold mt-1">
-              Crafting Tanjore Masterpieces 
+            <span className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none">
+              Aishwarya Arts
+            </span>
+            <span className="text-sm md:text-[15px] uppercase tracking-wide text-zinc-900 font-semibold mt-1">
+              Crafting Tanjore Masterpieces
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex space-x-8">
+        <nav className="hidden lg:flex space-x-8" aria-label="Main Navigation">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative text-lg font-bold tracking-normal transition ${pathname === item.href ? "text-amber-800" : "text-black hover:text-amber-700"}`}
+              className={`relative text-lg font-bold tracking-normal transition ${pathname === item.href
+                  ? "text-amber-800"
+                  : "text-black hover:text-amber-700"
+                }`}
             >
               {item.label}
               <span
-                className={`absolute left-0 -bottom-1 h-0.5 bg-amber-800 transition-all ${pathname === item.href ? "w-full" : "w-0"}`}
+                className={`absolute left-0 -bottom-1 h-0.5 bg-amber-800 transition-all ${pathname === item.href ? "w-full" : "w-0"
+                  }`}
               />
             </Link>
           ))}
@@ -162,11 +162,19 @@ const Header = () => {
 
         {/* Desktop Utilities */}
         <div className="hidden lg:flex items-center space-x-6">
-          <Link href="/wishlist" className="hover:text-amber-800 transition">
+          <Link
+            href="/wishlist"
+            aria-label="View Wishlist"
+            className="hover:text-amber-800 transition"
+          >
             {renderIcon("wishlist")}
           </Link>
 
-          <Link href="/cart" className="hover:text-amber-800 transition">
+          <Link
+            href="/cart"
+            aria-label="View Shopping Cart"
+            className="hover:text-amber-800 transition"
+          >
             {renderIcon("cart")}
           </Link>
 
@@ -174,12 +182,13 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen((p) => !p)}
+                aria-label="User Account Menu"
                 className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-100 flex items-center justify-center transition-all hover:border-amber-300 shadow-sm"
               >
                 {headerProfileSrc ? (
                   <Image
                     src={headerProfileSrc}
-                    alt="Avatar"
+                    alt="User Profile Avatar"
                     width={40}
                     height={40}
                     className="object-cover"
@@ -195,14 +204,14 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-xl py-2 overflow-hidden z-60">
                   <Link
                     href="/profile"
-                    className="block px-4 py-3 text-sm hover:bg-gray-50  transition"
+                    className="block px-4 py-3 text-sm hover:bg-gray-50 transition"
                     onClick={() => setDropdownOpen(false)}
                   >
                     My Profile
                   </Link>
                   <Link
                     href="/orders"
-                    className="block px-4 py-3 text-sm hover:bg-gray-50  transition"
+                    className="block px-4 py-3 text-sm hover:bg-gray-50 transition"
                     onClick={() => setDropdownOpen(false)}
                   >
                     My Orders
@@ -228,11 +237,14 @@ const Header = () => {
 
         {/* Mobile Button */}
         <div className="lg:hidden flex items-center gap-4">
-          {/* Mobile Cart/Wishlist quick access */}
-          <Link href="/cart" className="relative">
+          <Link href="/cart" aria-label="View Shopping Cart" className="relative">
             {renderIcon("cart")}
           </Link>
-          <button onClick={() => setMobileOpen(true)} className="p-1">
+          <button
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open Mobile Menu"
+            className="p-1"
+          >
             <CiMenuFries size={28} />
           </button>
         </div>
@@ -240,31 +252,37 @@ const Header = () => {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-100 bg-white p-6 transition-all animate-in slide-in-from-right duration-300">
+        <div
+          className="fixed inset-0 z-100 bg-white p-6 transition-all animate-in slide-in-from-right duration-300"
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="flex justify-between items-center mb-12">
-            <Image src={Logo} alt="Logo" width={60} />
+            <Image src={Logo} alt="Aishwarya Arts Logo" width={60} height={60} />
             <div className="flex flex-col">
-              <h1 className="text-xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent ">
-                Aishwaraya Arts
-              </h1>
+              <div className="text-xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent">
+                Aishwarya Arts
+              </div>
               <span className="text-[12px] uppercase tracking-wide text-zinc-900 font-semibold">
                 Tanjore Gallery
               </span>
             </div>
             <button
               onClick={() => setMobileOpen(false)}
+              aria-label="Close Mobile Menu"
               className="p-2 bg-gray-100 rounded-full"
             >
               <FiX size={24} />
             </button>
           </div>
-          <nav className="flex flex-col gap-6">
+          <nav className="flex flex-col gap-6" aria-label="Mobile Navigation">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`text-2xl font-semibold italic tracking-tighter  ${pathname === item.href ? "text-amber-800" : "text-black"}`}
+                className={`text-2xl font-semibold italic tracking-tighter ${pathname === item.href ? "text-amber-800" : "text-black"
+                  }`}
               >
                 {item.label}
               </Link>

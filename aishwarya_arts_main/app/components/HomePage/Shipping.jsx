@@ -31,7 +31,7 @@ const Shipping = () => {
       aria-labelledby="shipping-info"
     >
       <div className="flex justify-center items-center mb-8 px-4">
-        <h1
+        <h2
           id="shipping-info"
           className="font-semibold text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-wide text-center leading-tight"
         >
@@ -40,7 +40,7 @@ const Shipping = () => {
           <span className="inline-block">Offers</span>
           <span className="mx-2 text-zinc-300">|</span>
           <span className="inline-block">Best Price</span>
-        </h1>
+        </h2>
       </div>
 
       <div className="grid md:grid-cols-3 gap-12 text-center hover:group hover:transition hover:scale-105">

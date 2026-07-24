@@ -1,7 +1,6 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
+import { cn } from "@/lib/utlis";
 
 export default function Button({ children, href, onClick, className = "", color = "gold" }) {
   const baseClasses = `
@@ -29,7 +28,7 @@ export default function Button({ children, href, onClick, className = "", color 
 
     case "gold":
       colorClasses = `
-        bg-gradient-to-br from-[#d4af37] via-[#f7e488] to-[#b8860b]
+        bg-linear-to-br from-[#d4af37] via-[#f7e488] to-[#b8860b]
         text-black
         font-semibold
         shadow-[0_4px_10px_rgba(212,175,55,0.5)]
@@ -45,11 +44,13 @@ export default function Button({ children, href, onClick, className = "", color 
       colorClasses = "";
   }
 
+  const mergedClasses = cn(baseClasses, colorClasses, className);
+
   if (href) {
     return (
       <Link
         href={href}
-        className={`${baseClasses} ${colorClasses} ${className}`}
+        className={mergedClasses}
         role="button"
       >
         {children}
@@ -60,7 +61,7 @@ export default function Button({ children, href, onClick, className = "", color 
   return (
     <button
       onClick={onClick}
-      className={`${baseClasses} ${colorClasses} ${className}`}
+      className={mergedClasses}
       type="button"
     >
       {children}
