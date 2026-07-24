@@ -36,7 +36,7 @@ const Story = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="relative w-full h-[450px] md:h-[550px] lg:h-[600px] overflow-hidden rounded-3xl shadow-xl bg-zinc-50 border border-zinc-100"
+          className="relative w-full h-112.5 md:h-137.5 lg:h-150 overflow-hidden rounded-3xl shadow-xl bg-zinc-50 border border-zinc-100"
         >
           <Image
             src={images[currentImage]}

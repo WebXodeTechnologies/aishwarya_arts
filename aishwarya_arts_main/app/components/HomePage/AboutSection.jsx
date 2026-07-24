@@ -172,7 +172,7 @@ export default function ArtistAboutSection() {
                   <p className="text-[10px] md:text-xs uppercase tracking-widest text-amber-500 font-semibold mb-2">
                     {box.label}
                   </p>
-                  <p className="text-zinc-300 text-xs md:text-sm leading-snug max-w-[200px] lg:max-w-none">
+                  <p className="text-zinc-300 text-xs md:text-sm leading-snug max-w-50 lg:max-w-none">
                     {box.fullDesc}
                   </p>
                 </div>

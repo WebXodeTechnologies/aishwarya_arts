@@ -228,8 +228,8 @@ function FeaturedProducts() {
                 onClick={() => setActiveTab(tab.id)}
                 aria-pressed={isActive}
                 className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600 ${isActive
-                    ? "bg-gradient-to-r from-amber-800 to-yellow-600 text-white shadow-md shadow-amber-800/10"
-                    : "bg-white border border-zinc-200 text-zinc-800 hover:bg-zinc-50"
+                  ? "bg-linear-to-r from-amber-800 to-yellow-600 text-white shadow-md shadow-amber-800/10"
+                  : "bg-white border border-zinc-200 text-zinc-800 hover:bg-zinc-50"
                   }`}
               >
                 {tab.label}
@@ -280,7 +280,7 @@ function FeaturedProducts() {
                 className="group bg-white border border-zinc-200/60 rounded-xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-500 relative"
               >
                 {/* Image Showcase Frame */}
-                <div className="relative aspect-[4/5] bg-zinc-50 overflow-hidden border-b border-zinc-100">
+                <div className="relative aspect-4/5 bg-zinc-50 overflow-hidden border-b border-zinc-100">
                   <Image
                     src={imageSrc}
                     alt={`Handcrafted 22K Gold Tanjore Painting of ${product.title}`}
@@ -338,7 +338,7 @@ function FeaturedProducts() {
                 </div>
 
                 {/* Information block */}
-                <div className="p-6 flex flex-col flex-grow text-center items-center">
+                <div className="p-6 flex flex-col grow text-center items-center">
                   <span className="text-[10px] font-bold text-amber-800 tracking-widest uppercase mb-1.5 block">
                     {product.category === "others" ? "Tanjore Masterpiece" : product.category}
                   </span>
@@ -352,7 +352,7 @@ function FeaturedProducts() {
                     </h3>
                   </Link>
 
-                  <p className="text-xs text-zinc-600 mb-4 line-clamp-2 min-h-[2rem]">
+                  <p className="text-xs text-zinc-600 mb-4 line-clamp-2 min-h-8">
                     {product.description || "Certified authentic 22K gold leaf work crafted carefully by our master artist."}
                   </p>
 
@@ -428,7 +428,7 @@ function FeaturedProducts() {
               </button>
 
               {/* Left: Product Image */}
-              <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-zinc-50 flex items-center justify-center p-8 relative min-h-[320px]">
+              <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-zinc-50 flex items-center justify-center p-8 relative min-h-80">
                 <Image
                   src={selectedProduct.images?.[0] || "/logo.png"}
                   alt={`Detailed view of ${selectedProduct.title}`}
@@ -483,7 +483,7 @@ function FeaturedProducts() {
                     <div className="flex items-center text-xs text-zinc-800">
                       <FiGrid className="text-amber-600 mr-3 shrink-0" size={16} aria-hidden="true" />
                       <span className="font-semibold w-28 text-zinc-500 uppercase tracking-wider">Material:</span>
-                      <span className="font-bold text-zinc-900 text-left leading-tight max-w-[240px]">{selectedProduct.materialBase || "Water-resistant Plywood & Cotton Cloth"}</span>
+                      <span className="font-bold text-zinc-900 text-left leading-tight max-w-60">{selectedProduct.materialBase || "Water-resistant Plywood & Cotton Cloth"}</span>
                     </div>
                   </div>
                 </div>
