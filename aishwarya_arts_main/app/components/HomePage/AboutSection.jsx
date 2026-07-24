@@ -33,7 +33,6 @@ const ArtFrame = ({ children, className }) => {
 };
 
 export default function ArtistAboutSection() {
-  // --- 2. ANIMATION VARIANTS (The missing link) ---
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -54,49 +53,52 @@ export default function ArtistAboutSection() {
   const images = [
     {
       src: "/assets/grid/grid-image-1.jpg",
-      alt: "Tanjore Detail",
+      alt: "Master artisan detailing intricate gold leaf motifs on a Tanjore painting",
       className: "lg:mt-0",
     },
     {
       src: "/assets/grid/grid-image-7.jpg",
-      alt: "Gold Foil",
+      alt: "Authentic 22ct gold foil work and vibrant mineral pigments",
       className: "lg:mt-20 mt-10",
     },
     {
       src: "/assets/grid/grid-image-8.jpg",
-      alt: "Artisan Work",
+      alt: "Handcrafted traditional Thanjavur art creation process",
       className: "lg:-mt-20 -mt-10",
     },
     {
       src: "/assets/grid/grid-image-6.jpg",
-      alt: "Final Masterpiece",
+      alt: "Finished divine masterpiece by Aishwarya Arts",
       className: "lg:mt-0",
     },
   ];
 
   const infoBoxes = [
     {
-      icon: <Award />,
+      icon: <Award aria-hidden="true" />,
       title: "25+ Years",
       label: "Expertise",
-      fullDesc: "Preserving the soul of Thanjavur.",
+      fullDesc: "Preserving the sacred soul of Thanjavur heritage.",
     },
     {
-      icon: <Target />,
+      icon: <Target aria-hidden="true" />,
       title: "2500+",
       label: "Creations",
-      fullDesc: "Unique masterpieces adorned in 22ct gold.",
+      fullDesc: "Unique masterpieces adorned in genuine 22ct gold foil.",
     },
     {
-      icon: <Users />,
+      icon: <Users aria-hidden="true" />,
       title: "1.5K+",
       label: "Customers",
-      fullDesc: "Bringing divine radiance to homes worldwide.",
+      fullDesc: "Bringing divine radiance to sacred spaces worldwide.",
     },
   ];
 
   return (
-    <section className="relative bg-[#050505] w-full overflow-hidden font-outfit text-white py-24 md:py-40">
+    <section
+      className="relative bg-[#050505] w-full overflow-hidden font-outfit text-white py-24 md:py-40"
+      aria-label="Aishwarya Arts Heritage and Master Artisan Legacy"
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
@@ -122,7 +124,7 @@ export default function ArtistAboutSection() {
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   className="object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60" aria-hidden="true" />
               </ArtFrame>
             ))}
           </motion.div>
@@ -132,23 +134,22 @@ export default function ArtistAboutSection() {
             {/* --- TEXT CONTENT --- */}
             <motion.div variants={itemVariants} className="space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
               <div className="flex items-center gap-4">
-                <span className="hidden md:block h-px w-12 bg-amber-600" />
-                <h2 className="text-[13px] md:text-[15px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-amber-500 font-semibold">
+                <span className="hidden md:block h-px w-12 bg-amber-600" aria-hidden="true" />
+                <span className="text-[13px] md:text-[15px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-amber-500 font-semibold">
                   Since 2000 • Thanjavur
-                </h2>
+                </span>
               </div>
 
-              <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white">
+              {/* Semantic H2 Heading */}
+              <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white font-cinzel">
                 Sacred Gold <br />
                 <span className="bg-linear-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent italic drop-shadow-[0_4px_15px_rgba(251,191,36,0.3)] select-none">
                   Timeless Art
                 </span>
               </h2>
 
-              <p className="text-zinc-300 text-base md:text-xl leading-relaxed max-w-xl font-medium px-4 md:px-0">
-                Rooted in centuries of devotion, Aishwarya Arts preserves the
-                regal legacy of Tanjore. We turn traditional spirituality into
-                golden heirlooms for your modern sanctuary.
+              <p className="text-zinc-200 text-base md:text-xl leading-relaxed max-w-xl font-medium px-4 md:px-0">
+                Rooted in centuries of devotion, Aishwarya Arts preserves the regal heritage of authentic Tanjore paintings. We transform traditional spirituality into genuine 22K gold heirlooms for your modern sanctuary.
               </p>
             </motion.div>
 
@@ -171,7 +172,7 @@ export default function ArtistAboutSection() {
                   <p className="text-[10px] md:text-xs uppercase tracking-widest text-amber-500 font-semibold mb-2">
                     {box.label}
                   </p>
-                  <p className="text-zinc-400 text-xs md:text-sm leading-snug max-w-50 lg:max-w-none">
+                  <p className="text-zinc-300 text-xs md:text-sm leading-snug max-w-[200px] lg:max-w-none">
                     {box.fullDesc}
                   </p>
                 </div>
@@ -185,14 +186,15 @@ export default function ArtistAboutSection() {
             >
               <Link
                 href="/collections"
-                className="group relative inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 font-semibold text-sm md:text-md uppercase tracking-widest text-zinc-950 overflow-hidden rounded-full transition-all active:scale-95 shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_35px_rgba(251,191,36,0.5)]"
+                aria-label="Explore the full catalog of handcrafted 22K gold Tanjore paintings"
+                className="group relative inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 font-semibold text-sm md:text-md uppercase tracking-widest text-zinc-950 overflow-hidden rounded-full transition-all active:scale-95 shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_35px_rgba(251,191,36,0.5)] focus:outline-hidden focus:ring-2 focus:ring-amber-400"
               >
-                <div className="absolute inset-0 bg-linear-to-tr from-[#B8860B] via-[#FFD700] to-[#FDB931]" />
+                <div className="absolute inset-0 bg-linear-to-tr from-[#B8860B] via-[#FFD700] to-[#FDB931]" aria-hidden="true" />
                 <span className="relative z-10 flex items-center gap-3">
                   Explore Collection
-                  <ArrowRight size={17} className="transition-transform group-hover:translate-x-1.5" />
+                  <ArrowRight size={17} className="transition-transform group-hover:translate-x-1.5" aria-hidden="true" />
                 </span>
-                <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" aria-hidden="true" />
               </Link>
             </motion.div>
           </div>

@@ -11,10 +11,8 @@ const nextConfig = {
       { protocol: "https", hostname: "i.pinimg.com" },
       { protocol: "https", hostname: "*.ufs.sh" },
     ],
-    // Prevents server optimization timeouts on heavy CDN payloads
     dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // Increase minimum cache TTL to prevent repeated slow server fetches
+    contentSecurityPolicy: "default-src 'self'; script-src 'none';",
     minimumCacheTTL: 60,
   },
   eslint: {

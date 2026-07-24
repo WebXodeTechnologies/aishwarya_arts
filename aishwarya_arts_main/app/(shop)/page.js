@@ -11,10 +11,15 @@ import { unstable_cache } from "next/cache";
 import { connectDB } from "@/lib/db";
 import Banner from "@/models/Banner";
 
+// Force static rendering optimization where possible
+export const dynamic = "force-static";
+export const revalidate = 3600; // Revalidate cache every hour
+
 // Homepage Specific SEO Metadata for High-Intent Rankings
 export const metadata = {
   title: {
-    absolute: "Buy Authentic Handmade Tanjore Paintings Online | Aishwarya Arts",
+    absolute:
+      "Buy Authentic Handmade Tanjore Paintings Online | Aishwarya Arts",
   },
   description:
     "Explore exquisite 22K gold leaf handmade Tanjore paintings crafted by master artisans in Tamil Nadu. Certified authentic traditional art for home and office decor.",

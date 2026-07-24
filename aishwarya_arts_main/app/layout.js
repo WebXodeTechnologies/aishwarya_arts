@@ -1,13 +1,21 @@
-import { Titillium_Web } from "next/font/google";
+import { Titillium_Web, Cinzel_Decorative } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
 import GoogleAnalyticsWrapper from "./components/GoogleAnalyticsWrapper";
 
+// Limit weights to only what is actively used above-the-fold to reduce font file size
 const titillium = Titillium_Web({
   subsets: ["latin"],
-  weight: ["300", "400", "600", "700", "900"],
+  weight: ["400", "600", "700"], // Removed unused 300/900 weights for faster initial payload
   variable: "--font-titillium",
+  display: "swap",
+});
+
+const cinzel = Cinzel_Decorative({
+  subsets: ["latin"],
+  weight: ["700"], // Keep only primary heading weight needed above-the-fold
+  variable: "--font-cinzel",
   display: "swap",
 });
 
@@ -68,7 +76,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  // Structured JSON-LD Data for Google Knowledge Graph & Local SEO indexing
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ArtGallery",
@@ -108,7 +115,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* LCP Booster: Preconnect to image CDN domains to reduce load latency */}
+        {/* Preconnect & DNS-Prefetch for CDN */}
         <link rel="preconnect" href="https://utfs.io" />
         <link rel="dns-prefetch" href="https://utfs.io" />
 
@@ -117,7 +124,9 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${titillium.variable} antialiased font-sans`}>
+      <body
+        className={`${titillium.variable} ${cinzel.variable} antialiased font-sans`}
+      >
         <GoogleAnalyticsWrapper />
         <Providers>
           <Toaster position="top-center" />

@@ -9,7 +9,7 @@ import { FiHeart, FiEye, FiShoppingCart, FiX, FiAward, FiGrid, FiPackage } from 
 import { useCartStore } from "../../../store/useCartStore";
 import { useWishlistStore } from "../../../store/useWishlistStore";
 
-// Static premium fallbacks matching database records perfectly in case database is empty or offline
+// Static fallback master collection matching database schemas
 const staticFeaturedProducts = [
   {
     _id: "6a507af1f07e5f5b163653c1",
@@ -79,7 +79,6 @@ const staticFeaturedProducts = [
   }
 ];
 
-// Tabs for client filtering
 const TABS = [
   { id: "all", label: "All Masterpieces" },
   { id: "ganesha", label: "Ganesha" },
@@ -95,7 +94,6 @@ function FeaturedProducts() {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Store actions
   const addToCart = useCartStore((state) => state.addToCart);
   const { toggleWishlist, isInWishlist } = useWishlistStore();
 
@@ -105,7 +103,6 @@ function FeaturedProducts() {
         const res = await fetch("/api/products");
         const json = await res.json();
         if (json.success && json.data && json.data.length > 0) {
-          // Curate distinct masterpieces by title to avoid visual duplicates on homepage
           const uniqueMap = new Map();
           json.data.forEach((p) => {
             if (!uniqueMap.has(p.title)) {
@@ -126,7 +123,6 @@ function FeaturedProducts() {
     fetchProducts();
   }, []);
 
-  // Sync filtering based on active tab
   useEffect(() => {
     if (!products.length) return;
 
@@ -179,14 +175,11 @@ function FeaturedProducts() {
     }
   };
 
-  // Variants for staggered entrance
   const gridVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.08
-      }
+      transition: { staggerChildren: 0.08 }
     }
   };
 
@@ -196,52 +189,59 @@ function FeaturedProducts() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto py-24 px-4 md:px-8 border-t border-zinc-100 bg-[#faf8f5]/30">
-      
+    <section
+      className="w-full max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8 border-t border-zinc-100 bg-[#faf8f5]/30"
+      aria-labelledby="featured-gold-paintings-title"
+    >
       {/* --- Section Title Header --- */}
-      <div className="text-center mb-16 max-w-2xl mx-auto">
-        <div className="flex items-center justify-center gap-3 mb-4">
+      <header className="text-center mb-16 max-w-3xl mx-auto">
+        <div className="flex items-center justify-center gap-3 mb-4" aria-hidden="true">
           <span className="h-px w-8 bg-amber-600" />
           <span className="text-amber-800 font-bold tracking-[0.25em] uppercase text-[10px] md:text-[11px]">
             Masterpieces on Focus
           </span>
           <span className="h-px w-8 bg-amber-600" />
         </div>
-        
-        <h2 className="text-3xl md:text-5xl font-extrabold text-zinc-900 leading-tight">
-          Featured Gold Paintings
+
+        {/* Semantic H2 Heading */}
+        <h2
+          id="featured-gold-paintings-title"
+          className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-zinc-900 leading-tight font-cinzel tracking-wide"
+        >
+          Featured Gold Paintings &amp; Artworks
         </h2>
-        <span className="block w-20 h-1 bg-amber-600 mx-auto mt-4 rounded-full"></span>
-        <p className="text-zinc-600 text-sm md:text-base mt-4 leading-relaxed">
-          Exquisite hand-selected divine creations adorned with genuine 22K gold foil and embedded semiprecious Jaipur gemstones.
+        <span className="block w-20 h-1 bg-amber-600 mx-auto mt-4 rounded-full" aria-hidden="true"></span>
+
+        <p className="text-zinc-700 text-sm md:text-base mt-4 leading-relaxed font-medium">
+          Exquisite hand-selected divine creations adorned with genuine 22K gold foil and embedded semiprecious Jaipur gemstones by expert master artisans.
         </p>
-      </div>
+      </header>
 
       {/* --- Deity Tabs Filters --- */}
-      <div className="flex justify-center mb-12">
-        <div className="flex overflow-x-auto pb-4 gap-2 md:gap-3 max-w-full no-scrollbar justify-start md:justify-center px-2">
+      <nav aria-label="Product Category Filter" className="flex justify-center mb-12">
+        <div className="flex overflow-x-auto pb-4 gap-2 md:gap-3 max-w-full scrollbar-none justify-start md:justify-center px-2">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 whitespace-nowrap cursor-pointer ${
-                  isActive
+                aria-pressed={isActive}
+                className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600 ${isActive
                     ? "bg-gradient-to-r from-amber-800 to-yellow-600 text-white shadow-md shadow-amber-800/10"
-                    : "bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50"
-                }`}
+                    : "bg-white border border-zinc-200 text-zinc-800 hover:bg-zinc-50"
+                  }`}
               >
                 {tab.label}
               </button>
             );
           })}
         </div>
-      </div>
+      </nav>
 
       {/* --- Products Grid / Loading Skeletons --- */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" aria-hidden="true">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-white rounded-lg p-4 border border-zinc-100 space-y-4 animate-pulse">
               <div className="aspect-square bg-zinc-100 rounded-sm w-full" />
@@ -252,15 +252,15 @@ function FeaturedProducts() {
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="text-center py-16 bg-white border border-zinc-100 rounded-2xl p-8 max-w-md mx-auto">
-          <FiGrid className="mx-auto text-zinc-300 mb-4" size={40} />
-          <h3 className="text-lg font-bold text-zinc-800">No matching paintings found</h3>
-          <p className="text-sm text-zinc-500 mt-2">Try clearing your category filter or exploring our entire catalog.</p>
+        <div className="text-center py-16 bg-white border border-zinc-100 rounded-2xl p-8 max-w-md mx-auto shadow-sm">
+          <FiGrid className="mx-auto text-zinc-300 mb-4" size={40} aria-hidden="true" />
+          <h3 className="text-lg font-bold text-zinc-900">No matching paintings found</h3>
+          <p className="text-sm text-zinc-600 mt-2">Try clearing your category filter or exploring our entire catalog.</p>
           <button
             onClick={() => setActiveTab("all")}
-            className="mt-6 px-5 py-2 bg-zinc-900 text-white text-xs font-bold uppercase rounded-full tracking-wider hover:bg-zinc-800"
+            className="mt-6 px-6 py-3 bg-zinc-900 text-white text-xs font-bold uppercase rounded-full tracking-wider hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600"
           >
-            Show All
+            Show All Masterpieces
           </button>
         </div>
       ) : (
@@ -277,54 +277,61 @@ function FeaturedProducts() {
               <motion.article
                 key={product._id}
                 variants={cardVariants}
-                className="group bg-white border border-zinc-200/60 rounded-sm overflow-hidden flex flex-col hover:shadow-xl transition-all duration-500 relative"
+                className="group bg-white border border-zinc-200/60 rounded-xl overflow-hidden flex flex-col hover:shadow-xl transition-all duration-500 relative"
               >
                 {/* Image Showcase Frame */}
-                <div className="relative aspect-[4/5] bg-zinc-50/50 overflow-hidden border-b border-zinc-100">
+                <div className="relative aspect-[4/5] bg-zinc-50 overflow-hidden border-b border-zinc-100">
                   <Image
                     src={imageSrc}
-                    alt={product.title}
+                    alt={`Handcrafted 22K Gold Tanjore Painting of ${product.title}`}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-contain p-6 group-hover:scale-105 transition-transform duration-700"
                   />
-                  
-                  {/* Decorative Subtle Dark Vignette on Hover */}
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
+
+                  {/* Decorative Vignette on Hover */}
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true" />
+
                   {/* 22K Gold Certification Badge */}
-                  <div className="absolute top-4 left-4 z-10">
+                  <div className="absolute top-4 left-4 z-10" aria-hidden="true">
                     <span className="bg-white/90 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-amber-800 rounded-sm border border-amber-200 shadow-xs flex items-center gap-1.5">
                       <FiAward className="text-amber-600" size={11} />
                       22K Gold Foil
                     </span>
                   </div>
 
-                  {/* Wishlist Button */}
+                  {/* Wishlist Button with Accessible Label */}
                   <button
+                    type="button"
                     onClick={(e) => handleWishlistToggle(product, e)}
-                    className="absolute top-4 right-4 z-10 p-2.5 bg-white/90 backdrop-blur-md rounded-full shadow-xs text-zinc-900 transition-colors duration-300 hover:bg-amber-800 hover:text-white cursor-pointer"
+                    aria-label={`Save ${product.title} to your wishlist`}
+                    className="absolute top-4 right-4 z-10 p-3 bg-white/90 backdrop-blur-md rounded-full shadow-xs text-zinc-900 transition-colors duration-300 hover:bg-amber-800 hover:text-white cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600"
                   >
                     <FiHeart
-                      size={14}
+                      size={15}
                       className={isFavorite ? "fill-amber-600 stroke-amber-600" : "stroke-current"}
+                      aria-hidden="true"
                     />
                   </button>
 
                   {/* Actions overlay visible on hover */}
                   <div className="absolute inset-x-0 bottom-4 flex justify-center gap-3 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-10 px-4">
                     <button
+                      type="button"
                       onClick={() => setSelectedProduct(product)}
-                      className="bg-white hover:bg-zinc-950 hover:text-white text-zinc-950 text-xs font-bold uppercase tracking-wider py-2.5 px-4 rounded-full shadow-lg flex items-center gap-2 transition-all cursor-pointer"
+                      aria-label={`Quick view specifications for ${product.title}`}
+                      className="bg-white hover:bg-zinc-950 hover:text-white text-zinc-950 text-xs font-bold uppercase tracking-wider py-2.5 px-4 rounded-full shadow-lg flex items-center gap-2 transition-all cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600"
                     >
-                      <FiEye size={13} />
+                      <FiEye size={13} aria-hidden="true" />
                       Quick View
                     </button>
                     <button
+                      type="button"
                       onClick={(e) => handleAddToCart(product, e)}
-                      className="bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold uppercase tracking-wider py-2.5 px-4 rounded-full shadow-lg flex items-center gap-2 transition-all cursor-pointer"
+                      aria-label={`Add ${product.title} to shopping cart`}
+                      className="bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold uppercase tracking-wider py-2.5 px-4 rounded-full shadow-lg flex items-center gap-2 transition-all cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600"
                     >
-                      <FiShoppingCart size={13} />
+                      <FiShoppingCart size={13} aria-hidden="true" />
                       Add
                     </button>
                   </div>
@@ -332,33 +339,37 @@ function FeaturedProducts() {
 
                 {/* Information block */}
                 <div className="p-6 flex flex-col flex-grow text-center items-center">
-                  <span className="text-[10px] font-bold text-amber-700 tracking-widest uppercase mb-1.5 block">
-                    {product.category === "others" ? "Tanjore Painting" : product.category}
+                  <span className="text-[10px] font-bold text-amber-800 tracking-widest uppercase mb-1.5 block">
+                    {product.category === "others" ? "Tanjore Masterpiece" : product.category}
                   </span>
-                  
-                  <Link href={`/collections/${product._id}`} className="block">
-                    <h3 className="text-lg md:text-xl font-bold text-zinc-900 hover:text-amber-800 transition-colors duration-300 mb-2 line-clamp-1">
+
+                  <Link
+                    href={`/collections/${product._id}`}
+                    className="block focus:outline-hidden focus:ring-2 focus:ring-amber-600 rounded-sm"
+                  >
+                    <h3 className="text-lg md:text-xl font-bold text-zinc-900 hover:text-amber-800 transition-colors duration-300 mb-2 line-clamp-1 font-cinzel">
                       {product.title}
                     </h3>
                   </Link>
 
-                  <p className="text-xs text-zinc-500 mb-4 line-clamp-2 min-h-8">
+                  <p className="text-xs text-zinc-600 mb-4 line-clamp-2 min-h-[2rem]">
                     {product.description || "Certified authentic 22K gold leaf work crafted carefully by our master artist."}
                   </p>
 
                   <div className="mt-auto pt-4 border-t border-zinc-100 w-full flex items-center justify-between">
                     <div className="text-left">
-                      <span className="text-[9px] uppercase tracking-wider text-zinc-400 block">Base Price</span>
+                      <span className="text-[9px] uppercase tracking-wider text-zinc-500 block font-semibold">Base Price</span>
                       <span className="text-lg font-black text-zinc-900">
                         ₹{product.price?.toLocaleString("en-IN")}
                       </span>
                     </div>
                     <Link
                       href={`/collections/${product._id}`}
-                      className="text-xs font-bold uppercase tracking-wider text-amber-800 hover:text-amber-950 flex items-center gap-1.5 transition-colors"
+                      aria-label={`View full details of ${product.title}`}
+                      className="text-xs font-bold uppercase tracking-wider text-amber-800 hover:text-amber-950 flex items-center gap-1.5 transition-colors focus:outline-hidden focus:ring-2 focus:ring-amber-600 rounded-sm p-1"
                     >
                       Details
-                      <span className="text-md font-light">→</span>
+                      <span className="text-base font-light" aria-hidden="true">→</span>
                     </Link>
                   </div>
                 </div>
@@ -372,17 +383,23 @@ function FeaturedProducts() {
       <div className="mt-20 text-center">
         <Link
           href="/collections"
-          className="inline-flex items-center gap-3 px-8 py-4 border border-zinc-900 text-zinc-900 text-xs font-bold uppercase tracking-[0.2em] rounded-full hover:bg-zinc-900 hover:text-white transition-all duration-300"
+          aria-label="Explore the entire Aishwarya Arts Tanjore painting collection catalog"
+          className="inline-flex items-center gap-3 px-8 py-4 border border-zinc-900 text-zinc-900 text-xs font-bold uppercase tracking-[0.2em] rounded-full hover:bg-zinc-900 hover:text-white transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-amber-600"
         >
           Explore Full Gallery
-          <span className="text-md font-normal">→</span>
+          <span className="text-base font-normal" aria-hidden="true">→</span>
         </Link>
       </div>
 
       {/* --- Specification Quick View Modal --- */}
       <AnimatePresence>
         {selectedProduct && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quick-view-title"
+          >
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -390,6 +407,7 @@ function FeaturedProducts() {
               exit={{ opacity: 0 }}
               onClick={() => setSelectedProduct(null)}
               className="absolute inset-0 bg-black/60 backdrop-blur-xs"
+              aria-hidden="true"
             />
 
             {/* Modal Body Container */}
@@ -397,21 +415,23 @@ function FeaturedProducts() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden z-10 flex flex-col md:flex-row border border-zinc-100 max-h-[90vh] md:max-h-none overflow-y-auto md:overflow-y-visible"
+              className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col md:flex-row border border-zinc-100 max-h-[90vh] md:max-h-none overflow-y-auto md:overflow-y-visible"
             >
               {/* Close Button */}
               <button
+                type="button"
                 onClick={() => setSelectedProduct(null)}
-                className="absolute top-4 right-4 z-20 p-2 bg-white/90 backdrop-blur-md rounded-full text-zinc-800 hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
+                aria-label="Close product quick view modal"
+                className="absolute top-4 right-4 z-20 p-2.5 bg-white/90 backdrop-blur-md rounded-full text-zinc-800 hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600"
               >
-                <FiX size={18} />
+                <FiX size={18} aria-hidden="true" />
               </button>
 
               {/* Left: Product Image */}
-              <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-zinc-50 flex items-center justify-center p-8 relative min-h-80">
+              <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-zinc-50 flex items-center justify-center p-8 relative min-h-[320px]">
                 <Image
                   src={selectedProduct.images?.[0] || "/logo.png"}
-                  alt={selectedProduct.title}
+                  alt={`Detailed view of ${selectedProduct.title}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-contain p-8"
@@ -419,13 +439,16 @@ function FeaturedProducts() {
               </div>
 
               {/* Right: Specifications Content */}
-              <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-between">
+              <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-10 flex flex-col justify-between">
                 <div>
-                  <span className="text-xs font-bold text-amber-700 tracking-widest uppercase block mb-2">
-                    {selectedProduct.category === "others" ? "Tanjore Painting" : selectedProduct.category}
+                  <span className="text-xs font-bold text-amber-800 tracking-widest uppercase block mb-2">
+                    {selectedProduct.category === "others" ? "Tanjore Masterpiece" : selectedProduct.category}
                   </span>
-                  
-                  <h3 className="text-2xl md:text-3xl font-extrabold text-zinc-900 leading-tight mb-4">
+
+                  <h3
+                    id="quick-view-title"
+                    className="text-2xl md:text-3xl font-extrabold text-zinc-900 leading-tight mb-4 font-cinzel"
+                  >
                     {selectedProduct.title}
                   </h3>
 
@@ -433,34 +456,34 @@ function FeaturedProducts() {
                     ₹{selectedProduct.price?.toLocaleString("en-IN")}
                   </div>
 
-                  <p className="text-sm text-zinc-600 leading-relaxed mb-6">
+                  <p className="text-sm text-zinc-700 leading-relaxed mb-6 font-medium">
                     {selectedProduct.description || "Authentic handmade traditional Tanjore painting adorned with certified 22K Gold foil and hand-embedded gemstones."}
                   </p>
 
                   {/* Specs Checklist Table */}
                   <div className="space-y-3.5 border-t border-b border-zinc-100 py-6 mb-6">
-                    <div className="flex items-center text-xs text-zinc-700">
-                      <FiAward className="text-amber-600 mr-3" size={15} />
+                    <div className="flex items-center text-xs text-zinc-800">
+                      <FiAward className="text-amber-600 mr-3 shrink-0" size={16} aria-hidden="true" />
                       <span className="font-semibold w-28 text-zinc-500 uppercase tracking-wider">Gold Purity:</span>
                       <span className="font-bold text-zinc-900">{selectedProduct.goldPurity || "Certified 22ct Gold Foil"}</span>
                     </div>
 
-                    <div className="flex items-center text-xs text-zinc-700">
-                      <FiGrid className="text-amber-600 mr-3" size={15} />
+                    <div className="flex items-center text-xs text-zinc-800">
+                      <FiGrid className="text-amber-600 mr-3 shrink-0" size={16} aria-hidden="true" />
                       <span className="font-semibold w-28 text-zinc-500 uppercase tracking-wider">Base Size:</span>
                       <span className="font-bold text-zinc-900">{selectedProduct.dimensions || '20" X 16"'} (Customizable)</span>
                     </div>
 
-                    <div className="flex items-center text-xs text-zinc-700">
-                      <FiPackage className="text-amber-600 mr-3" size={15} />
+                    <div className="flex items-center text-xs text-zinc-800">
+                      <FiPackage className="text-amber-600 mr-3 shrink-0" size={16} aria-hidden="true" />
                       <span className="font-semibold w-28 text-zinc-500 uppercase tracking-wider">Frame:</span>
                       <span className="font-bold text-zinc-900">{selectedProduct.frameType || "Genuine Teak Wood"}</span>
                     </div>
 
-                    <div className="flex items-center text-xs text-zinc-700">
-                      <FiGrid className="text-amber-600 mr-3" size={15} />
+                    <div className="flex items-center text-xs text-zinc-800">
+                      <FiGrid className="text-amber-600 mr-3 shrink-0" size={16} aria-hidden="true" />
                       <span className="font-semibold w-28 text-zinc-500 uppercase tracking-wider">Material:</span>
-                      <span className="font-bold text-zinc-900 text-left leading-tight max-w-64">{selectedProduct.materialBase || "Water-resistant Plywood & Cotton Cloth"}</span>
+                      <span className="font-bold text-zinc-900 text-left leading-tight max-w-[240px]">{selectedProduct.materialBase || "Water-resistant Plywood & Cotton Cloth"}</span>
                     </div>
                   </div>
                 </div>
@@ -468,16 +491,17 @@ function FeaturedProducts() {
                 {/* Modal Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 mt-6">
                   <button
+                    type="button"
                     onClick={() => handleAddToCart(selectedProduct)}
-                    className="flex-1 bg-zinc-900 text-white font-bold uppercase tracking-wider text-xs py-4 px-6 rounded-full flex items-center justify-center gap-2 hover:bg-zinc-800 transition-colors shadow-lg cursor-pointer"
+                    className="flex-1 bg-zinc-900 text-white font-bold uppercase tracking-wider text-xs py-4 px-6 rounded-full flex items-center justify-center gap-2 hover:bg-zinc-800 transition-colors shadow-lg cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600"
                   >
-                    <FiShoppingCart size={15} />
+                    <FiShoppingCart size={15} aria-hidden="true" />
                     Add to Shopping Cart
                   </button>
                   <Link
                     href={`/collections/${selectedProduct._id}`}
                     onClick={() => setSelectedProduct(null)}
-                    className="flex-1 border border-zinc-300 text-zinc-800 font-bold uppercase tracking-wider text-xs py-4 px-6 rounded-full flex items-center justify-center gap-2 hover:bg-zinc-50 transition-colors"
+                    className="flex-1 border border-zinc-300 text-zinc-900 font-bold uppercase tracking-wider text-xs py-4 px-6 rounded-full flex items-center justify-center gap-2 hover:bg-zinc-50 transition-colors focus:outline-hidden focus:ring-2 focus:ring-amber-600"
                   >
                     View Details Page
                   </Link>

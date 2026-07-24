@@ -76,7 +76,7 @@ export default function Hero({ initialBanners }) {
 
   if (loading)
     return (
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 py-6" aria-hidden="true">
         <div className="aspect-21/9 w-full bg-zinc-100 animate-pulse rounded-[2.5rem]" />
       </div>
     );
@@ -125,16 +125,16 @@ export default function Hero({ initialBanners }) {
                 <button
                   onClick={prevSlide}
                   aria-label="Previous slide"
-                  className="pointer-events-auto p-4 rounded-2xl bg-white/10 backdrop-blur-lg text-white border border-white/20 hover:bg-white hover:text-black transition-all shadow-xl active:scale-95 -translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 duration-500"
+                  className="pointer-events-auto p-4 rounded-2xl bg-white/10 backdrop-blur-lg text-white border border-white/20 hover:bg-white hover:text-black transition-all shadow-xl active:scale-95 -translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 duration-500 focus:outline-hidden focus:ring-2 focus:ring-white"
                 >
-                  <ChevronLeft size={24} />
+                  <ChevronLeft size={24} aria-hidden="true" />
                 </button>
                 <button
                   onClick={nextSlide}
                   aria-label="Next slide"
-                  className="pointer-events-auto p-4 rounded-2xl bg-white/10 backdrop-blur-lg text-white border border-white/20 hover:bg-white hover:text-black transition-all shadow-xl active:scale-95 translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 duration-500"
+                  className="pointer-events-auto p-4 rounded-2xl bg-white/10 backdrop-blur-lg text-white border border-white/20 hover:bg-white hover:text-black transition-all shadow-xl active:scale-95 translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 duration-500 focus:outline-hidden focus:ring-2 focus:ring-white"
                 >
-                  <ChevronRight size={24} />
+                  <ChevronRight size={24} aria-hidden="true" />
                 </button>
               </div>
 
@@ -145,12 +145,12 @@ export default function Hero({ initialBanners }) {
                     key={i}
                     onClick={() => setIndex(i)}
                     aria-label={`Go to slide ${i + 1}`}
-                    className="relative group py-2"
+                    className="relative group py-2 focus:outline-hidden"
                   >
                     <div
                       className={`h-0.75 rounded-full transition-all duration-700 ${index === i
-                        ? "w-10 bg-amber-500"
-                        : "w-3 bg-white/30 hover:bg-white/60"
+                          ? "w-10 bg-amber-500"
+                          : "w-3 bg-white/30 hover:bg-white/60"
                         }`}
                     />
                   </button>

@@ -7,43 +7,43 @@ const Shipping = () => {
   const details = [
     {
       icon: "/assets/shipping/delivery.svg",
-      title: "Shipping Across India",
-      desc: "Enjoy safe and fast delivery to every destination in India with Aishwarya Arts.",
-      alt: "Delivery truck representing free shipping",
+      title: "Secure Shipping Across India",
+      desc: "Enjoy safe, insured, and fast doorstep delivery to every destination nationwide with Aishwarya Arts.",
+      alt: "Secure delivery truck representing nationwide shipping for handmade art",
     },
     {
       icon: "/assets/shipping/offer.svg",
-      title: "Exclusive Offers & Deals",
-      desc: "Get up to 20% off on traditional Tanjore paintings and exclusive art collections.",
-      alt: "Discount tag showing exclusive offers and deals",
+      title: "Exclusive Offers &amp; Heritage Deals",
+      desc: "Discover special pricing and curated art deals on authentic traditional Tanjore paintings.",
+      alt: "Discount tag symbol showing exclusive offers on Tanjore paintings",
     },
     {
       icon: "/assets/shipping/bestprice.svg",
-      title: "Guaranteed Best Prices",
-      desc: "From traditional classics to custom masterpieces, we ensure fair pricing and top quality.",
-      alt: "Price tag symbol representing best prices in the market",
+      title: "Guaranteed Masterpiece Pricing",
+      desc: "From temple classics to custom royal portraits, we ensure transparent pricing and certified quality.",
+      alt: "Price tag symbol representing guaranteed best market value for artwork",
     },
   ];
 
   return (
     <section
-      className="max-w-7xl mx-auto py-20 px-6 md:px-16"
-      aria-labelledby="shipping-info"
+      className="w-full max-w-7xl mx-auto py-20 px-6 md:px-16 bg-white"
+      aria-labelledby="shipping-service-title"
     >
-      <div className="flex justify-center items-center mb-8 px-4">
+      <header className="flex justify-center items-center mb-16 px-4">
         <h2
-          id="shipping-info"
-          className="font-semibold text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-wide text-center leading-tight"
+          id="shipping-service-title"
+          className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-wide text-center leading-tight text-zinc-900 font-cinzel"
         >
-          <span className="inline-block">Delivery</span>
-          <span className="mx-2 text-zinc-300">|</span>
-          <span className="inline-block">Offers</span>
-          <span className="mx-2 text-zinc-300">|</span>
-          <span className="inline-block">Best Price</span>
+          <span className="inline-block">Secure Delivery</span>
+          <span className="mx-3 text-amber-600" aria-hidden="true">|</span>
+          <span className="inline-block">Exclusive Offers</span>
+          <span className="mx-3 text-amber-600" aria-hidden="true">|</span>
+          <span className="inline-block">Best Price Guarantee</span>
         </h2>
-      </div>
+      </header>
 
-      <div className="grid md:grid-cols-3 gap-12 text-center hover:group hover:transition hover:scale-105">
+      <div className="grid md:grid-cols-3 gap-12 text-center">
         {details.map((item, i) => (
           <motion.article
             key={i}
@@ -51,23 +51,25 @@ const Shipping = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: i * 0.15 }}
             viewport={{ once: true }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center p-6 rounded-2xl bg-zinc-50/50 border border-zinc-100 shadow-xs transition-transform duration-500 hover:scale-105"
           >
-            <div className="mb-5 flex items-center justify-center mt-5">
+            <div className="mb-5 flex items-center justify-center mt-2 p-4 bg-white rounded-2xl shadow-xs border border-zinc-100">
               <Image
                 src={item.icon}
                 alt={item.alt}
-                width={80}
-                height={80}
+                width={56}
+                height={56}
                 loading="lazy"
                 decoding="async"
-                className="object-contain invert-25"
+                className="object-contain"
               />
             </div>
-            <h3 className="font-semibold text-black text-xl">
+
+            <h3 className="font-bold text-zinc-900 text-lg md:text-xl mb-3 font-cinzel">
               {item.title}
             </h3>
-            <p className="text-black mt-2 leading-relaxed text-base">
+
+            <p className="text-zinc-700 leading-relaxed text-sm md:text-base font-medium">
               {item.desc}
             </p>
           </motion.article>
