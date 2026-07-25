@@ -15,10 +15,10 @@ import { useSession } from "next-auth/react";
 export default function CollectionsClient({ initialProducts = [] }) {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [products, setProducts] = useState(initialProducts);
-  const [loading, setLoading] = useState(false);
+  const [products] = useState(initialProducts);
+  const [loading] = useState(false);
 
-  // state for filtering and sorting
+  // State for filtering and sorting
   const [sortBy, setSortBy] = useState("newest");
   const [filters, setFilters] = useState({
     godName: [],
@@ -28,7 +28,6 @@ export default function CollectionsClient({ initialProducts = [] }) {
 
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { isLoggedIn } = useAuthStore();
 
   const addToCart = useCartStore((state) => state.addToCart);
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
@@ -49,12 +48,12 @@ export default function CollectionsClient({ initialProducts = [] }) {
 
     // 2. Filter by Work Style
     if (filters.workStyle.length > 0) {
-      result = result.filter((p) => 
+      result = result.filter((p) =>
         filters.workStyle.includes(p.workStyle?.toLowerCase())
       );
     }
 
-    // 3. DIMENSIONS FILTER
+    // 3. Dimensions Filter
     if (filters.dimensions.length > 0) {
       result = result.filter((p) => {
         if (!p.dimensions) return false;
@@ -94,15 +93,18 @@ export default function CollectionsClient({ initialProducts = [] }) {
   useEffect(() => {
     const checkGoogleUserProfile = async () => {
       if (status === "authenticated" && session?.user) {
-        const res = await fetch("/api/users/profile");
-        const result = await res.json();
+        try {
+          const res = await fetch("/api/users/profile");
+          const result = await res.json();
 
-        // If a Google user has no phone, they can't buy. Remind them!
-        if (result.success && !result.data.primaryPhone) {
-          toast("Complete your profile to enable express checkout!", {
-            icon: '🎨',
-            duration: 6000,
-          });
+          if (result.success && !result.data.primaryPhone) {
+            toast("Complete your profile to enable express checkout!", {
+              icon: '🎨',
+              duration: 6000,
+            });
+          }
+        } catch (err) {
+          console.error("Profile check failed:", err);
         }
       }
     };
@@ -121,15 +123,13 @@ export default function CollectionsClient({ initialProducts = [] }) {
     addToCart({
       id: product._id,
       title: product.title,
-      // Fallback SKU if not present
       sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
-      // Use the product's base price since no matrix selection is made here
       price: product.offerPrice || product.price,
-      image: product.images[0],
-      quantity: 1, // Default to 1 from grid view
-      size: product.dimensions || "Standard", // Default size from DB
-      frame: product.frameType || "Classic Frame", // Default frame from DB
-      style: product.workStyle || "Flat", // Default style from DB
+      image: product.images?.[0] || "/logo.png",
+      quantity: 1,
+      size: product.dimensions || "Standard",
+      frame: product.frameType || "Classic Frame",
+      style: product.workStyle || "Flat",
       godName: product.godName
     });
 
@@ -150,7 +150,7 @@ export default function CollectionsClient({ initialProducts = [] }) {
       title: product.title,
       sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
       price: product.offerPrice || product.price,
-      image: product.images[0],
+      image: product.images?.[0] || "/logo.png",
       size: product.dimensions || "Standard",
       frame: product.frameType || "Classic Frame",
       style: product.workStyle || "Flat",
@@ -163,59 +163,77 @@ export default function CollectionsClient({ initialProducts = [] }) {
 
   return (
     <div className="bg-white min-h-screen font-outfit relative">
-      {/* --- MOBILE FILTER DRAWER --- */}
+
+      {/* ========================================================================= */}
+      {/* --- MOBILE FILTER DRAWER COMPONENT --- */}
+      {/* ========================================================================= */}
       <div
         className={`fixed inset-0 z-50 lg:hidden transition-transform duration-300 ${isMobileFilterOpen ? "translate-x-0" : "-translate-x-full"}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Filter sidebar drawer"
       >
         <div
-          className="absolute inset-0 bg-black/40"
+          className="absolute inset-0 bg-black/50 backdrop-blur-xs"
           onClick={() => setIsMobileFilterOpen(false)}
+          aria-hidden="true"
         />
         <div className="absolute inset-y-0 left-0 w-4/5 max-w-xs bg-white p-6 shadow-xl overflow-y-auto">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-bold">Filters</h2>
+            <h2 className="text-xl font-bold font-cinzel text-zinc-900">Filter Artworks</h2>
             <button
+              type="button"
               onClick={() => setIsMobileFilterOpen(false)}
-              className="p-2"
+              aria-label="Close filter drawer"
+              className="p-2 text-zinc-700 hover:text-zinc-900 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600 rounded-lg"
             >
-              <X size={24} />
+              <X size={24} aria-hidden="true" />
             </button>
           </div>
           <FilterSidebar selectedFilters={filters} onFilterChange={handleFilterChange} />
         </div>
       </div>
 
-      {/* --- HEADER --- */}
-      <header className="border-b border-gray-100 py-6 lg:py-10">
+      {/* ========================================================================= */}
+      {/* --- PAGE HEADER & BREADCRUMBS --- */}
+      {/* ========================================================================= */}
+      <header className="border-b border-zinc-100 py-6 lg:py-10 bg-zinc-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <nav className="hidden md:block text-[10px] uppercase tracking-[0.2em] text-black mb-4">
-            <a href="/" className="hover:text-amber-700">
-              Home
-            </a>{" "}
-            / Collections
+          <nav aria-label="Breadcrumb" className="hidden md:block text-[11px] uppercase tracking-[0.2em] text-zinc-500 mb-4 font-semibold">
+            <ol className="flex items-center gap-2">
+              <li>
+                <a href="/" className="hover:text-amber-800 transition-colors">Home</a>
+              </li>
+              <span aria-hidden="true">/</span>
+              <li>
+                <span className="text-zinc-900 font-bold" aria-current="page">Collections</span>
+              </li>
+            </ol>
           </nav>
 
           <div className="flex flex-col gap-6">
-            <h1 className="text-2xl lg:text-4xl font-semibold text-gray-900">
-              All Paintings
+            <h1 className="text-3xl lg:text-5xl font-extrabold text-zinc-900 font-cinzel tracking-wide">
+              Traditional Tanjore Paintings Collection
             </h1>
 
             {/* Mobile Filter & Sort Bar */}
-            <div className="flex items-center justify-between border-y border-gray-100 py-4 lg:hidden">
+            <div className="flex items-center justify-between border-y border-zinc-200 py-4 lg:hidden">
               <button
+                type="button"
                 onClick={() => setIsMobileFilterOpen(true)}
-                className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
+                aria-label="Open filter sidebar"
+                className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-900 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600 p-2"
               >
-                <SlidersHorizontal size={16} /> Filters
+                <SlidersHorizontal size={16} aria-hidden="true" /> Filters
               </button>
-              <div className="h-4 w-px bg-gray-200"></div>
+              <div className="h-4 w-px bg-zinc-200" aria-hidden="true" />
               <SortDropdown currentSort={sortBy} onSortChange={(value) => setSortBy(value)} />
             </div>
 
-            {/* Desktop Count & Sort */}
+            {/* Desktop Count & Sort Bar */}
             <div className="hidden lg:flex items-center justify-between">
-              <p className="text-md text-black italic">
-                Showing {processedProducts.length} unique designs
+              <p className="text-sm md:text-base text-zinc-600 font-medium italic">
+                Showing <strong className="text-zinc-900 font-bold">{processedProducts.length}</strong> unique handcrafted masterpieces
               </p>
               <SortDropdown currentSort={sortBy} onSortChange={setSortBy} />
             </div>
@@ -223,20 +241,23 @@ export default function CollectionsClient({ initialProducts = [] }) {
         </div>
       </header>
 
-      {/* --- MAIN CONTENT --- */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+      {/* ========================================================================= */}
+      {/* --- MAIN CATALOG CONTENT & GRID --- */}
+      {/* ========================================================================= */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-16">
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* DESKTOP SIDEBAR */}
-          <aside className="hidden lg:block lg:w-1/4 h-fit sticky top-24">
+
+          {/* Desktop Filter Sidebar */}
+          <aside className="hidden lg:block lg:w-1/4 h-fit sticky top-24" aria-label="Catalog Filters">
             <FilterSidebar selectedFilters={filters} onFilterChange={handleFilterChange} />
           </aside>
 
-          {/* PRODUCT GRID */}
+          {/* Product Grid Area */}
           <main className="lg:w-3/4 w-full">
             {loading ? (
-              <div className="h-96 flex flex-col items-center justify-center text-amber-700 gap-4">
-                <Loader2 className="animate-spin" size={32} />
-                <p className="font-semibold uppercase tracking-wide text-md">Syncing Art Gallery...</p>
+              <div className="h-96 flex flex-col items-center justify-center text-amber-700 gap-4" aria-label="Loading catalog">
+                <Loader2 className="animate-spin" size={32} aria-hidden="true" />
+                <p className="font-bold uppercase tracking-wider text-sm">Syncing Art Gallery...</p>
               </div>
             ) : processedProducts.length > 0 ? (
               <ProductGrid
@@ -245,16 +266,22 @@ export default function CollectionsClient({ initialProducts = [] }) {
                 onAddToCart={handleAddToCart}
               />
             ) : (
-              <div className="h-96 flex items-center justify-center border-2 border-dashed border-zinc-100 rounded-[3rem]">
-                <p className="text-zinc-400 font-bold uppercase tracking-tighter">No masterpieces currently in stock.</p>
+              <div className="h-96 flex flex-col items-center justify-center border-2 border-dashed border-zinc-200 rounded-[2.5rem] p-8 text-center bg-zinc-50/50">
+                <h3 className="text-lg font-bold text-zinc-900 mb-2">No masterpieces found</h3>
+                <p className="text-sm text-zinc-600">Try adjusting your filters to view more authentic Tanjore artworks.</p>
               </div>
             )}
 
+            {/* Pagination / Load More Trigger */}
             {processedProducts.length > 12 && (
               <div className="mt-16 flex flex-col items-center gap-4">
-                <div className="h-px w-12 bg-amber-200"></div>
-                <button className="w-full md:w-auto px-12 py-4 border border-gray-900 rounded-full font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all duration-300">
-                  Load More
+                <div className="h-px w-16 bg-amber-600/30" aria-hidden="true" />
+                <button
+                  type="button"
+                  aria-label="Load more Tanjore paintings"
+                  className="w-full md:w-auto px-12 py-4 border border-zinc-900 rounded-full font-bold text-xs uppercase tracking-[0.2em] hover:bg-zinc-900 hover:text-white transition-all duration-300 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-600 shadow-xs"
+                >
+                  Load More Masterpieces
                 </button>
               </div>
             )}

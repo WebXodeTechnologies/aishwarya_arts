@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 // 1. Data Constants - Values MUST be lowercase to match normalized DB strings
@@ -24,15 +26,22 @@ const ART_STYLES = [
 
 const DIMENSIONS = ["15x12", "18x14", "20x16", "24x18", "30x24", "36x24", "48x36", "60x36", "72x48", "Custom Size"];
 
-const FilterSidebar = ({ selectedFilters, onFilterChange }) => {
+export default function FilterSidebar({ selectedFilters, onFilterChange }) {
   // Helper to strip quotes and spaces for exact matching (e.g., "20" X 16"" -> 20x16)
   const clean = (str) => str?.toLowerCase().replace(/["\s]/g, "") || "";
 
   return (
-    <div className="space-y-10 sticky top-28 h-[calc(100vh-120px)] overflow-y-auto pr-4 scrollbar-hide">
+    <aside
+      aria-label="Product Filter Navigation"
+      className="space-y-8 sticky top-28 h-[calc(100vh-120px)] overflow-y-auto pr-4 scrollbar-hide"
+    >
       {/* 1. DEITY FILTER */}
-      <FilterGroup title="GOD">
-        <div className="flex flex-col gap-3.5 max-h-64 overflow-y-auto pr-2 custom-scrollbar text-black">
+      <FilterGroup title="Deity / God">
+        <div
+          className="flex flex-col gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar text-zinc-700"
+          role="group"
+          aria-label="Filter by Deity"
+        >
           {GOD.map((god) => (
             <FilterCheckbox
               key={god}
@@ -44,50 +53,57 @@ const FilterSidebar = ({ selectedFilters, onFilterChange }) => {
         </div>
       </FilterGroup>
 
-      {/* 2. ART STYLE FILTER - Ensuring strictly lowercase matching */}
+      {/* 2. ART STYLE FILTER */}
       <FilterGroup title="Art Style / Type">
-        {ART_STYLES.map((type) => (
-          <FilterCheckbox
-            key={type.value}
-            label={type.label}
-            checked={selectedFilters.workStyle.includes(
-              type.value.toLowerCase(),
-            )}
-            onChange={() =>
-              onFilterChange("workStyle", type.value.toLowerCase())
-            }
-          />
-        ))}
+        <div
+          className="flex flex-col gap-3"
+          role="group"
+          aria-label="Filter by Art Style"
+        >
+          {ART_STYLES.map((type) => (
+            <FilterCheckbox
+              key={type.value}
+              label={type.label}
+              checked={selectedFilters.workStyle.includes(type.value.toLowerCase())}
+              onChange={() => onFilterChange("workStyle", type.value.toLowerCase())}
+            />
+          ))}
+        </div>
       </FilterGroup>
 
-      {/* 3. DIMENSIONS FILTER - Using 'clean' helper to match DB strings with quotes */}
+      {/* 3. DIMENSIONS FILTER */}
       <FilterGroup title="Dimensions (Inches)">
-        {DIMENSIONS.map((size) => (
-          <FilterCheckbox
-            key={size}
-            label={size}
-            checked={selectedFilters.dimensions.some(
-              (d) => clean(d) === clean(size),
-            )}
-            onChange={() => onFilterChange("dimensions", size.toLowerCase())}
-          />
-        ))}
+        <div
+          className="flex flex-col gap-3"
+          role="group"
+          aria-label="Filter by Dimensions"
+        >
+          {DIMENSIONS.map((size) => (
+            <FilterCheckbox
+              key={size}
+              label={size}
+              checked={selectedFilters.dimensions.some((d) => clean(d) === clean(size))}
+              onChange={() => onFilterChange("dimensions", size.toLowerCase())}
+            />
+          ))}
+        </div>
       </FilterGroup>
-    </div>
+    </aside>
   );
-};
+}
 
 /* ================= REUSABLE SUB-COMPONENTS ================= */
 
 const FilterCheckbox = ({ label, checked, onChange }) => (
-  <label className="flex items-center justify-between cursor-pointer group py-1">
+  <label className="flex items-center justify-between cursor-pointer group py-1.5 focus-within:ring-2 focus-within:ring-amber-600 rounded-md px-1">
     <div className="flex items-center gap-3">
       <div
-        className={`w-4 h-4 rounded border transition-all flex items-center justify-center
+        className={`w-4 h-4 rounded border transition-all flex items-center justify-center shrink-0
         ${checked
-            ? "bg-amber-800 border-amber-800"
-            : "border-gray-300 group-hover:border-amber-600 bg-white"
+            ? "bg-amber-800 border-amber-800 shadow-xs"
+            : "border-zinc-300 group-hover:border-amber-600 bg-white"
           }`}
+        aria-hidden="true"
       >
         {checked && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
       </div>
@@ -95,27 +111,26 @@ const FilterCheckbox = ({ label, checked, onChange }) => (
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="hidden"
+        className="sr-only"
+        aria-label={`Filter by ${label}`}
       />
       <span
-        className={`text-sm tracking-wide transition-colors ${checked ? "text-amber-900 font-bold" : "text-zinc-900 group-hover:text-black"}`}
+        className={`text-sm tracking-wide transition-colors font-medium ${checked ? "text-amber-900 font-bold" : "text-zinc-700 group-hover:text-zinc-900"}`}
       >
         {label}
       </span>
     </div>
     {checked && (
-      <div className="w-1 h-1 rounded-full bg-amber-800 animate-pulse" />
+      <div className="w-1.5 h-1.5 rounded-full bg-amber-800 animate-pulse" aria-hidden="true" />
     )}
   </label>
 );
 
 const FilterGroup = ({ title, children }) => (
-  <div className="border-b border-gray-100 pb-8">
-    <h2 className="text-md uppercase tracking-[0.15em] font-bold text-black mb-5">
+  <div className="border-b border-zinc-100 pb-6">
+    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-zinc-900 mb-4 font-cinzel">
       {title}
-    </h2>
-    <div className="flex flex-col gap-3.5">{children}</div>
+    </h3>
+    <div className="flex flex-col gap-2.5">{children}</div>
   </div>
 );
-
-export default FilterSidebar;

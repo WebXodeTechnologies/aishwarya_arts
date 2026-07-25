@@ -39,7 +39,7 @@ const DIMENSIONS = [
 const WORK_STYLE_LABELS = {
   flat: "Flat",
   "2d": "2D",
-  embossed: "3D Embossed", 
+  embossed: "3D Embossed",
 };
 
 export default function ProductClient({ initialProduct }) {
@@ -72,7 +72,6 @@ export default function ProductClient({ initialProduct }) {
     return [...product.images, ...GLOBAL_ASSETS.frames.map((f) => f.url)];
   }, [product]);
 
-  // --- LOGIC: 1. FIND SELECTION ---
   const currentSelection = useMemo(() => {
     if (!product || !product.priceMatrix || !selectedSize) return null;
 
@@ -83,7 +82,6 @@ export default function ProductClient({ initialProduct }) {
       const itemSize = normalize(item.size);
       const itemStyle = normalize(item.style);
 
-      // Check if Size and Style match
       const basicMatch = itemSize === searchSize && itemStyle === searchStyle;
 
       if (item.frame) {
@@ -93,7 +91,6 @@ export default function ProductClient({ initialProduct }) {
     });
   }, [selectedSize, selectedStyle, selectedFrame, product]);
 
-  // Matches 'price' (Selling Price) and 'mrp' (Original Price) from your matrix
   const displayPrice = currentSelection?.price || product?.price || 0;
   const displayMRP =
     currentSelection?.mrp || product?.offerPrice || product?.price || 0;
@@ -111,7 +108,6 @@ export default function ProductClient({ initialProduct }) {
     (item) => item.id === product?._id || item._id === product?._id,
   );
 
-  // --- CALIBRATED INTERACTION HANDLER FOR ALL SCREENS ---
   const handleInteraction = (e) => {
     if (!imgRef.current) return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -165,7 +161,7 @@ export default function ProductClient({ initialProduct }) {
 
   const technicalSpecs = [
     { label: "Divine Subject", value: product.godName },
-    { label: "Work Style", value: WORK_STYLE_LABELS[selectedStyle] || selectedStyle }, 
+    { label: "Work Style", value: WORK_STYLE_LABELS[selectedStyle] || selectedStyle },
     { label: "Frame Type", value: selectedFrame },
     { label: "Lead Time", value: product.leadTime },
   ];
@@ -191,7 +187,6 @@ export default function ProductClient({ initialProduct }) {
     });
   };
 
-  // Structured Data (JSON-LD) for SEO
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -218,36 +213,36 @@ export default function ProductClient({ initialProduct }) {
 
   return (
     <div className="min-h-screen bg-white font-outfit pb-20 overflow-x-hidden">
-      {/* Inject Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       {/* BREADCRUMBS */}
-      <div className="max-w-360 mx-auto px-4 md:px-6 py-6 md:py-8 text-[10px] md:text-[12px] uppercase tracking-wide text-zinc-600 flex items-center gap-2 overflow-hidden">
-        <Link href="/" className="hover:text-amber-700 whitespace-nowrap">
+      <nav aria-label="Breadcrumb" className="max-w-360 mx-auto px-4 md:px-6 py-6 md:py-8 text-[10px] md:text-[12px] uppercase tracking-wide text-zinc-700 flex items-center gap-2 overflow-hidden">
+        <Link href="/" className="hover:text-amber-800 whitespace-nowrap">
           Home
         </Link>
-        <ChevronRight size={10} className="shrink-0" />
+        <ChevronRight size={10} className="shrink-0" aria-hidden="true" />
         <Link
           href="/collections"
-          className="hover:text-amber-700 whitespace-nowrap"
+          className="hover:text-amber-800 whitespace-nowrap"
         >
           Collections
         </Link>
-        <ChevronRight size={10} className="shrink-0" />
-        <span className="text-zinc-900 font-semibold truncate">
+        <ChevronRight size={10} className="shrink-0" aria-hidden="true" />
+        <span className="text-zinc-900 font-semibold truncate" aria-current="page">
           {product.title}
         </span>
-      </div>
+      </nav>
 
       <div className="max-w-360 mx-auto px-4 md:px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
+
           {/* --- LEFT: IMAGE EXHIBIT --- */}
           <div className="lg:col-span-7 space-y-6 md:space-y-8">
             <div
-              className="relative aspect-4/5 rounded-3xl md:rounded-[2.5rem] overflow-hidden cursor-crosshair group touch-none"
+              className="relative aspect-4/5 rounded-3xl md:rounded-[2.5rem] overflow-hidden cursor-crosshair group touch-none bg-zinc-50 border border-zinc-200"
               onMouseMove={handleInteraction}
               onTouchMove={handleInteraction}
               onMouseEnter={() =>
@@ -260,13 +255,15 @@ export default function ProductClient({ initialProduct }) {
               <Image
                 ref={imgRef}
                 src={activeImage}
-                alt={product.title || "Masterpiece"}
+                alt={`${product.title} - Authentic Tanjore Painting View`}
                 fill
+                sizes="(max-width: 1024px) 100vw, 60vw"
                 className={`object-contain p-4 transition-opacity duration-300 ${zoomData.show ? "xl:opacity-0" : "opacity-100"}`}
                 priority
               />
               {zoomData.show && (
                 <div
+                  aria-hidden="true"
                   className="absolute inset-0 z-10 w-full h-full pointer-events-none hidden lg:block"
                   style={{
                     backgroundImage: `url(${activeImage})`,
@@ -277,26 +274,31 @@ export default function ProductClient({ initialProduct }) {
                 />
               )}
               <button
+                type="button"
                 onClick={handleWishlistClick}
-                className="absolute top-4 right-4 md:top-6 md:right-6 z-20 p-3 md:p-4 rounded-full bg-white/90 shadow-xl hover:scale-110 active:scale-90 transition-transform"
+                aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+                className="absolute top-4 right-4 md:top-6 md:right-6 z-20 p-3 md:p-4 rounded-full bg-white/90 shadow-xl hover:scale-110 active:scale-90 transition-transform cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-amber-800"
               >
                 <Heart
                   size={20}
                   className={
-                    isInWishlist ? "fill-red-500 text-red-500" : "text-zinc-900"
+                    isInWishlist ? "fill-red-600 text-red-600" : "text-zinc-900"
                   }
+                  aria-hidden="true"
                 />
               </button>
             </div>
 
-            <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
+            <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x" role="region" aria-label="Product thumbnail gallery">
               {allGalleryImages.map((img, idx) => (
                 <button
                   key={idx}
+                  type="button"
                   onClick={() => setActiveImage(img)}
-                  className={`relative w-16 h-16 md:w-24 md:h-24 shrink-0 rounded-xl md:rounded-2xl overflow-hidden transition-all duration-300 snap-center ${activeImage === img ? "ring-2 ring-amber-600 ring-offset-2" : "opacity-60 hover:opacity-100"}`}
+                  aria-label={`Show gallery image view ${idx + 1}`}
+                  className={`relative w-16 h-16 md:w-24 md:h-24 shrink-0 rounded-xl md:rounded-2xl overflow-hidden transition-all duration-300 snap-center cursor-pointer border ${activeImage === img ? "border-amber-800 ring-2 ring-amber-800/20" : "border-zinc-300 opacity-70 hover:opacity-100"}`}
                 >
-                  <Image src={img} alt="thumb" fill className="object-cover bg-red-400" />
+                  <Image src={img} alt={`Thumbnail ${idx + 1} of ${product.title}`} fill sizes="96px" className="object-cover bg-zinc-50" />
                 </button>
               ))}
             </div>
@@ -306,104 +308,102 @@ export default function ProductClient({ initialProduct }) {
           <div className="lg:col-span-5 flex flex-col space-y-8 md:space-y-10">
             <header className="space-y-4">
               <div className="flex items-center gap-3">
-                <span className="h-px w-6 md:w-8 bg-amber-600" />
-                <span className="text-sm md:text-md font-semibold uppercase tracking-[0.2em] text-amber-700 italic">
+                <span className="h-px w-6 md:w-8 bg-amber-800" aria-hidden="true" />
+                <span className="text-sm md:text-md font-semibold uppercase tracking-[0.2em] text-amber-800 italic">
                   Artisan Masterpiece
                 </span>
               </div>
-              <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter text-zinc-900 leading-tight md:leading-[0.9]">
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-zinc-900 leading-tight font-cinzel">
                 {product.title}
               </h1>
 
               <div className="flex flex-col gap-1">
                 <div className="flex items-baseline gap-4">
-                  <span className="text-3xl md:text-4xl font-bold text-zinc-900 tracking-tight">
+                  <span className="text-3xl md:text-4xl font-bold text-zinc-900 tracking-tight tabular-nums">
                     ₹{displayPrice.toLocaleString("en-IN")}
                   </span>
 
                   {displayMRP > displayPrice && (
-                    <span className="text-lg md:text-xl text-zinc-400 line-through font-light">
+                    <span className="text-lg md:text-xl text-zinc-600 line-through font-light tabular-nums">
                       ₹{displayMRP.toLocaleString("en-IN")}
                     </span>
                   )}
                 </div>
 
                 {displayMRP > displayPrice && (
-                  <p className="text-xs md:text-md font-bold text-green-700 uppercase tracking-widest bg-green-50 w-fit px-3 py-1 rounded-full border border-green-100 mt-2">
+                  <p className="text-xs md:text-sm font-bold text-emerald-800 uppercase tracking-widest bg-emerald-50 w-fit px-3 py-1 rounded-full border border-emerald-200 mt-2">
                     Save ₹{(displayMRP - displayPrice).toLocaleString("en-IN")}{" "}
                     Today
                   </p>
                 )}
               </div>
 
-              <div className="flex items-center gap-2 text-xs md:text-md font-semibold text-amber-700 uppercase tracking-widest bg-amber-50/50 w-fit px-4 py-1.5 rounded-full border border-amber-100/50">
-                <CheckCircle2 size={12} /> Authentic 22K Gold Foil
+              <div className="flex items-center gap-2 text-xs md:text-sm font-semibold text-amber-900 uppercase tracking-widest bg-amber-50 w-fit px-4 py-1.5 rounded-full border border-amber-200">
+                <CheckCircle2 size={14} aria-hidden="true" /> Authentic 22K Gold Foil
               </div>
             </header>
 
             {/* SIZE CARDS */}
             <div className="space-y-4">
               <div className="flex justify-between items-end">
-                <label className="text-sm md:text-md font-semibold uppercase tracking-widest text-zinc-800">
+                <label className="text-xs md:text-sm font-bold uppercase tracking-widest text-zinc-900">
                   Available Dimensions
                 </label>
-                <span className="text-[10px] text-amber-600 font-bold uppercase tracking-tight">
+                <span className="text-[10px] text-amber-800 font-bold uppercase tracking-tight">
                   Select size to update price
                 </span>
               </div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                  {DIMENSIONS.map((size) => {
-                    const isAvailable = isSizeAvailable(size);
-                    const isSelected = selectedSize === size;
-                    return (
-                      <button
-                        key={size}
-                        type="button"
-                        disabled={!isAvailable}
-                        onClick={() => setSelectedSize(size)}
-                        className={`relative py-2 px-1 rounded-lg border text-lg font-semibold transition-all duration-300
-                        ${
-                          !isAvailable
-                            ? "bg-zinc-50 border-zinc-100 text-zinc-400 cursor-not-allowed"
-                            : isSelected
-                              ? "border-amber-600 bg-amber-900 text-white shadow-md ring-2 ring-amber-100"
-                              : "border-zinc-200 bg-white text-zinc-800 hover:border-amber-400"
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2" role="group" aria-label="Available dimensions">
+                {DIMENSIONS.map((size) => {
+                  const isAvailable = isSizeAvailable(size);
+                  const isSelected = selectedSize === size;
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      disabled={!isAvailable}
+                      onClick={() => setSelectedSize(size)}
+                      aria-label={`Select size ${size}`}
+                      className={`relative py-2.5 px-1 rounded-xl border text-sm md:text-base font-bold transition-all duration-300 cursor-pointer ${!isAvailable
+                        ? "bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed"
+                        : isSelected
+                          ? "border-amber-900 bg-amber-950 text-white shadow-md ring-2 ring-amber-800/30"
+                          : "border-zinc-300 bg-white text-zinc-900 hover:border-amber-700"
                         }`}
-                      >
-                        {size.replace(/["\s]/g, "").replace("X", "x")}
-                        {!isAvailable && (
-                          <Lock
-                            size={8}
-                            className="absolute top-1 right-1 opacity-50"
-                          />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                    >
+                      {size.replace(/["\s]/g, "").replace("X", "x")}
+                      {!isAvailable && (
+                        <Lock
+                          size={10}
+                          className="absolute top-1 right-1 opacity-50"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* FRAME PILLS */}
             <div className="space-y-4">
-              <label className="text-sm md:text-md font-semibold uppercase tracking-widest text-zinc-800">
-                Frame selection
+              <label className="text-xs md:text-sm font-bold uppercase tracking-widest text-zinc-900 block">
+                Frame Selection
               </label>
-              <div className="flex flex-wrap gap-4 mt-5">
+              <div className="flex flex-wrap gap-3" role="group" aria-label="Frame selection options">
                 {GLOBAL_ASSETS.frames.map((frame) => (
                   <button
                     key={frame.id}
+                    type="button"
                     onClick={() => {
                       setSelectedFrame(frame.name);
                       setActiveImage(frame.url);
                     }}
-                    className={`px-4 py-2 rounded-full border text-md font-semibold uppercase tracking-wider transition-all duration-300
-                      ${
-                        selectedFrame === frame.name
-                          ? "bg-amber-900 text-white border-amber-900 shadow-lg scale-105"
-                          : "bg-zinc-50 text-zinc-800 border-zinc-200 hover:border-amber-500 hover:text-amber-800 hover:bg-white"
+                    aria-label={`Select ${frame.name}`}
+                    className={`px-4 py-2 rounded-full border text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${selectedFrame === frame.name
+                      ? "bg-amber-950 text-white border-amber-950 shadow-md scale-105"
+                      : "bg-zinc-50 text-zinc-800 border-zinc-300 hover:border-amber-700 hover:text-amber-900 hover:bg-white"
                       }`}
                   >
                     {frame.name.replace(" Frame", "")}
@@ -413,17 +413,17 @@ export default function ProductClient({ initialProduct }) {
             </div>
 
             {/* WORK STYLE SELECTION */}
-            <div className="space-y-4 pt-4">
+            <div className="space-y-4 pt-2">
               <div className="flex justify-between items-end">
-                <label className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                <label className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-700">
                   Select Work Style
                 </label>
-                <span className="text-[10px] text-amber-600 font-bold uppercase tracking-tight">
+                <span className="text-[10px] text-amber-800 font-bold uppercase tracking-tight">
                   {selectedStyle === "embossed" ? "Premium 3D Relief" : "Traditional Finish"}
                 </span>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3" role="group" aria-label="Work style options">
                 {availableStyles.map((style) => {
                   const isSelected = selectedStyle === style;
                   const is3D = style === "embossed";
@@ -431,22 +431,21 @@ export default function ProductClient({ initialProduct }) {
                   return (
                     <button
                       key={style}
+                      type="button"
                       onClick={() => setSelectedStyle(style)}
-                      className={`px-6 py-3 rounded-xl border-2 text-[11px] font-bold uppercase tracking-widest transition-all duration-500 flex items-center gap-2
-                        ${
-                          isSelected
-                            ? "border-amber-600 bg-amber-900 text-white shadow-lg scale-[1.02]"
-                            : "border-zinc-100 bg-zinc-50 text-zinc-500 hover:border-amber-200 hover:bg-white"
+                      aria-label={`Select work style ${WORK_STYLE_LABELS[style] || style}`}
+                      className={`px-5 py-3 rounded-xl border-2 text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center gap-2 cursor-pointer ${isSelected
+                        ? "border-amber-900 bg-amber-950 text-white shadow-lg scale-[1.02]"
+                        : "border-zinc-300 bg-zinc-50 text-zinc-800 hover:border-amber-700 hover:bg-white"
                         }`}
                     >
-                      <div 
-                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 
-                        ${isSelected ? "bg-white animate-pulse" : "bg-zinc-300"}`} 
+                      <div
+                        aria-hidden="true"
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${isSelected ? "bg-white animate-pulse" : "bg-zinc-500"}`}
                       />
                       <span>{WORK_STYLE_LABELS[style] || style}</span>
-
                       {is3D && !isSelected && (
-                        <span className="text-[8px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-sm ml-1">
+                        <span className="text-[8px] bg-amber-200 text-amber-950 px-1.5 py-0.5 rounded-sm ml-1 font-bold">
                           PRO
                         </span>
                       )}
@@ -457,43 +456,50 @@ export default function ProductClient({ initialProduct }) {
             </div>
 
             {/* QUANTITY & ACTIONS */}
-            <div className="space-y-6 md:space-y-8">
+            <div className="space-y-6 pt-4">
               <div className="space-y-3">
-                <label className="text-sm md:text-md font-semibold uppercase tracking-widest text-zinc-800">
+                <label className="text-xs md:text-sm font-bold uppercase tracking-widest text-zinc-900 block">
                   Quantity
                 </label>
-                <div className="flex items-center justify-between bg-zinc-50 border border-zinc-100 rounded-2xl px-6 py-3 md:py-4 max-w-40">
+                <div className="flex items-center justify-between bg-zinc-50 border border-zinc-300 rounded-2xl px-6 py-3 max-w-40">
                   <button
+                    type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="text-zinc-400 hover:text-amber-700 p-1"
+                    aria-label="Decrease quantity"
+                    className="text-zinc-700 hover:text-amber-800 p-1 cursor-pointer"
                   >
-                    <Minus size={16} />
+                    <Minus size={16} aria-hidden="true" />
                   </button>
-                  <span className="font-bold text-sm md:text-base text-zinc-900">
+                  <span className="font-bold text-base text-zinc-900 tabular-nums">
                     {quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() => setQuantity(quantity + 1)}
-                    className="text-zinc-400 hover:text-amber-700 p-1"
+                    aria-label="Increase quantity"
+                    className="text-zinc-700 hover:text-amber-800 p-1 cursor-pointer"
                   >
-                    <Plus size={16} />
+                    <Plus size={16} aria-hidden="true" />
                   </button>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 md:gap-4">
+              <div className="flex flex-col gap-3">
                 <button
+                  type="button"
                   onClick={onAddToCart}
-                  className="group relative w-full py-5 md:py-6 bg-zinc-900 text-white rounded-3xl md:rounded-[2.5rem] font-semibold uppercase text-sm md:text-md tracking-[0.2em] md:tracking-[0.3em] overflow-hidden shadow-xl active:scale-95 transition-all"
+                  aria-label="Add item to shopping cart"
+                  className="group relative w-full py-5 bg-zinc-900 text-white rounded-2xl font-bold uppercase text-xs md:text-sm tracking-[0.25em] overflow-hidden shadow-xl hover:bg-zinc-800 active:scale-95 transition-all cursor-pointer"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-3">
-                    Add to Cart <ShoppingBag size={18} />
+                    Add to Cart <ShoppingBag size={18} aria-hidden="true" />
                   </span>
-                  <div className="absolute inset-0 bg-linear-to-r from-amber-600 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </button>
                 <button
+                  type="button"
                   onClick={onBuyNow}
-                  className="w-full py-5 md:py-6 border-2 border-zinc-100 text-zinc-900 rounded-3xl md:rounded-[2.5rem] font-semibold uppercase text-sm md:text-md tracking-[0.2em] md:tracking-[0.3em] hover:bg-amber-500 active:scale-95 transition-all"
+                  aria-label="Buy product immediately with express checkout"
+                  className="w-full py-5 border-2 border-zinc-900 text-zinc-900 rounded-2xl font-bold uppercase text-xs md:text-sm tracking-[0.25em] hover:bg-amber-600 hover:border-amber-600 hover:text-white active:scale-95 transition-all cursor-pointer"
                 >
                   Buy Now
                 </button>
@@ -501,136 +507,130 @@ export default function ProductClient({ initialProduct }) {
             </div>
 
             {/* SHIPPING INFO BOX */}
-            <div className="p-5 md:p-6 bg-white rounded-3xl border border-zinc-100 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] space-y-4">
-              <div className="flex items-center justify-between border-b border-zinc-50 pb-3">
-                <div className="flex items-center gap-2.5 text-amber-600 font-bold uppercase text-md tracking-wide">
-                  <div className="p-1.5 bg-amber-50 rounded-lg">
-                    <Truck size={20} strokeWidth={2.5} />
+            <div className="p-5 md:p-6 bg-zinc-50 rounded-3xl border border-zinc-300 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-zinc-200 pb-3">
+                <div className="flex items-center gap-2.5 text-amber-900 font-bold uppercase text-xs tracking-wide">
+                  <div className="p-1.5 bg-white rounded-lg shadow-xs border border-zinc-200">
+                    <Truck size={18} strokeWidth={2} aria-hidden="true" />
                   </div>
-                  Logistics & Delivery
+                  Logistics &amp; Delivery
                 </div>
-                <span className=" inline-flex items-center justify-center bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase md:text-xs md:px-3 md:py-1.5 lg:text-sm lg:px-4 lg:py-2 border border-emerald-100/50 shadow-sm whitespace-nowrap">
+                <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-300">
                   Safe Transit
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <p className="text-sm font-bold text-zinc-900 uppercase tracking-wider">
-                    Creation & Lead Time
-                  </p>
-                  <p className="text-sm md:text-md text-zinc-900 font-bold flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="text-xs font-bold text-zinc-700 uppercase tracking-wider block">
+                    Creation &amp; Lead Time
+                  </span>
+                  <p className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-700" aria-hidden="true" />
                     {product.leadTime || "7-18 Days"}
                   </p>
                 </div>
 
                 <div className="space-y-1">
-                  <p className="text-sm font-bold text-zinc-900 uppercase tracking-wider">
+                  <span className="text-xs font-bold text-zinc-700 uppercase tracking-wider block">
                     Shipping Fee
-                  </p>
-                  <p className="text-sm text-zinc-700 font-medium leading-tight">
-                    Calculated based on{" "}
-                    <span className="text-zinc-900 font-bold underline decoration-amber-200 underline-offset-4">
-                      final weight
-                    </span>{" "}
-                    after packing.
+                  </span>
+                  <p className="text-sm text-zinc-800 font-medium">
+                    Calculated based on <strong className="text-zinc-900 underline decoration-amber-600">final weight</strong> after crating.
                   </p>
                 </div>
-              </div>
-
-              <div className="pt-2 flex items-center gap-2 text-sm text-zinc-900 italic">
-                <div className="w-1 h-1 bg-zinc-100 rounded-full" />
-                Professionally crated for break-free delivery.
               </div>
             </div>
           </div>
         </div>
 
         {/* --- BOTTOM EXHIBIT --- */}
-        <div className="mt-20 md:mt-32 pt-12 md:pt-20 border-t border-zinc-100 grid grid-cols-1 xl:grid-cols-12 gap-12 xl:gap-30">
+        <div className="mt-20 md:mt-32 pt-12 md:pt-20 border-t border-zinc-300 grid grid-cols-1 xl:grid-cols-12 gap-12 xl:gap-20">
+
           {/* TECHNICAL SPECS */}
-          <div className="lg:col-span-5 space-y-8 md:space-y-10">
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-amber-700">
-              Specifications
-            </h3>
-            <div className="divide-y divide-zinc-50 bg-white rounded-3xl md:rounded-[2.5rem] px-6 md:px-8 py-2 border border-zinc-50 shadow-sm">
+          <section className="lg:col-span-5 space-y-6" aria-labelledby="specs-heading">
+            <h2 id="specs-heading" className="text-xs font-bold uppercase tracking-[0.2em] text-amber-900">
+              Technical Specifications
+            </h2>
+            <div className="divide-y divide-zinc-200 bg-zinc-50 rounded-3xl px-6 md:px-8 py-2 border border-zinc-300 shadow-xs">
               {technicalSpecs.map((spec) => (
                 <div
                   key={spec.label}
-                  className="flex justify-between items-center py-5 md:py-6 gap-4"
+                  className="flex justify-between items-center py-4 gap-4"
                 >
-                  <span className="text-xs md:text-sm font-semibold text-zinc-500 uppercase tracking-widest shrink-0">
+                  <span className="text-xs font-bold text-zinc-700 uppercase tracking-widest shrink-0">
                     {spec.label}
                   </span>
-                  <span className="text-sm md:text-base font-semibold uppercase text-zinc-900 italic text-right">
+                  <span className="text-sm font-bold uppercase text-zinc-900 italic text-right">
                     {spec.value || "Not Specified"}
                   </span>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* PRODUCT STORY */}
-          <div className="lg:col-span-7 space-y-10 md:space-y-12">
+          <section className="lg:col-span-7 space-y-6" aria-labelledby="story-heading">
+            <h2 id="story-heading" className="text-xs font-bold uppercase tracking-[0.2em] text-amber-900">
+              The Artisan Story
+            </h2>
             <div className="space-y-6">
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-amber-700">
-                The Story
-              </h3>
-              <h2 className="text-3xl md:text-5xl font-semibold text-zinc-900 tracking-tight leading-tight">
+              <h3 className="text-2xl md:text-4xl font-bold text-zinc-900 tracking-tight font-cinzel leading-snug">
                 {product.storyTitle?.replace(/22ct/gi, "22K") || "Heritage in Every Stroke"}
-              </h2>
+              </h3>
               <div className="space-y-4">
-                <p className="text-zinc-700 text-lg md:text-xl leading-relaxed font-medium">
+                <p className="text-zinc-800 text-base md:text-lg leading-relaxed font-medium">
                   {product.description?.replace(/22ct/gi, "22K")}
                 </p>
-                <p className="text-zinc-500 text-md md:text-lg leading-relaxed italic border-l-4 border-amber-200 pl-6 py-2">
-                  {product.detailedDescription?.replace(/22ct/gi, "22K") || ""}
-                </p>
+                {product.detailedDescription && (
+                  <p className="text-zinc-700 text-sm md:text-base leading-relaxed italic border-l-4 border-amber-700 pl-6 py-2">
+                    {product.detailedDescription.replace(/22ct/gi, "22K")}
+                  </p>
+                )}
               </div>
             </div>
-          </div>
+          </section>
         </div>
 
         {/* ARTISAN HALLMARKS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 pt-20">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-20 mt-20 border-t border-zinc-300" aria-label="Aishwarya Arts quality hallmarks">
           {[
             {
-              icon: <Award />,
+              icon: <Award size={24} aria-hidden="true" />,
               title: "25+ Years Legacy",
               desc: "Crafted by master artisans from Thanjavur.",
             },
             {
-              icon: <Zap />,
-              title: "22K Gold foil",
+              icon: <Zap size={24} aria-hidden="true" />,
+              title: "22K Gold Foil",
               desc: "Certified original gold leaf used.",
             },
             {
-              icon: <ShieldAlert />,
+              icon: <ShieldAlert size={24} aria-hidden="true" />,
               title: "Safety & Care",
               desc: "Avoid direct sunlight and moisture.",
             },
             {
-              icon: <CheckCircle2 />,
+              icon: <CheckCircle2 size={24} aria-hidden="true" />,
               title: "Durability",
-              desc: "Traditional Teak frames and waterproof base.",
+              desc: "Traditional teak frames and waterproof base.",
             },
           ].map((item, i) => (
-            <div key={i} className="flex gap-4 md:gap-5">
-              <div className="h-10 w-10 md:h-12 md:w-12 shrink-0 bg-amber-50 rounded-xl md:rounded-2xl flex items-center justify-center text-amber-600 shadow-sm">
+            <div key={i} className="flex gap-4 p-6 bg-zinc-50 rounded-2xl border border-zinc-300 shadow-xs">
+              <div className="h-12 w-12 shrink-0 bg-white border border-zinc-300 rounded-xl flex items-center justify-center text-amber-800 shadow-xs">
                 {item.icon}
               </div>
               <div className="space-y-1">
-                <h4 className="font-semibold text-sm md:text-md uppercase tracking-widest text-zinc-900">
+                <h3 className="font-bold text-sm uppercase tracking-wider text-zinc-900 font-cinzel">
                   {item.title}
-                </h4>
-                <p className="text-xs md:text-sm text-zinc-900 leading-relaxed font-medium">
+                </h3>
+                <p className="text-xs text-zinc-700 font-medium leading-relaxed">
                   {item.desc}
                 </p>
               </div>
             </div>
           ))}
-        </div>
+        </section>
       </div>
     </div>
   );
