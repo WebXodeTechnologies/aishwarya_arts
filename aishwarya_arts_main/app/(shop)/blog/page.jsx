@@ -155,7 +155,7 @@ export default function BlogPage() {
               </div>
 
               {/* Text content - solid white background, removing unwanted grays */}
-              <div className="p-6 sm:p-8 bg-white relative -mt-12 rounded-t-[2rem] z-10 border-t border-zinc-100 flex flex-col grow justify-between shadow-xs">
+              <div className="p-6 sm:p-8 bg-white relative -mt-12 rounded-t-4xl z-10 border-t border-zinc-100 flex flex-col grow justify-between shadow-xs">
                 <div className="space-y-3">
                   <span className="inline-block bg-amber-900 text-amber-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                     {post.category}
