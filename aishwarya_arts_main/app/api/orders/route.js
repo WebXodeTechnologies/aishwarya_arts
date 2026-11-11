@@ -1,17 +1,16 @@
-import { connectDB } from "../../../lib/db";
-import Order from "../../../models/Order";
-import Product from "../../../models/Product";
-import User from "../../../models/User";
-import Counter from "../../../models/CounterApi"; // IMPORT COUNTER
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { connectDB } from "@/lib/db";
+import Order from "@/models/Order";
+import Product from "@/models/Product";
+import User from "@/models/User";
+import Counter from "@/models/CounterApi";
+import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import crypto from "crypto"
+import crypto from "crypto";
 
 export async function GET() {
   try {
     await connectDB();
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
 
     const dbUser = await User.findOne({ email: session.user.email });
@@ -24,19 +23,24 @@ export async function GET() {
   }
 }
 
-
-
 export async function POST(req) {
   try {
     await connectDB();
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
 
     const dbUser = await User.findOne({ email: session.user.email });
     if (!dbUser) return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
 
     const body = await req.json();
-    const { orderItems, shippingAddress, paymentMethod, razorpayOrderId, razorpayPaymentId } = body;
+    const { 
+      orderItems, 
+      shippingAddress, 
+      paymentMethod, 
+      razorpayOrderId, 
+      razorpayPaymentId, 
+      razorpaySignature 
+    } = body;
 
     if (paymentMethod === "Razorpay") {
       const generated_signature = crypto
@@ -59,7 +63,6 @@ export async function POST(req) {
       { new: true, upsert: true }
     );
     const customOrderId = `AG-${String(counter.seq).padStart(3, '0')}-${monthYearStr}`;
-    
 
     // --- 2. VALIDATE ITEMS & PRICE ---
     let subtotal = 0;
@@ -87,7 +90,7 @@ export async function POST(req) {
 
     // --- 3. CREATE ORDER ---
     const newOrder = await Order.create({
-      orderId: customOrderId, // USE CUSTOM ID
+      orderId: customOrderId,
       user: dbUser._id, 
       orderItems: verifiedItems,
       totalAmount: finalTotal,

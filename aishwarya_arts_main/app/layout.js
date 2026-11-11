@@ -7,17 +7,24 @@ import GoogleAnalyticsWrapper from "./components/GoogleAnalyticsWrapper";
 // Limit weights to only what is actively used above-the-fold to reduce font file size
 const titillium = Titillium_Web({
   subsets: ["latin"],
-  weight: ["400", "600", "700"], // Removed unused 300/900 weights for faster initial payload
+  weight: ["400", "600", "700"],
   variable: "--font-titillium",
   display: "swap",
 });
 
 const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
-  weight: ["700"], // Keep only primary heading weight needed above-the-fold
+  weight: ["700"],
   variable: "--font-cinzel",
   display: "swap",
 });
+
+// SEPARATED VIEWPORT EXPORT (Required for Next.js App Router mobile indexing & layout shift prevention)
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#8B4513", // Rich traditional art accent tone
+};
 
 export const metadata = {
   metadataBase: new URL("https://www.aishwaryaarts.com"),
@@ -27,6 +34,9 @@ export const metadata = {
   },
   description:
     "Buy premium handmade Tanjore paintings and traditional 22K gold leaf art. Explore curated collections crafted by expert master artisans at Aishwarya Arts.",
+  applicationName: "Aishwarya Arts E-Commerce",
+  authors: [{ name: "Aishwarya Arts", url: "https://www.aishwaryaarts.com" }],
+  generator: "Next.js",
   keywords: [
     "Tanjore Paintings",
     "Handmade Indian Art",
@@ -73,6 +83,10 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    // Add your Google Search Console verification code here once generated
+    google: "YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -86,20 +100,22 @@ export default function RootLayout({ children }) {
     email: "contact.aishwaryaarts@gmail.com",
     address: {
       "@type": "PostalAddress",
+      streetAddress: "Namakkal Main Road", // Refined for local business schema accuracy
       addressLocality: "Namakkal",
       addressRegion: "Tamil Nadu",
+      postalCode: "637001",
       addressCountry: "IN",
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: "11.2223",
-      longitude: "78.1677",
+      latitude: 11.2223,
+      longitude: 78.1677,
     },
     priceRange: "₹₹₹",
     sameAs: [
       "https://www.facebook.com/aishwaryaarts",
       "https://www.instagram.com/aishwaryaarts",
-      "https://www.youtube.com/aishwaryaarts",
+      "https://www.youtube.com/@aishwaryaarts",
       "https://www.linkedin.com/company/aishwarya-arts",
     ],
     contactPoint: {

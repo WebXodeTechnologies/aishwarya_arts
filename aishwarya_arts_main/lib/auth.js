@@ -1,14 +1,14 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { connectDB } from "../lib/db";
-import User from "../models/User";
+import { connectDB } from "./db"; // Fixed: relative to lib/ folder
+import User from "../models/User"; // Correct: models/ is sibling to lib/
 import bcrypt from "bcryptjs";
 
 export const authOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
 
     CredentialsProvider({
@@ -22,16 +22,14 @@ export const authOptions = {
           throw new Error("Email and password are required");
         }
 
-        // Normalize email to prevent "Incorrect Credentials" due to caps
         const inputEmail = credentials.email.toLowerCase().trim();
         const inputPassword = credentials.password.trim();
 
-        // --- A. HARDCODED ADMIN CHECK (PRIORITY) ---
+        // --- A. HARDCODED ADMIN CHECK ---
         const ADMIN_EMAIL = "aishwaryaarts@gmail.com";
         const ADMIN_PASSWORD = "123456";
 
         if (inputEmail === ADMIN_EMAIL && inputPassword === ADMIN_PASSWORD) {
-          console.log("🚀 Admin Login Successful");
           return {
             id: "admin-1",
             name: "Akash",
@@ -42,37 +40,25 @@ export const authOptions = {
         }
 
         // --- B. DATABASE CUSTOMER CHECK ---
-        try {
-          await connectDB();
-          // We select +password because it's hidden in your Schema
-          const user = await User.findOne({ email: inputEmail }).select(
-            "+password",
-          );
+        await connectDB();
+        const user = await User.findOne({ email: inputEmail }).select("+password");
 
-          if (!user) {
-            console.error("❌ Auth Error: No user found in DB");
-            throw new Error("Invalid email or password");
-          }
-
-          const isValid = await bcrypt.compare(inputPassword, user.password);
-
-          if (!isValid) {
-            console.error("❌ Auth Error: Password mismatch");
-            throw new Error("Invalid email or password");
-          }
-
-          return {
-            id: user._id.toString(),
-            name: `${user.firstName} ${user.lastName || ""}`.trim(),
-            email: user.email,
-            image: user.avatar?.startsWith("data:") ? null : user.avatar,
-            role: user.role || "user",
-          };
-        } catch (error) {
-          // Providing a generic error to the UI for security, but logging detail to server
-          console.error("Database Auth Error:", error.message);
-          throw new Error(error.message || "Internal Server Error");
+        if (!user || !user.password) {
+          throw new Error("Invalid email or password");
         }
+
+        const isValid = await bcrypt.compare(inputPassword, user.password);
+        if (!isValid) {
+          throw new Error("Invalid email or password");
+        }
+
+        return {
+          id: user._id.toString(),
+          name: `${user.firstName} ${user.lastName || ""}`.trim(),
+          email: user.email,
+          image: user.avatar?.startsWith("data:") ? null : user.avatar,
+          role: user.role || "user",
+        };
       },
     }),
   ],
@@ -82,21 +68,15 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (account.provider === "google") {
+      if (account?.provider === "google") {
         try {
           await connectDB();
-
-          // 1. Define the normalized email correctly
           const normalizedEmail = user.email.toLowerCase().trim();
-
-          // 2. Use 'normalizedEmail' for the search
           const existingUser = await User.findOne({ email: normalizedEmail });
 
           if (!existingUser) {
-            // 3. Use 'normalizedEmail' for the creation
             await User.create({
-              firstName:
-                profile?.given_name || user.name?.split(" ")[0] || "User",
+              firstName: profile?.given_name || user.name?.split(" ")[0] || "User",
               lastName: profile?.family_name || user.name?.split(" ")[1] || "",
               email: normalizedEmail,
               avatar: user.image,
@@ -106,8 +86,7 @@ export const authOptions = {
           }
           return true;
         } catch (error) {
-          // This will now show you the REAL error in Vercel logs
-          console.error("🚀 Google Sign-In DB Error:", error);
+          console.error("Google Sign-In DB Error:", error);
           return false;
         }
       }
@@ -118,8 +97,7 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        const isBase64 =
-          typeof user.image === "string" && user.image.startsWith("data:");
+        const isBase64 = typeof user.image === "string" && user.image.startsWith("data:");
         token.picture = isBase64 ? null : user.image;
       }
       if (trigger === "update" && session?.image) {
@@ -128,6 +106,7 @@ export const authOptions = {
       }
       return token;
     },
+
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
@@ -142,5 +121,4 @@ export const authOptions = {
     error: "/auth/error",
   },
   secret: process.env.NEXTAUTH_SECRET,
-  
 };

@@ -1,10 +1,6 @@
 import NextAuth from "next-auth";
-import { connectDB } from "../../../../lib/db";
 import { authOptions } from "../../../../lib/auth";
 
-connectDB();
+const { handlers } = NextAuth(authOptions);
 
-
-
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export const { GET, POST } = handlers;

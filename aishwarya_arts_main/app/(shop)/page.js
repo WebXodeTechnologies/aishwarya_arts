@@ -8,8 +8,8 @@ import Story from "../components/HomePage/Story";
 import Testimonial from "../components/HomePage/Testimonial";
 import Tooltip from "../components/HomePage/Tooltip";
 import { unstable_cache } from "next/cache";
-import { connectDB } from "@/lib/db";
-import Banner from "@/models/Banner";
+import { connectDB } from "../../lib/db";
+import Banner from "../../models/Banner";
 
 // Force static rendering optimization where possible
 export const dynamic = "force-static";

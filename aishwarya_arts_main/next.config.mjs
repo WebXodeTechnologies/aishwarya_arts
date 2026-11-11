@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  productionBrowserSourceMaps: true, // Fixes missing source maps warning in production builds
-  compress: true, // Enables compression for faster network payloads
+  productionBrowserSourceMaps: true,
+  compress: true,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
@@ -13,7 +13,7 @@ const nextConfig = {
       { protocol: "https", hostname: "*.ufs.sh" },
     ],
     dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none';",
+    // REMOVED contentSecurityPolicy: "default-src 'self'; script-src 'none';" -> This was killing scripts and analytics!
     minimumCacheTTL: 60,
   },
   eslint: {

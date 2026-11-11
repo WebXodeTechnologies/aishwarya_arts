@@ -1,14 +1,13 @@
-import { connectDB } from "../../../../lib/db";
-import User from "../../../../models/User";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../lib/auth"; 
+import { connectDB } from "@/lib/db";
+import User from "@/models/User";
+import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 // 1. GET: Fetch user data to display in the profile form
 export async function GET(req) {
   try {
     await connectDB();
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session || !session.user) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
@@ -31,7 +30,7 @@ export async function GET(req) {
 export async function PUT(req) {
   try {
     await connectDB();
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session || !session.user) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
@@ -39,7 +38,6 @@ export async function PUT(req) {
 
     const body = await req.json();
     const { firstName, lastName, alternatePhone, primaryPhone, address, avatar } = body;
-
 
     const updateData = {
       firstName,
@@ -56,7 +54,7 @@ export async function PUT(req) {
 
     const updatedUser = await User.findOneAndUpdate(
       { email: session.user.email },
-      { $set: updateData  },
+      { $set: updateData },
       { new: true, runValidators: true }
     ).select("-password");
 
