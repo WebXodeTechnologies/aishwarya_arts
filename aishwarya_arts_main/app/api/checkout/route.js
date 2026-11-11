@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
-import { connectDB } from "@/lib/db";
-import Product from "@/models/Product";
+import { connectDB } from "../../../lib/db";
+import Product from "../../../models/Product";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

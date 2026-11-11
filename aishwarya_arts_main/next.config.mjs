@@ -13,8 +13,10 @@ const nextConfig = {
       { protocol: "https", hostname: "*.ufs.sh" },
     ],
     dangerouslyAllowSVG: true,
-    // REMOVED contentSecurityPolicy: "default-src 'self'; script-src 'none';" -> This was killing scripts and analytics!
     minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920], // Caps max requested width at 1920px
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    formats: ["image/webp"],
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -42,6 +44,7 @@ const nextConfig = {
   },
   async headers() {
     return [
+      // 1. Global Security Headers
       {
         source: "/(.*)",
         headers: [
@@ -68,6 +71,26 @@ const nextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(self)",
+          },
+        ],
+      },
+      // 2. Aggressive Edge Caching for Next.js Static Bundles (JS/CSS)
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // 3. Cache Optimized Images at Cloudflare Edge
+      {
+        source: "/_next/image/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
           },
         ],
       },

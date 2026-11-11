@@ -9,7 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
-import { useDashboardStore } from "@/store/useDashboardStore";
+import { useDashboardStore } from "../../../store/useDashboardStore";
 
 
 const Navbar = ({ onMenuClick }) => {

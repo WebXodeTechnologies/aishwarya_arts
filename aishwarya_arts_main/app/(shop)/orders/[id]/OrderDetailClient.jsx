@@ -10,7 +10,7 @@ import {
     EyeOff,
     Eye
 } from "lucide-react";
-import PrintableInvoice from "@/app/components/invoice/InvoiceTemplate";
+import PrintableInvoice from "../../../../app/components/invoice/InvoiceTemplate";
 import { useReactToPrint } from 'react-to-print';
 
 const numberToWords = (num) => {

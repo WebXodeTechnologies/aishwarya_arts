@@ -9,7 +9,7 @@ import InventoryAlerts from "../../../components/admin/dashboard/InventoryAlerts
 import BannerStatus from "../../../components/admin/dashboard/BannerStatus";
 import LogisticsPulse from "../../../components/admin/dashboard/LogisticsPulse";
 import { useEffect } from "react";
-import { useDashboardStore } from "@/store/useDashboardStore";
+import { useDashboardStore } from "../../../../store/useDashboardStore";
 
 export default function DashboardPage() {
   const { data, loading, fetchStats } = useDashboardStore();

@@ -1,6 +1,6 @@
 // app/api/auth/reset-password/route.js
-import { connectDB } from "@/lib/db";
-import User from "@/models/User";
+import { connectDB } from "../../../../lib/db";
+import User from "../../../../models/User";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";

@@ -1,5 +1,5 @@
-import { connectDB } from "@/lib/db";
-import Product from "@/models/Product";
+import { connectDB } from "../lib/db";
+import Product from "../models/Product";
 import { blogPosts } from "./data/blogdata";
 
 export default async function sitemap() {

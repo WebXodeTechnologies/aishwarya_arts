@@ -1,9 +1,9 @@
-import { connectDB } from "@/lib/db";
-import Order from "@/models/Order";
-import Product from "@/models/Product";
-import User from "@/models/User";
-import Counter from "@/models/CounterApi";
-import { authOptions } from "@/lib/auth";
+import { connectDB } from "../../../lib/db";
+import Order from "../../../models/Order";
+import Product from "../../../models/Product";
+import User from "../../../models/User";
+import Counter from "../../../models/CounterApi";
+import { authOptions } from "../../../lib/auth";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 

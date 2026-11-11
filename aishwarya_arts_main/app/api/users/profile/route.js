@@ -1,6 +1,6 @@
-import { connectDB } from "@/lib/db";
-import User from "@/models/User";
-import { authOptions } from "@/lib/auth";
+import { connectDB } from "../../../../lib/db";
+import User from "../../../../models/User";
+import { authOptions } from "../../../../lib/auth";
 import { NextResponse } from "next/server";
 
 // 1. GET: Fetch user data to display in the profile form

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { sendEmail } from "@/app/actions/sendEmail";
+import { sendEmail } from "../../../app/actions/sendEmail";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 

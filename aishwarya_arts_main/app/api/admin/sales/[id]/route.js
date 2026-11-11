@@ -1,5 +1,5 @@
-import { connectDB } from "@/lib/db";
-import Order from "@/models/Order";
+import { connectDB } from "../../../../../lib/db";
+import Order from "../../../../../models/Order";
 import { NextResponse } from "next/server";
 
 // 1. GET: Fetch details for the View Page

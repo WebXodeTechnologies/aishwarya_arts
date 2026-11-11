@@ -1,5 +1,5 @@
-import { connectDB } from "@/lib/db";
-import User from "@/models/User";
+import { connectDB } from "../../../../lib/db";
+import User from "../../../../models/User";
 import crypto from "crypto";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import Order from "@/models/Order";
-import User from "@/models/User";
+import { connectDB } from "../../../../../lib/db";
+import Order from "../../../../../models/Order";
+import User from "../../../../../models/User";
 
 // --- GET: Fetch Single Order Details ---
 export async function GET(req, { params }) {

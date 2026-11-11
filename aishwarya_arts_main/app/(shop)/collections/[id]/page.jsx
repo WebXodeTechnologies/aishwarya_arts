@@ -1,6 +1,6 @@
 import React from "react";
-import { connectDB } from "@/lib/db";
-import Product from "@/models/Product";
+import { connectDB } from "../../../../lib/db";
+import Product from "../../../../models/Product";
 import ProductClient from "./ProductClient";
 import { notFound } from "next/navigation";
 

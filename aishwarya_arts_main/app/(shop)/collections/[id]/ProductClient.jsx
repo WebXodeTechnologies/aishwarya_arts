@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "../../../../store/useCartStore";
 import { useWishlistStore } from "../../../../store/useWishlistStore";
 import { useAuthStore } from "../../../../store/useAuthStore";
-import { GLOBAL_ASSETS } from "@/lib/constants";
+import { GLOBAL_ASSETS } from "../../../../lib//constants";
 
 const DIMENSIONS = [
   '15" X 12"',

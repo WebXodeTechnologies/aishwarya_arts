@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import Banner from "@/models/Banner";
+import { connectDB } from "../../../../lib/db";
+import Banner from "../../../../models/Banner";
 import { revalidateTag, revalidatePath } from "next/cache";
 
 // GET: Fetch all active banners for the Hero Carousel

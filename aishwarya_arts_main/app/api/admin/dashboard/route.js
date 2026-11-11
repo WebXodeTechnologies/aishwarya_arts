@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import Order from "@/models/Order";
-import Product from "@/models/Product";
-import User from "@/models/User";
+import { connectDB } from "../../../../lib/db";
+import Order from "../../../../models/Order";
+import Product from "../../../../models/Product";
+import User from "../../../../models/User";
 
 export async function GET() {
   try {
