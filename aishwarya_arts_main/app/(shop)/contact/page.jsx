@@ -28,7 +28,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "https://www.aishwaryaarts.com/assets/og-image.jpg",
+        url: "https://www.aishwaryaarts.com/logo.png",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Art Gallery Namakkal",
@@ -39,7 +39,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Contact Aishwarya Arts | Namakkal",
     description: "Reach out to our traditional Thanjavur art gallery for bespoke temple and deity portraits.",
-    images: ["https://www.aishwaryaarts.com/assets/og-image.jpg"],
+    images: ["https://www.aishwaryaarts.com/logo.png"],
   },
   robots: {
     index: true,
@@ -55,7 +55,6 @@ export const metadata = {
 };
 
 export default function ContactPage() {
-  // Rich LocalBusiness and ContactPage Structured Data Schema for Local SEO
   const contactSchema = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
@@ -107,13 +106,17 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* Injecting Local Business & Contact Schema Markup */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
       />
 
       <main className="min-h-screen bg-white font-outfit">
+        {/* Hidden or visual semantic H1 so SEO spiders instantly recognize the primary heading */}
+        <div className="sr-only">
+          <h1>Contact Aishwarya Arts - Tanjore Painting Gallery Namakkal</h1>
+        </div>
+
         <ContactHeader />
         <ContactForm />
         <ContactInfoCards />

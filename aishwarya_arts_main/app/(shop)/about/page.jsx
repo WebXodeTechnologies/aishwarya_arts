@@ -8,6 +8,7 @@ import ContactAnimation from '../../components/About/ContactAnimation';
 
 // Comprehensive SEO Metadata for Google Search & Social Sharing
 export const metadata = {
+  metadataBase: new URL("https://www.aishwaryaarts.com"),
   title: "About Us | Master Artisans of Traditional Tanjore Art",
   description: "Discover the 25+ year heritage and master craftsmanship behind Aishwarya Arts. Creating certified authentic 22K gold leaf Tanjore paintings in Tamil Nadu since 2000.",
   keywords: [
@@ -18,7 +19,7 @@ export const metadata = {
     "Handmade Indian Art Studio"
   ],
   alternates: {
-    canonical: "https://www.aishwaryaarts.com/about",
+    canonical: "/about",
   },
   openGraph: {
     title: "About Aishwarya Arts | Heritage & Master Craftsmanship",
@@ -29,7 +30,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "https://www.aishwaryaarts.com/assets/og-image.jpg",
+        url: "https://www.aishwaryaarts.com/logo.png", // Updated to your main logo asset
         width: 1200,
         height: 630,
         alt: "Master artisans crafting authentic Tanjore paintings at Aishwarya Arts",
@@ -40,7 +41,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "About Us | Aishwarya Arts Tanjore Gallery",
     description: "Explore our 25+ year legacy crafting certified authentic 22K gold leaf Tanjore paintings.",
-    images: ["https://www.aishwaryaarts.com/assets/og-image.jpg"],
+    images: ["https://www.aishwaryaarts.com/logo.png"], // Updated matching asset
   },
   robots: {
     index: true,
@@ -95,6 +96,7 @@ const aboutSchema = {
       />
 
       <main className="w-full flex flex-col min-h-screen">
+      <h1 className="sr-only">About Aishwarya Arts | Master Artisans of Traditional Tanjore Art</h1>
         {/* <AboutVideo /> */}
         <ProfessionalJourney />
         <MissionVision />
