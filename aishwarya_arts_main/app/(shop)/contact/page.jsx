@@ -28,7 +28,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/og-image.jpg",
+        url: "https://www.aishwaryaarts.com/assets/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Art Gallery Namakkal",
@@ -39,7 +39,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Contact Aishwarya Arts | Namakkal",
     description: "Reach out to our traditional Thanjavur art gallery for bespoke temple and deity portraits.",
-    images: ["/assets/og-image.jpg"],
+    images: ["https://www.aishwaryaarts.com/assets/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -67,8 +67,8 @@ export default function ContactPage() {
       "name": "Aishwarya Arts",
       "image": "https://www.aishwaryaarts.com/logo.png",
       "url": "https://www.aishwaryaarts.com",
-      "telephone": "+91-9876543210", // Replace with your active gallery phone number
-      "email": "support@aishwaryaarts.com",
+      "telephone": "+91-7550152764",
+      "email": "contact.aishwaryaarts@gmail.com",
       "priceRange": "₹₹₹",
       "address": {
         "@type": "PostalAddress",
