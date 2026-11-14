@@ -13,7 +13,7 @@ const Shipping = () => {
     },
     {
       icon: "/assets/shipping/offer.svg",
-      title: "Exclusive Offers &amp; Heritage Deals",
+      title: "Exclusive Offers & Heritage Deals",
       desc: "Discover special pricing and curated art deals on authentic traditional Tanjore paintings.",
       alt: "Discount tag symbol showing exclusive offers on Tanjore paintings",
     },

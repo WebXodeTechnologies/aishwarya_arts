@@ -37,14 +37,16 @@ export const metadata = {
   applicationName: "Aishwarya Arts E-Commerce",
   authors: [{ name: "Aishwarya Arts", url: "https://www.aishwaryaarts.com" }],
   generator: "Next.js",
-  keywords: [
-    "Tanjore Paintings",
-    "Handmade Indian Art",
-    "Aishwarya Arts Namakkal",
-    "Traditional Gold Leaf Paintings",
-    "Buy Tanjore Art Online",
-    "Original Thanjavur Paintings",
-  ],
+keywords: [
+  "Aishwarya Arts",
+  "Tanjore Paintings",
+  "Authentic Thanjavur Art",
+  "Handmade Indian Art",
+  "Traditional Gold Leaf Paintings",
+  "Buy Tanjore Art Online",
+  "South Indian Wall Decor",
+  "Aishwarya Arts Namakkal"
+],
   alternates: {
     canonical: "/",
   },
@@ -120,7 +122,7 @@ export default function RootLayout({ children }) {
     ],
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+91-96550-07661",
+      telephone: "+91-9655007661",
       contactType: "customer service",
       email: "contact.aishwaryaarts@gmail.com",
       areaServed: "IN",
@@ -134,6 +136,8 @@ export default function RootLayout({ children }) {
         {/* Preconnect & DNS-Prefetch for CDN */}
         <link rel="preconnect" href="https://utfs.io" />
         <link rel="dns-prefetch" href="https://utfs.io" />
+        <link rel="preconnect" href="https://ufs.sh" />
+        <link rel="dns-prefetch" href="https://ufs.sh" />
 
         <script
           type="application/ld+json"
