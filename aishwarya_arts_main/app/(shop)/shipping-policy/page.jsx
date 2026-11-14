@@ -23,7 +23,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/logo.png",
+        url: "https://www.aishwaryaarts.com/logo.png",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Shipping and Delivery Policy",
@@ -34,7 +34,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Shipping & Delivery Policy | Aishwarya Arts",
     description: "Review our shipping policies for secure domestic and global art deliveries.",
-    images: ["/logo.png"],
+    images: ["https://www.aishwaryaarts.com/logo.png"],
   },
   robots: {
     index: true,
@@ -95,7 +95,7 @@ export default function ShippingPolicyPage() {
             <section className="space-y-3">
               <h2>1. Packaging &amp; Preservation</h2>
               <p>
-                Tanjore paintings are delicate masterpieces adorned with 22ct gold leaf and precious stones. To guarantee safe transit, all paintings are wrapped in multiple protective layers of shock-absorbing foam and bubblewrap, then sealed inside custom-made, heavy-duty wooden crates. This packaging ensures the artwork is immune to pressure and moisture during shipment.
+                Tanjore paintings are delicate masterpieces adorned with 22K gold leaf and precious stones. To guarantee safe transit, all paintings are wrapped in multiple protective layers of shock-absorbing foam and bubblewrap, then sealed inside custom-made, heavy-duty wooden crates. This packaging ensures the artwork is immune to pressure and moisture during shipment.
               </p>
             </section>
 

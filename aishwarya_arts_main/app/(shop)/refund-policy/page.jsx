@@ -23,7 +23,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/logo.png",
+        url: "https://www.aishwaryaarts.com/logo.png",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Refund and Return Policy",
@@ -34,7 +34,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Refund & Return Policy | Aishwarya Arts",
     description: "Review our policies regarding returns and replacements for traditional Thanjavur art pieces.",
-    images: ["/logo.png"],
+    images: ["https://www.aishwaryaarts.com/logo.png"],
   },
   robots: {
     index: true,

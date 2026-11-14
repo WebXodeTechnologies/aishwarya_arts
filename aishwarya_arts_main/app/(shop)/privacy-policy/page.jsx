@@ -23,7 +23,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/logo.png",
+        url: "https://www.aishwaryaarts.com/logo.png",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Privacy Policy",
@@ -34,7 +34,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Privacy Policy | Aishwarya Arts",
     description: "Understand our data security practices for custom art commissions and online orders.",
-    images: ["/logo.png"],
+    images: ["https://www.aishwaryaarts.com/logo.png"],
   },
   robots: {
     index: true,
@@ -124,8 +124,8 @@ export default function PrivacyPolicyPage() {
               <h2>5. Contact Our Privacy Team</h2>
               <p>
                 If you have questions regarding your data or this privacy policy, please reach out to us at{" "}
-                <a href="mailto:support@aishwaryaarts.com" className="text-amber-900 font-bold hover:underline underline-offset-4">
-                  support@aishwaryaarts.com
+                <a href="mailto:contact.aishwaryaarts@gmail.com" className="text-amber-900 font-bold hover:underline underline-offset-4">
+                  contact.aishwaryaarts@gmail.com
                 </a>{" "}
                 or visit our gallery in Namakkal, Tamil Nadu.
               </p>

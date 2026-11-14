@@ -23,7 +23,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/logo.png",
+        url: "https://www.aishwaryaarts.com/logo.png",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Terms and Conditions",
@@ -34,7 +34,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Terms & Conditions | Aishwarya Arts",
     description: "Read our terms of service for purchasing traditional Thanjavur masterpieces.",
-    images: ["/logo.png"],
+    images: ["https://www.aishwaryaarts.com/logo.png"],
   },
   robots: {
     index: true,
