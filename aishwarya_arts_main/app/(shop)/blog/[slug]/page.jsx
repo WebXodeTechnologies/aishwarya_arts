@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { blogPosts } from "../../../data/blogdata";
 
-// Enable Incremental Static Regeneration (ISR) or static caching
+// Enable Incremental Static Regeneration (ISR)
 export const revalidate = 3600;
 
 // Generate Dynamic SEO Metadata for Each Blog Article
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
   const title = `${post.title} | Aishwarya Arts Art Blog`;
   const description = post.summary || `Explore ${post.title} and learn about traditional Indian art forms, heritage, and history at Aishwarya Arts.`;
   const articleUrl = `https://www.aishwaryaarts.com/blog/${slug}`;
-  const imageUrl = post.image || "https://www.aishwaryaarts.com/logo.png";
+  const imageUrl = post.image ? `https://www.aishwaryaarts.com${post.image}` : "https://www.aishwaryaarts.com/logo.png";
 
   return {
     metadataBase: new URL("https://www.aishwaryaarts.com"),
@@ -90,7 +90,7 @@ export default async function BlogDetail({ params }) {
 
   const articleUrl = `https://www.aishwaryaarts.com/blog/${slug}`;
 
-  // Rich BlogPosting Structured Data Schema for Google Rich Snippets & Knowledge Graph
+  // Rich BlogPosting Structured Data Schema for Google Rich Snippets
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",

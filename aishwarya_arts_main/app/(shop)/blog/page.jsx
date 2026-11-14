@@ -58,7 +58,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/logo.png",
+        url: "https://www.aishwaryaarts.com/logo.png",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Art Blog",
@@ -69,7 +69,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Art & Heritage Blog | Aishwarya Arts",
     description: "Explore the timeless history of Thanjavur art and custom Indian masterpieces.",
-    images: ["/logo.png"],
+    images: ["https://www.aishwaryaarts.com/logo.png"],
   },
   robots: {
     index: true,
@@ -154,16 +154,17 @@ export default function BlogPage() {
                 />
               </div>
 
-              {/* Text content - solid white background, removing unwanted grays */}
+              {/* Text content - solid white background */}
               <div className="p-6 sm:p-8 bg-white relative -mt-12 rounded-t-4xl z-10 border-t border-zinc-100 flex flex-col grow justify-between shadow-xs">
                 <div className="space-y-3">
                   <span className="inline-block bg-amber-900 text-amber-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                     {post.category}
                   </span>
 
-                  <h2 className="text-xl md:text-2xl font-bold text-zinc-900 group-hover:text-amber-800 transition-colors font-cinzel leading-snug">
+                  {/* FIXED: Changed from h2 to h3 to maintain strict hierarchical outline flow */}
+                  <h3 className="text-xl md:text-2xl font-bold text-zinc-900 group-hover:text-amber-800 transition-colors font-cinzel leading-snug">
                     {post.title}
-                  </h2>
+                  </h3>
 
                   <p className="text-zinc-700 text-sm md:text-base font-medium leading-relaxed">
                     {post.summary}
