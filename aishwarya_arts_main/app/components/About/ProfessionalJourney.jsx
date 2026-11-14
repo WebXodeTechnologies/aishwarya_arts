@@ -43,7 +43,7 @@ export default function ProfessionalJourney() {
           id="professional-journey-title"
           className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-zinc-900 tracking-wide leading-snug font-cinzel"
         >
-          Our Professional Journey &amp; Heritage
+          Our Professional Journey & Heritage
         </h2>
 
         <p className="text-zinc-700 leading-relaxed mb-5 text-base md:text-lg font-medium">

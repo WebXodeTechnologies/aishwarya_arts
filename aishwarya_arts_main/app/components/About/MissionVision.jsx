@@ -44,7 +44,7 @@ export default function MissionVision() {
         id="mission-vision-heading"
         className="text-3xl md:text-5xl font-bold mb-16 text-zinc-900 tracking-wide font-cinzel"
       >
-        Our Mission, Vision &amp; Commitment
+        Our Mission, Vision & Commitment
       </h2>
 
       <div className="grid md:grid-cols-3 gap-8 md:gap-10">

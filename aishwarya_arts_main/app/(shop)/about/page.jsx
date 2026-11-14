@@ -57,7 +57,7 @@ export const metadata = {
 
 export default function Page() {
   // Rich Structured Data Schema for Google Knowledge Graph & Local Art Gallery SEO
-  const aboutSchema = {
+const aboutSchema = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "About Aishwarya Arts",
@@ -79,8 +79,8 @@ export default function Page() {
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "11.2223",
-        "longitude": "78.1677"
+        "latitude": 11.2223,
+        "longitude": 78.1677
       },
       "priceRange": "₹₹₹"
     }

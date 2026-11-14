@@ -7,32 +7,32 @@ const reasons = [
   {
     title: "Timeless Tradition",
     description:
-      "Every Tanjore painting is created using age-old temple techniques passed down through generations, preserving the spiritual soul of South Indian art.",
+      "Every Tanjore painting is created using age-old South Indian temple techniques passed down through generations, preserving the authentic spiritual soul of traditional art.",
   },
   {
     title: "Masterful Artisanship",
     description:
-      "Our artisans, guided by master craftsman Devandran, blend precision, devotion, and decades of experience into every single brushstroke.",
+      "Our master artisans, guided by decades of dedicated heritage experience, blend architectural precision, deep devotion, and peerless skill into every single brushstroke.",
   },
   {
     title: "Sacred Authenticity",
     description:
-      "We use genuine 22K gold foil, natural mineral pigments, and traditional tools to ensure every artwork radiates divine brilliance and purity.",
+      "We use genuine 22K gold foil, natural mineral pigments, and traditional tools to ensure every handcrafted artwork radiates lifelong brilliance and purity.",
   },
   {
     title: "Custom & Devotional Works",
     description:
-      "From personalized deity portraits to grand temple commissions, we bring your spiritual vision to life with reverence and absolute detail.",
+      "From personalized deity portraits to custom temple commissions, we bring your spiritual vision to life with complete reverence and exquisite detail.",
   },
   {
     title: "Enduring Quality",
     description:
-      "Each masterpiece is crafted to last for generations, using archival, water-resistant materials that preserve color, texture, and radiance over time.",
+      "Each temple-grade masterpiece is built to last for generations, using archival, water-resistant plywood bases and cotton cloth that protect texture and radiance over time.",
   },
   {
     title: "Trusted Legacy",
     description:
-      "With years of dedicated craftsmanship in Tanjore artistry, Aishwarya Arts has earned the trust of collectors, devotees, and art lovers across India.",
+      "With a proven track record in authentic Tanjore artistry, Aishwarya Arts is trusted by elite art collectors, temples, and patrons across India and worldwide.",
   },
 ];
 
@@ -61,7 +61,7 @@ export default function WhyChoose() {
         </h2>
 
         <p className="mt-4 text-zinc-700 max-w-2xl mx-auto text-base md:text-lg font-medium leading-relaxed">
-          Discover why art collectors and connoisseurs trust Aishwarya Arts for genuine 22K gold foil masterpieces.
+          Discover why art collectors and connoisseurs trust Aishwarya Arts for genuine 22K gold foil masterpieces crafted in Tamil Nadu.
         </p>
       </div>
 
