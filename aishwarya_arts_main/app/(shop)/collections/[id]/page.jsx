@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const title = `${product.title} - Authentic Tanjore Painting | Aishwarya Arts`;
+  const title = `${product.title} | Authentic Tanjore Painting | Aishwarya Arts`;
   const description = product.description || `Handcrafted traditional Thanjavur Tanjore painting of ${product.title}, made with pure 22K gold foil and genuine teakwood frames.`;
   const imageUrl = product.images?.[0] || "https://www.aishwaryaarts.com/logo.png";
   const productUrl = `https://www.aishwaryaarts.com/collections/${productId}`;

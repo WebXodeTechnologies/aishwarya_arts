@@ -28,7 +28,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/og-image.jpg",
+        url: "https://www.aishwaryaarts.com/assets/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Aishwarya Arts Tanjore Paintings Collection Gallery",
@@ -39,7 +39,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Exquisite Tanjore Paintings Collection | Aishwarya Arts",
     description: "Explore authentic handmade 22K gold leaf Tanjore paintings crafted by master artisans.",
-    images: ["/assets/og-image.jpg"],
+    images: ["https://www.aishwaryaarts.com/assets/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -70,9 +70,9 @@ export default async function CollectionsPage() {
     updatedAt: p.updatedAt ? p.updatedAt.toISOString() : null,
     priceMatrix: p.priceMatrix
       ? p.priceMatrix.map((matrix) => ({
-        ...matrix,
-        _id: matrix._id ? matrix._id.toString() : null,
-      }))
+          ...matrix,
+          _id: matrix._id ? matrix._id.toString() : null,
+        }))
       : [],
   }));
 
@@ -90,6 +90,7 @@ export default async function CollectionsPage() {
         "position": index + 1,
         "url": `https://www.aishwaryaarts.com/collections/${product._id}`,
         "name": product.title,
+        "image": product.images?.[0] || "https://www.aishwaryaarts.com/logo.png",
       })),
     },
   };

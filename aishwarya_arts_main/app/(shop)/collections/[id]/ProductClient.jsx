@@ -255,7 +255,7 @@ export default function ProductClient({ initialProduct }) {
               <Image
                 ref={imgRef}
                 src={activeImage}
-                alt={`${product.title} - Authentic Tanjore Painting View`}
+                alt={`${product.title} | Authentic Tanjore Painting View`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
                 className={`object-contain p-4 transition-opacity duration-300 ${zoomData.show ? "xl:opacity-0" : "opacity-100"}`}
