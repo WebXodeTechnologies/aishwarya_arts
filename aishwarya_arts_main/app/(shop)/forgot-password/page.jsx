@@ -1,23 +1,41 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Mail, ArrowLeft } from "lucide-react";
-import ForgotPasswordForm from "./ForgotPasswordForm"; // Or keep your stateful form logic cleanly separated
-
-// Strict crawl hygiene for authentication security
-export const metadata = {
-  metadataBase: new URL("https://www.aishwaryaarts.com"),
-  title: "Forgot Password | Aishwarya Arts",
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-    },
-  },
-};
+import { Mail, ArrowLeft, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Check your email for the reset link!", {
+          icon: '✉️',
+          duration: 5000
+        });
+      } else {
+        toast.error(data.error || "Something went wrong.");
+      }
+    } catch (err) {
+      toast.error("Failed to connect to the server.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafafa] font-outfit px-4 relative overflow-hidden">
       {/* Decorative Background Elements */}
@@ -45,7 +63,34 @@ export default function ForgotPasswordPage() {
             </p>
           </div>
 
-          <ForgotPasswordForm />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-zinc-400 ml-1">
+                Email Address
+              </label>
+              <div className="relative">
+                <input 
+                  type="email" 
+                  placeholder="name@example.com" 
+                  className="w-full pl-12 pr-4 py-4 bg-zinc-50 border border-zinc-100 rounded-2xl outline-none focus:border-amber-600 focus:bg-white transition-all text-zinc-900"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-300" size={20} />
+              </div>
+            </div>
+
+            <button 
+              disabled={loading}
+              className="w-full bg-zinc-900 text-white py-5 rounded-2xl font-bold text-xs uppercase tracking-[0.2em] hover:bg-amber-900 transition-all duration-300 shadow-xl shadow-zinc-200 disabled:bg-zinc-300 disabled:shadow-none flex items-center justify-center gap-3 group"
+            >
+              {loading ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                <>Send Reset Link</>
+              )}
+            </button>
+          </form>
 
           <div className="mt-10 pt-8 border-t border-zinc-50 text-center">
             <p className="text-zinc-800 text-xs uppercase tracking-widest font-medium">
